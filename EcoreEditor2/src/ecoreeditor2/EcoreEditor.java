@@ -106,7 +106,7 @@ public class EcoreEditor extends EditorPart {
 		loadResource();
 		
 		EPackage ePackage = (EPackage) resource.getContents().get(0);
-		
+		findDatatypes();
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(parent, ePackage);
 		} catch (final ECPRendererException ex) {
@@ -115,16 +115,23 @@ public class EcoreEditor extends EditorPart {
 	}
 	
 	private void findDatatypes() {
-		// Get a list of all data types
-		//TreeIterator<EObject> contents = resource.getAllContents();
-		
-		
-		List<EClassifier> classifiers = EcorePackage.eINSTANCE.getEClassifiers();
 		List<EDataType> dataTypes = new ArrayList<EDataType>();
-		for(EClassifier c : classifiers){
-			
+		
+		// Find all EDatatypes in the resource
+		TreeIterator<EObject> contents = resource.getAllContents();
+		while(contents.hasNext()){
+			EObject c = contents.next();
 			if(c instanceof EDataType) {
 				Log.i(((EDataType)c).getName());
+				dataTypes.add((EDataType) c);
+			}
+		}
+		
+		// Find all EDatatypes in the ECore-Package.
+		List<EClassifier> classifiers = EcorePackage.eINSTANCE.getEClassifiers();
+		for(EClassifier c : classifiers) {
+			if(c instanceof EDataType) {
+				Log.i(c.getName());
 				dataTypes.add((EDataType) c);
 			}
 		}
