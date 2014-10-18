@@ -5,7 +5,8 @@ Bundle-SymbolicName: EcoreEditor2;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ecoreeditor2.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecp.ui.view.swt;bundle-version="1.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.emf.common.command,
@@ -16,6 +17,8 @@ Import-Package: org.eclipse.emf.common.command,
  org.eclipse.emf.ecore.resource.impl,
  org.eclipse.emf.ecore.util,
  org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.ecp.ui.view;version="1.4.0",
+ org.eclipse.emf.ecp.ui.view.swt;version="1.4.0",
  org.eclipse.emf.ecp.view.model.common.edit.provider;version="1.4.0",
  org.eclipse.emf.edit.domain,
  org.eclipse.emf.edit.provider,
