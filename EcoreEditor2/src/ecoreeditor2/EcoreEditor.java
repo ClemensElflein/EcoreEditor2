@@ -1,8 +1,10 @@
 package ecoreeditor2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,8 +13,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -78,6 +85,9 @@ public class EcoreEditor extends EditorPart {
 				EcoreEditor.this.firePropertyChange(PROP_DIRTY);
 			}
 		});
+		
+		
+	
 	}
 
 	@Override
@@ -96,10 +106,27 @@ public class EcoreEditor extends EditorPart {
 		loadResource();
 		
 		EPackage ePackage = (EPackage) resource.getContents().get(0);
+		
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(parent, ePackage);
 		} catch (final ECPRendererException ex) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, ex.getMessage(), ex));
+		}
+	}
+	
+	private void findDatatypes() {
+		// Get a list of all data types
+		//TreeIterator<EObject> contents = resource.getAllContents();
+		
+		
+		List<EClassifier> classifiers = EcorePackage.eINSTANCE.getEClassifiers();
+		List<EDataType> dataTypes = new ArrayList<EDataType>();
+		for(EClassifier c : classifiers){
+			
+			if(c instanceof EDataType) {
+				Log.i(((EDataType)c).getName());
+				dataTypes.add((EDataType) c);
+			}
 		}
 	}
 	
@@ -109,6 +136,7 @@ public class EcoreEditor extends EditorPart {
 	private void loadResource() {
 		final FileEditorInput fei = (FileEditorInput) getEditorInput();
 		final ResourceSet resourceSet = createResourceSet();
+		
 		try {
 			final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
 			loadOptions
