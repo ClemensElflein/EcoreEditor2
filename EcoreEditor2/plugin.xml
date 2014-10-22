@@ -11,5 +11,12 @@
             name="name">
       </editor>
    </extension>
+   
+   <extension
+        point="org.eclipse.emf.ecp.view.context.viewServices">
+     <viewService
+           class="ecoreeditor2.DataTypeReferenceService">
+     </viewService>
+ </extension>
 
 </plugin>

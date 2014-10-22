@@ -160,6 +160,7 @@ public class EcoreEditor extends EditorPart {
 				rsSize = resourceSet.getResources().size();
 			}
 
+
 		} catch (final IOException e) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
 		}
