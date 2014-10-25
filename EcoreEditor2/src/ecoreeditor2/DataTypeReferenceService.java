@@ -59,12 +59,15 @@ public class DataTypeReferenceService implements ReferenceService {
 		if(!(context.getDomainModel() instanceof EAttribute) || !(eReference.getEReferenceType() instanceof EClassifier))
 			return null;
 		
+		// TODO: Move to Helper class; Use Resource! (root.getResource())
 		List<EDataType> dataTypes = new ArrayList<EDataType>();
+		
 		
 		// Find all EDatatypes in the root of the DomainModel
 		EObject root = context.getDomainModel();
-		while(root.eContainer() != null)
+		while(root.eContainer() != null) {
 			root = root.eContainer();
+		}
 		
 		TreeIterator<EObject> contents = root.eAllContents();
 		while(contents.hasNext()){
@@ -129,7 +132,6 @@ public class DataTypeReferenceService implements ReferenceService {
 
 	@Override
 	public void openInNewContext(EObject eObject) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 }
