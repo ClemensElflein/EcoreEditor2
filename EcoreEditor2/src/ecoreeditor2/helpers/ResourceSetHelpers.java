@@ -74,10 +74,13 @@ public class ResourceSetHelpers {
 			loadOptions
 				.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
 
+			int rsSizeOld = resourceSet.getResources().size();
 			resourceSet.createResource(resourceURI).load(loadOptions);
 
 			// resolve all proxies
 			int rsSize = resourceSet.getResources().size();
+			
+			Log.i("Added Resource! Old Size:"+rsSizeOld+"; New Size:"+rsSize);
 			EcoreUtil.resolveAll(resourceSet);
 			while (rsSize != resourceSet.getResources().size()) {
 				EcoreUtil.resolveAll(resourceSet);
