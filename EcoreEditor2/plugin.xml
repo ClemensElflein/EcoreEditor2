@@ -18,5 +18,14 @@
            class="ecoreeditor2.DataTypeReferenceService">
      </viewService>
  </extension>
+   <extension
+         point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">
+         <MasterDetailAction
+            command="ecoreeditor2.LoadEcoreHandler"
+            imagePath="icons/preview.png"
+            label="Add Ecore"
+            location="toolbar">
+      </MasterDetailAction>
+   </extension>
 
 </plugin>

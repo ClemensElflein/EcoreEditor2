@@ -1,35 +1,21 @@
 package ecoreeditor2;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
 import java.util.EventObject;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
-import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
-import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -37,10 +23,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import ecoreeditor2.helpers.ResourceSetHelpers;
+
 public class EcoreEditor extends EditorPart {
 
 	// The Resource loaded from the provided EditorInput
-	private Resource resource;
+	private ResourceSet resourceSet;
 	
 	// Use a simple CommandStack that can undo and redo nothing.
 	private BasicCommandStack commandStack = new BasicCommandStack();
@@ -51,15 +39,11 @@ public class EcoreEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		try {
-			resource.save(null);
-			
+		if(ResourceSetHelpers.save(resourceSet)) {
 			// Tell the CommandStack, that we have saved the file successfully
 			// and inform the Workspace, that the Dirty property has changed.
 			commandStack.saveIsDone();
 			firePropertyChange(PROP_DIRTY);
-		} catch (IOException e) {
-			Log.e(e);
 		}
 	}
 
@@ -105,35 +89,19 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 		
-		EPackage ePackage = (EPackage) resource.getContents().get(0);
-		findDatatypes();
+		List<EPackage> ePackages = new LinkedList<EPackage>();
+		
+		for(Resource resource : resourceSet.getResources()) {
+			ePackages.add((EPackage) resource.getContents().get(0));
+		}
+
+		Log.i(ePackages.size() + " Packages found!");
+		
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, ePackage);
+			ECPSWTViewRenderer.INSTANCE.render(parent, ePackages.get(1));
+			
 		} catch (final ECPRendererException ex) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, ex.getMessage(), ex));
-		}
-	}
-	
-	private void findDatatypes() {
-		List<EDataType> dataTypes = new ArrayList<EDataType>();
-		
-		// Find all EDatatypes in the resource
-		TreeIterator<EObject> contents = resource.getAllContents();
-		while(contents.hasNext()){
-			EObject c = contents.next();
-			if(c instanceof EDataType) {
-				Log.i(((EDataType)c).getName());
-				dataTypes.add((EDataType) c);
-			}
-		}
-		
-		// Find all EDatatypes in the ECore-Package.
-		List<EClassifier> classifiers = EcorePackage.eINSTANCE.getEClassifiers();
-		for(EClassifier c : classifiers) {
-			if(c instanceof EDataType) {
-				Log.i(c.getName());
-				dataTypes.add((EDataType) c);
-			}
 		}
 	}
 	
@@ -142,42 +110,11 @@ public class EcoreEditor extends EditorPart {
 	 */
 	private void loadResource() {
 		final FileEditorInput fei = (FileEditorInput) getEditorInput();
-		final ResourceSet resourceSet = createResourceSet();
-		
 		try {
-			final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
-			loadOptions
-				.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-
-			resource = resourceSet.createResource(URI.createURI(fei.getURI().toURL().toExternalForm()));
-			resource.load(loadOptions);
-
-			// resolve all proxies
-			int rsSize = resourceSet.getResources().size();
-			EcoreUtil.resolveAll(resourceSet);
-			while (rsSize != resourceSet.getResources().size()) {
-				EcoreUtil.resolveAll(resourceSet);
-				rsSize = resourceSet.getResources().size();
-			}
-
-
-		} catch (final IOException e) {
-			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+			resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(URI.createURI(fei.getURI().toURL().toExternalForm()), commandStack);
+		} catch (MalformedURLException e) {
+			Log.e(e);
 		}
-	}
-	
-	private ResourceSet createResourceSet() {
-		final ResourceSet resourceSet = new ResourceSetImpl();
-
-		final AdapterFactoryEditingDomain domain = new AdapterFactoryEditingDomain(
-			new ComposedAdapterFactory(
-					new AdapterFactory[] {
-							new CustomReflectiveItemProviderAdapterFactory(),
-							new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
-							}),
-					commandStack, resourceSet);
-		resourceSet.eAdapters().add(new AdapterFactoryEditingDomain.EditingDomainProvider(domain));
-		return resourceSet;
 	}
 
 	@Override
