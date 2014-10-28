@@ -1,10 +1,15 @@
 package ecoreeditor2;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,10 +21,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -49,8 +56,14 @@ public class EcoreEditor extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-
+		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
+		int result = saveAsDialog.open();
+		if(result == Window.OK) {
+			IPath path = saveAsDialog.getResult();
+			setPartName(path.lastSegment());
+	    	resourceSet.getResources().get(0).setURI(URI.createFileURI(path.toOSString()));
+	    	doSave(null);
+		}
 	}
 
 	@Override
@@ -81,8 +94,7 @@ public class EcoreEditor extends EditorPart {
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// We don't allow the SaveAs operation at this time.
-		return false;
+		return true;
 	}
 
 	@Override
@@ -98,7 +110,7 @@ public class EcoreEditor extends EditorPart {
 		Log.i(ePackages.size() + " Packages found!");
 		
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, ePackages.get(1));
+			ECPSWTViewRenderer.INSTANCE.render(parent, ePackages.get(0));
 			
 		} catch (final ECPRendererException ex) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, ex.getMessage(), ex));
