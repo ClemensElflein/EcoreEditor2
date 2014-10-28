@@ -2,6 +2,7 @@ package ecoreeditor2.helpers;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -41,7 +42,7 @@ public class ResourceSetHelpers {
 	public static ResourceSet loadResourceSetWithProxies(URI resourceURI, BasicCommandStack commandStack) {
 		// Create a ResourceSet and add the requested Resource
 		ResourceSet resourceSet = createResourceSet(commandStack);
-		if(addResourceToSet(resourceURI, resourceSet)) {
+		if(addResourceToSet(resourceSet, resourceURI)) {
 			return resourceSet;
 		}
 		return null;
@@ -61,7 +62,7 @@ public class ResourceSetHelpers {
 		return resourceSet;
 	}
 	
-	public static boolean addResourceToSet(URI resourceURI, ResourceSet resourceSet) {
+	public static boolean addResourceToSet(ResourceSet resourceSet, URI resourceURI) {
 		try {
 			final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
 			loadOptions
@@ -82,5 +83,9 @@ public class ResourceSetHelpers {
 			Log.e(e);
 		}
 		return false;
+	}
+	
+	public static <T> List<T> findAllOf(ResourceSet resourceSet, Class<T> clazz, boolean includeEcorePackage) {
+		throw new UnsupportedOperationException();
 	}
 }

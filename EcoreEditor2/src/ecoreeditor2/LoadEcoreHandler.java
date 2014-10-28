@@ -43,8 +43,8 @@ public class LoadEcoreHandler extends MasterDetailAction {
         if(result == Window.OK) {
         	// Get the Resource Set and Add the File to it
         	IResource selectedResource = (IResource) dialog.getFirstResult();
-        	ResourceSetHelpers.addResourceToSet(URI.createFileURI(selectedResource.getFullPath().toOSString()),
-        			object.eResource().getResourceSet());
+        	ResourceSetHelpers.addResourceToSet(object.eResource().getResourceSet(),
+        			URI.createFileURI(selectedResource.getFullPath().toOSString()));
         }
         
 	}
