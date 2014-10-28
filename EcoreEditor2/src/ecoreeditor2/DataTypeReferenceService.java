@@ -44,6 +44,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
+import ecoreeditor2.helpers.ResourceSetHelpers;
+
 public class DataTypeReferenceService implements ReferenceService {
 
 	private ViewModelContext context;
@@ -59,31 +61,7 @@ public class DataTypeReferenceService implements ReferenceService {
 		if(!(context.getDomainModel() instanceof EAttribute) || !(eReference.getEReferenceType() instanceof EClassifier))
 			return null;
 		
-		// TODO: Move to Helper class; Use Resource! (root.getResource())
-		List<EDataType> dataTypes = new ArrayList<EDataType>();
-		
-		
-		// Find all EDatatypes in the root of the DomainModel
-		EObject root = context.getDomainModel();
-		while(root.eContainer() != null) {
-			root = root.eContainer();
-		}
-		
-		TreeIterator<EObject> contents = root.eAllContents();
-		while(contents.hasNext()){
-			EObject c = contents.next();
-			if(c instanceof EDataType) {
-				dataTypes.add((EDataType) c);
-			}
-		}
-		
-		// Find all EDatatypes in the ECore-Package.
-		List<EClassifier> classifiers = EcorePackage.eINSTANCE.getEClassifiers();
-		for(EClassifier c : classifiers) {
-			if(c instanceof EDataType) {
-				dataTypes.add((EDataType) c);
-			}
-		}
+		List<EDataType> dataTypes = ResourceSetHelpers.findAllOfTypeInResourceSet(context.getDomainModel(), EDataType.class, true);
 		
 		ListDialog dialog = new ListDialog(Display.getDefault().getActiveShell());
 		dialog.setTitle("Select Datatype");

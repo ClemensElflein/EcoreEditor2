@@ -1,6 +1,7 @@
 package ecoreeditor2.helpers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -85,7 +91,36 @@ public class ResourceSetHelpers {
 		return false;
 	}
 	
+	public static <T> List<T> findAllOfTypeInResourceSet(EObject object, Class<T> clazz, boolean includeEcorePackage) {
+		return ResourceSetHelpers.findAllOf(object.eResource().getResourceSet(), clazz, includeEcorePackage);
+	}
+	
 	public static <T> List<T> findAllOf(ResourceSet resourceSet, Class<T> clazz, boolean includeEcorePackage) {
-		throw new UnsupportedOperationException();
+		List<T> result = new ArrayList<T>();
+		
+
+		// Iterate through all EObjects in every Resource in the set and return all Objects of Class clazz.
+		for(Resource resource : resourceSet.getResources()) {
+			TreeIterator<EObject> objectIterator = resource.getAllContents();
+			while(objectIterator.hasNext()) {
+				EObject o = objectIterator.next();
+				if(o != null && clazz.isInstance(o)) {
+					result.add((T) o);
+				}
+			}
+		}
+		
+		if(includeEcorePackage) {
+			// Find all EDatatypes in the ECore-Package.
+			TreeIterator<EObject> objectIterator = EcorePackage.eINSTANCE.eAllContents();
+			while(objectIterator.hasNext()) {
+				EObject o = objectIterator.next();
+				if(o != null && clazz.isInstance(o)) {
+					result.add((T) o);
+				}
+			}
+		}
+		
+		return result;
 	}
 }
