@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
@@ -97,16 +97,19 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 
-		List<EPackage> ePackages = new LinkedList<EPackage>();
+		List<EObject> eObjects = new LinkedList<EObject>();
 
 		for (Resource resource : resourceSet.getResources()) {
-			ePackages.add((EPackage) resource.getContents().get(0));
+			if (!resource.getContents().isEmpty()) {
+				eObjects.add(resource.getContents().get(0));
+			}
 		}
 
-		Log.i(ePackages.size() + " Packages found!");
+		Log.i(eObjects.size() + " eObjects found!");
 
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, ePackages.get(0));
+			// TODO: Multiple
+			ECPSWTViewRenderer.INSTANCE.render(parent, eObjects.get(0));
 
 		} catch (final ECPRendererException ex) {
 			Activator
