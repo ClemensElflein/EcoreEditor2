@@ -6,15 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,9 +21,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.ui.part.FileEditorInput;
 
-import ecoreeditor2.Activator;
 import ecoreeditor2.Log;
 
 public class ResourceSetHelpers {
@@ -103,12 +97,14 @@ public class ResourceSetHelpers {
 		
 
 		// Iterate through all EObjects in every Resource in the set and return all Objects of Class clazz.
-		for(Resource resource : resourceSet.getResources()) {
-			TreeIterator<EObject> objectIterator = resource.getAllContents();
-			while(objectIterator.hasNext()) {
-				EObject o = objectIterator.next();
-				if(o != null && clazz.isInstance(o)) {
-					result.add((T) o);
+		if(resourceSet != null) {
+			for(Resource resource : resourceSet.getResources()) {
+				TreeIterator<EObject> objectIterator = resource.getAllContents();
+				while(objectIterator.hasNext()) {
+					EObject o = objectIterator.next();
+					if(o != null && clazz.isInstance(o)) {
+						result.add((T) o);
+					}
 				}
 			}
 		}
@@ -125,5 +121,10 @@ public class ResourceSetHelpers {
 		}
 		
 		return result;
+	}
+
+	public static <T> List<T> findAllInEcorePackage(
+			Class<T> clazz) {
+		return findAllOf(null, clazz, true);
 	}
 }
