@@ -6,7 +6,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal.MasterDetailAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -17,6 +16,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
+import treeInput.TreeInput;
 import ecoreeditor2.helpers.ResourceSetHelpers;
 
 public class LoadEcoreHandler extends MasterDetailAction {
@@ -34,7 +34,7 @@ public class LoadEcoreHandler extends MasterDetailAction {
 
 	@Override
 	public boolean shouldShow(EObject eObject) {
-		return eObject instanceof EPackage;
+		return eObject instanceof TreeInput;
 	}
 
 	@Override
