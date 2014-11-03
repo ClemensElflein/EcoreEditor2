@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.eclipse.emf.ecp.ecoreeditor.EcoreEditor"
-            default="false"
-            extensions="ecore2"
-            id="EcoreEditor2.editor1"
-            name="name">
-      </editor>
-   </extension>
    
    <extension
         point="org.eclipse.emf.ecp.view.context.viewServices">
      <viewService
-           class="org.eclipse.emf.ecp.ecoreeditor.DataTypeReferenceService">
+           class="org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices.DataTypeReferenceService">
      </viewService>
  </extension>
    <extension
          point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">
          <MasterDetailAction
-            command="ecoreeditor2.LoadEcoreHandler"
+            command="org.eclipse.emf.ecp.ecoreeditor.ecore.handlers.LoadEcoreHandler"
             imagePath="icons/preview.png"
             label="Add Ecore"
             location="toolbar">
@@ -31,9 +21,9 @@
       <extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emf.ecp.ecoreeditor.controls.DataTypeControl">
+            renderer="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.DataTypeControl">
          <dynamicTest
-               testClass="org.eclipse.emf.ecp.ecoreeditor.controls.DatatypeRendererTest">
+               testClass="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.DatatypeRendererTest">
          </dynamicTest>
       </renderer>
    </extension>
@@ -41,11 +31,12 @@
    <extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emf.ecp.ecoreeditor.controls.EEnumLiteralRenderer">
+            renderer="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.EEnumLiteralRenderer">
 			<dynamicTest
-               testClass="org.eclipse.emf.ecp.ecoreeditor.controls.EEnumLiteralRendererTest">
+               testClass="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.EEnumLiteralRendererTest">
          </dynamicTest>
       </renderer>
    </extension>
+
 
 </plugin>
