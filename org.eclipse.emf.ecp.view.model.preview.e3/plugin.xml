@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="EMF Forms"
+            id="org.eclipse.emf.ecp.view.ide">
+      </category>
+      <view
+            name="EMF Forms Preview"
+            icon="icons/preview.png"
+            category="org.eclipse.emf.ecp.view.ide"
+            class="org.eclipse.emf.ecp.view.model.internal.preview.e3.views.PreviewView"
+            id="org.eclipse.emf.ecp.view.model.preview.e3.views.PreviewView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.emf.ecp.view.model.internal.preview.actions.OpenPreviewHandler"
+            id="org.eclipse.emf.ecp.view.model.preview.OpenPreviewCommand"
+            name="Open Preview">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.emf.ecp.ui.ModelExplorerView?after=org.eclipse.emf.ecp.ui.separatorProvider">
+         <command
+               commandId="org.eclipse.emf.ecp.view.model.preview.OpenPreviewCommand"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="org.eclipse.emf.ecp.view.spi.model.VView">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <separator
+               name="org.eclipse.emf.ecp.ui.e3.viewModelSeparator">
+         </separator>
+         <menu
+               id="org.eclipse.emf.ecp.ui.e3.emfFormsMenu"
+               label="EMF Forms">
+            <command
+                  commandId="org.eclipse.emf.ecp.view.model.preview.OpenPreviewCommand"
+                  icon="icons/preview.png"
+                  label="Open Preview"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <adapt
+                        type="org.eclipse.core.resources.IFile">
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.view">
+                     </test>
+                  </adapt>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">
+      <MasterDetailAction
+            command="org.eclipse.emf.ecp.view.model.internal.preview.actions.OpenPreviewHandler"
+            imagePath="icons/preview.png"
+            label="Open Preview"
+            location="toolbar">
+      </MasterDetailAction>
+   </extension>
+ </plugin>

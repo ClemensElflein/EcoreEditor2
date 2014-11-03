@@ -1,0 +1,118 @@
+Manifest-Version: 1.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Built-By: genie.modeling.ecp
+Bundle-SymbolicName: org.eclipse.emf.ecp.view.model.preview.e3;singlet
+ on:=true
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/emfcli
+ ent/org.eclipse.emf.ecp.core.git;path="bundles/org.eclipse.emf.ecp.vi
+ ew.model.preview.e3";commitId=c9c92b55fd4116946b2bbfbf8929bebc438cb14
+ 7
+Bundle-Activator: org.eclipse.emf.ecp.view.model.internal.preview.Acti
+ vator
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)
+ ",org.eclipse.emf.ecp.view.model.preview.common;bundle-version="[1.4.
+ 0,2.0.0)",org.eclipse.emf.ecp.view.model;bundle-version="[1.4.0,2.0.0
+ )",org.eclipse.emf.ecp.ide.editor.view;bundle-version="[1.4.0,2.0.0)"
+ ,org.eclipse.emf.ecp.view.treemasterdetail.ui.swt;bundle-version="[1.
+ 4.0,2.0.0)",org.eclipse.ui.workbench;bundle-version="[3.7.0,4.0.0)",o
+ rg.eclipse.emf.edit;bundle-version="[2.8.0,3.0.0)",org.eclipse.emf.ec
+ p.view.model.common;bundle-version="[1.4.0,2.0.0)",org.eclipse.emf.ec
+ p.ide.view.service;bundle-version="[1.4.0,2.0.0)"
+Export-Package: org.eclipse.emf.ecp.view.model.internal.preview;versio
+ n="1.4.0";x-internal:=true,org.eclipse.emf.ecp.view.model.internal.pr
+ eview.actions;version="1.4.0";x-internal:=true,org.eclipse.emf.ecp.vi
+ ew.model.internal.preview.e3.views;version="1.4.0";x-internal:=true
+Bundle-Version: 1.4.0.20140916-1322
+Build-Jdk: 1.6.0_45
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Eclipse Modeling Project
+Bundle-Name: Preview View
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Import-Package: org.eclipse.core.commands;version="0.0.0",org.eclipse.
+ jface.action;version="0.0.0",org.eclipse.jface.dialogs;version="0.0.0
+ ",org.eclipse.jface.layout;version="0.0.0",org.eclipse.jface.resource
+ ;version="0.0.0",org.eclipse.jface.viewers;version="0.0.0",org.eclips
+ e.swt;version="0.0.0",org.eclipse.swt.custom;version="0.0.0",org.ecli
+ pse.swt.events;version="0.0.0",org.eclipse.swt.graphics;version="0.0.
+ 0",org.eclipse.swt.layout;version="0.0.0",org.eclipse.swt.widgets;ver
+ sion="0.0.0",org.eclipse.ui;ui.workbench=split;version="0.0.0",org.ec
+ lipse.ui.part;ui.workbench=split;version="0.0.0",org.eclipse.ui.plugi
+ n;version="0.0.0"
+Bundle-ManifestVersion: 2
+
+Name: icons/loadData.png
+SHA1-Digest: Jhd+Auqv4tOTX7sr9rW8KtrhXhg=
+
+Name: icons/arrow_refresh.png
+SHA1-Digest: 8u6hvrle3WAJpvUJjMzDlieU4bM=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$1.class
+SHA1-Digest: rJgkerhCTorZMz7M6w2M+LmcrY0=
+
+Name: about.html
+SHA1-Digest: mLkmRLtG3amkcY0I7KSYZX6qKhs=
+
+Name: contexts.xml
+SHA1-Digest: vaFdljzx08vhLXyib5hTmcaX9r8=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$2.class
+SHA1-Digest: N3rHSZrJik2fD7TSTJDIyDn79x8=
+
+Name: icons/preview.png
+SHA1-Digest: yyTCl7GiHQ4Us1n247yhB9T76SM=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$3.class
+SHA1-Digest: gROjAondhdxa+hOK2w1SJ3rnMUM=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$4.class
+SHA1-Digest: d7+uJ7k97LntH2HZCaqypOddilg=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$5.class
+SHA1-Digest: KiACABD7T34+8IkFUqcmtVz6FL0=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$6.class
+SHA1-Digest: V7Q7sNzUC97ayrKbq8YzP+FF5MU=
+
+Name: icons/arrow_rotate_anticlockwise.png
+SHA1-Digest: SWFu5VaraRmVK42is3/tZA+qIuE=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/actions/OpenPrev
+ iewHandler.class
+SHA1-Digest: GvL6KSPvX5g26mYuNsyhGINbGVc=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$7.class
+SHA1-Digest: NySrzKjaRFVmG8vwkNf5/prgfnE=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View$8.class
+SHA1-Digest: VXNA7z5GoGRsRpHXp3MZsbTax/M=
+
+Name: META-INF/maven/org.eclipse.emf.ecp/org.eclipse.emf.ecp.view.mode
+ l.preview.e3/pom.properties
+SHA1-Digest: eAawXssPbY1ifW+sbWPMnAknzwk=
+
+Name: META-INF/maven/org.eclipse.emf.ecp/org.eclipse.emf.ecp.view.mode
+ l.preview.e3/pom.xml
+SHA1-Digest: QB8mhck4QyHlSrau/QwuyUMk9Cc=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/Activator.class
+SHA1-Digest: 5sf+SpYK0tY9C6ZX3rGHosws4oE=
+
+Name: icons/cleanData.png
+SHA1-Digest: +6UbjZEuDoi8mP7QOpkz6SJnV7A=
+
+Name: plugin.xml
+SHA1-Digest: zGv+G+LlPg3oP5RG21ms0rEe+78=
+
+Name: org/eclipse/emf/ecp/view/model/internal/preview/e3/views/Preview
+ View.class
+SHA1-Digest: TOz1OgdYE+YZWCVUfa7ukFWmWdA=
+
