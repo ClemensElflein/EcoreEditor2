@@ -13,7 +13,6 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
@@ -100,16 +99,16 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 
-		List<EObject> ePackages = new LinkedList<EObject>();
+		List<EObject> eObjects = new LinkedList<EObject>();
 
 		for (Resource resource : resourceSet.getResources()) {
-			ePackages.add((EPackage) resource.getContents().get(0));
+			eObjects.add(resource.getContents().get(0));
 		}
 
-		Log.i(ePackages.size() + " Packages found!");
+		Log.i(eObjects.size() + " Objects found!");
 
 		TreeInput input = TreeInputFactory.eINSTANCE.createTreeInput();
-		input.setTreeRoots(ePackages);
+		input.setTreeRoots(eObjects);
 
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(parent, input);
