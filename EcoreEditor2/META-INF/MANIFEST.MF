@@ -37,4 +37,6 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.emf.edit.domain,
  org.eclipse.emf.edit.provider,
  org.eclipse.ui.dialogs,
- org.eclipse.ui.part
+ org.eclipse.ui.part,
+ treeInput
+Export-Package: ecoreeditor2;x-internal:=true

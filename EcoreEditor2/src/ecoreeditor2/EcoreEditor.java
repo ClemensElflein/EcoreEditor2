@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -26,6 +27,8 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import treeInput.TreeInput;
+import treeInput.TreeInputFactory;
 import ecoreeditor2.helpers.ResourceSetHelpers;
 
 public class EcoreEditor extends EditorPart {
@@ -97,7 +100,7 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 
-		List<EPackage> ePackages = new LinkedList<EPackage>();
+		List<EObject> ePackages = new LinkedList<EObject>();
 
 		for (Resource resource : resourceSet.getResources()) {
 			ePackages.add((EPackage) resource.getContents().get(0));
@@ -105,8 +108,11 @@ public class EcoreEditor extends EditorPart {
 
 		Log.i(ePackages.size() + " Packages found!");
 
+		TreeInput input = TreeInputFactory.eINSTANCE.createTreeInput();
+		input.setTreeRoots(ePackages);
+
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, ePackages.get(0));
+			ECPSWTViewRenderer.INSTANCE.render(parent, input);
 
 		} catch (final ECPRendererException ex) {
 			Activator
