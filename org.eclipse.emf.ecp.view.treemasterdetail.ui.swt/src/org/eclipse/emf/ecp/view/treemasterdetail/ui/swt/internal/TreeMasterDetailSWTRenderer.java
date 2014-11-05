@@ -14,7 +14,6 @@
 package org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -255,8 +254,7 @@ public class TreeMasterDetailSWTRenderer extends
 
 			@Override
 			public Object[] getElements(Object object) {
-				return (Object[]) object;// new Object[] { ((RootObject)
-											// object).getRoot() };
+				return (Object[]) object;
 			}
 		};
 		final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
@@ -776,48 +774,17 @@ public class TreeMasterDetailSWTRenderer extends
 					}
 					childComposite = createComposite();
 
-					final Object[] root = (Object[]) manipulateSelection(((TreeViewer) event
-							.getSource()).getInput());
 					final Map<String, Object> context = new LinkedHashMap<String, Object>();
 					context.put(DETAIL_KEY, true);
 
-					if (root != null && Arrays.asList(root).contains(selected)
-							&& false) {
-						context.put(ROOT_KEY, true);
-						VView vView = getVElement().getDetailView();
-						if (vView.getChildren().isEmpty()) {
-							vView = ViewProviderHelper.getView(
-									(EObject) selected, context);
-						}
-						if (DynamicEObjectImpl.class.isInstance(selected)) {
-							final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
-									.createViewModelContext(vView,
-											(EObject) selected,
-											referenceService);
-							manipulateViewContext(viewContext);
-							ECPSWTViewRenderer.INSTANCE.render(childComposite,
-									viewContext);
-
-						} else {
-							final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
-									.createViewModelContext(vView,
-											(EObject) selected,
-											referenceService);
-							manipulateViewContext(viewContext);
-							ECPSWTViewRenderer.INSTANCE.render(childComposite,
-									viewContext);
-						}
-
-					} else {
-						final VView view = ViewProviderHelper.getView(
-								(EObject) selected, context);
-						final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
-								.createViewModelContext(view,
-										(EObject) selected, referenceService);
-						manipulateViewContext(viewContext);
-						ECPSWTViewRenderer.INSTANCE.render(childComposite,
-								viewContext);
-					}
+					final VView view = ViewProviderHelper.getView(
+							(EObject) selected, context);
+					final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
+							.createViewModelContext(view, (EObject) selected,
+									referenceService);
+					manipulateViewContext(viewContext);
+					ECPSWTViewRenderer.INSTANCE.render(childComposite,
+							viewContext);
 
 					relayoutDetail();
 				} catch (final ECPRendererException e) {
