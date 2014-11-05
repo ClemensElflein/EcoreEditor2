@@ -40,4 +40,4 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.ui.part,
  treeInput
 Export-Package: org.eclipse.emf.ecp.ecoreeditor;x-internal:=true,
- org.eclipse.emf.ecp.ecoreeditor.helpers;x-friends:="org.eclipse.emf.ecp.ecoreeditor.ecore"
+ org.eclipse.emf.ecp.ecoreeditor.helpers
