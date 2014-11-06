@@ -5,8 +5,11 @@ import java.util.List;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.view.spi.core.swt.SimpleControlJFaceViewerSWTRenderer;
@@ -30,9 +33,20 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 	protected Viewer createJFaceViewer(Composite parent, Setting setting) {
 		final ComboViewer combo = new ComboViewer(parent, SWT.DROP_DOWN);
 
-		List<EDataType> dataTypes = ResourceSetHelpers
-				.findAllOfTypeInResourceSet(getViewModelContext()
-						.getDomainModel(), EDataType.class, true);
+		Class<?> type = EClassifier.class;
+		boolean includeEcorePackage = false;
+
+		if (setting.getEStructuralFeature() instanceof EAttribute) {
+			type = EDataType.class;
+			includeEcorePackage = true;
+		} else if (setting.getEStructuralFeature() instanceof EReference) {
+			type = EClass.class;
+			includeEcorePackage = false;
+		}
+
+		List<?> classifiers = ResourceSetHelpers.findAllOfTypeInResourceSet(
+				getViewModelContext().getDomainModel(), type,
+				includeEcorePackage);
 
 		combo.setLabelProvider(new LabelProvider() {
 			@Override
@@ -43,7 +57,7 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 			}
 		});
 		combo.setContentProvider(new ArrayContentProvider());
-		combo.setInput(dataTypes.toArray());
+		combo.setInput(classifiers.toArray());
 
 		new AutoCompleteField(combo.getCombo(), new ComboContentAdapter(),
 				combo.getCombo().getItems());
@@ -57,7 +71,7 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 						((ComboViewer) viewer).getCombo()),
 				getModelValue(setting),
 				new EMFUpdateValueStrategy().setConverter(new Converter(
-						String.class, EDataType.class) {
+						String.class, EClassifier.class) {
 					@Override
 					public Object convert(Object fromObject) {
 						// We want the result for such a request to be null, not
@@ -65,12 +79,13 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 						if (fromObject == null)
 							return null;
 
-						Object[] dataTypes = (Object[]) ((ComboViewer) viewer)
+						Object[] classifiers = (Object[]) ((ComboViewer) viewer)
 								.getInput();
-						for (int i = 0; i < dataTypes.length; i++) {
-							if (fromObject.equals(((EDataType) dataTypes[i])
-									.getName())) {
-								return dataTypes[i];
+						for (int i = 0; i < classifiers.length; i++) {
+							if (fromObject
+									.equals(((EClassifier) classifiers[i])
+											.getName())) {
+								return classifiers[i];
 							}
 						}
 
@@ -81,11 +96,11 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 						// As it would have been matched in the previous
 						// for-loop.
 						String fromStringWithE = "E" + fromObject.toString();
-						for (int i = 0; i < dataTypes.length; i++) {
+						for (int i = 0; i < classifiers.length; i++) {
 							if (fromStringWithE
-									.equals(((EDataType) dataTypes[i])
+									.equals(((EClassifier) classifiers[i])
 											.getName())) {
-								return dataTypes[i];
+								return classifiers[i];
 							}
 						}
 
