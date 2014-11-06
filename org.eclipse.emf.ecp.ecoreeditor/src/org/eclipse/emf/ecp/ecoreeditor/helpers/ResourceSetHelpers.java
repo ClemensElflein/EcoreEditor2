@@ -28,7 +28,7 @@ public class ResourceSetHelpers {
 	// Saves all changes in a ResourceSet
 	public static boolean save(ResourceSet resourceSet) {
 		try {
-			for(Resource resource : resourceSet.getResources()) {
+			for (Resource resource : resourceSet.getResources()) {
 				resource.save(null);
 			}
 			return true;
@@ -37,43 +37,47 @@ public class ResourceSetHelpers {
 		}
 		return false;
 	}
-	
-	public static ResourceSet loadResourceSetWithProxies(URI resourceURI, BasicCommandStack commandStack) {
+
+	public static ResourceSet loadResourceSetWithProxies(URI resourceURI,
+			BasicCommandStack commandStack) {
 		// Create a ResourceSet and add the requested Resource
 		ResourceSet resourceSet = createResourceSet(commandStack);
-		if(addResourceToSet(resourceSet, resourceURI)) {
+		if (addResourceToSet(resourceSet, resourceURI)) {
 			return resourceSet;
 		}
 		return null;
 	}
-	
+
 	private static ResourceSet createResourceSet(CommandStack commandStack) {
 		final ResourceSet resourceSet = new ResourceSetImpl();
 
 		final AdapterFactoryEditingDomain domain = new AdapterFactoryEditingDomain(
-			new ComposedAdapterFactory(
-					new AdapterFactory[] {
-							new CustomReflectiveItemProviderAdapterFactory(),
-							new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
-							}),
-					commandStack, resourceSet);
-		resourceSet.eAdapters().add(new AdapterFactoryEditingDomain.EditingDomainProvider(domain));
+				new ComposedAdapterFactory(
+						new AdapterFactory[] {
+								new CustomReflectiveItemProviderAdapterFactory(),
+								new ComposedAdapterFactory(
+										ComposedAdapterFactory.Descriptor.Registry.INSTANCE) }),
+				commandStack, resourceSet);
+		resourceSet.eAdapters().add(
+				new AdapterFactoryEditingDomain.EditingDomainProvider(domain));
 		return resourceSet;
 	}
-	
-	public static boolean addResourceToSet(ResourceSet resourceSet, URI resourceURI) {
+
+	public static boolean addResourceToSet(ResourceSet resourceSet,
+			URI resourceURI) {
 		try {
 			final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
-			loadOptions
-				.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+			loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE,
+					Boolean.TRUE);
 
 			int rsSizeOld = resourceSet.getResources().size();
 			resourceSet.createResource(resourceURI).load(loadOptions);
 
 			// resolve all proxies
 			int rsSize = resourceSet.getResources().size();
-			
-			Log.i("Added Resource! Old Size:"+rsSizeOld+"; New Size:"+rsSize);
+
+			Log.i("Added Resource! Old Size:" + rsSizeOld + "; New Size:"
+					+ rsSize);
 			EcoreUtil.resolveAll(resourceSet);
 			while (rsSize != resourceSet.getResources().size()) {
 				EcoreUtil.resolveAll(resourceSet);
@@ -86,44 +90,49 @@ public class ResourceSetHelpers {
 		}
 		return false;
 	}
-	
-	public static <T> List<T> findAllOfTypeInResourceSet(EObject object, Class<T> clazz, boolean includeEcorePackage) {
-		return ResourceSetHelpers.findAllOf(object.eResource().getResourceSet(), clazz, includeEcorePackage);
-	}
-	
-	public static <T> List<T> findAllOf(ResourceSet resourceSet, Class<T> clazz, boolean includeEcorePackage) {
-		List<T> result = new ArrayList<T>();
-		
 
-		// Iterate through all EObjects in every Resource in the set and return all Objects of Class clazz.
-		if(resourceSet != null) {
-			for(Resource resource : resourceSet.getResources()) {
-				TreeIterator<EObject> objectIterator = resource.getAllContents();
-				while(objectIterator.hasNext()) {
+	public static <T> List<T> findAllOfTypeInResourceSet(EObject object,
+			Class<T> clazz, boolean includeEcorePackage) {
+		return ResourceSetHelpers
+				.findAllOf(object.eResource().getResourceSet(), clazz,
+						includeEcorePackage);
+	}
+
+	public static <T> List<T> findAllOf(ResourceSet resourceSet,
+			Class<T> clazz, boolean includeEcorePackage) {
+		List<T> result = new ArrayList<T>();
+
+		// Iterate through all EObjects in every Resource in the set and return
+		// all Objects of Class clazz.
+		if (resourceSet != null) {
+			for (Resource resource : resourceSet.getResources()) {
+				TreeIterator<EObject> objectIterator = resource
+						.getAllContents();
+				while (objectIterator.hasNext()) {
 					EObject o = objectIterator.next();
-					if(o != null && clazz.isInstance(o)) {
+					if (o != null && clazz.isInstance(o)) {
 						result.add((T) o);
 					}
 				}
 			}
 		}
-		
-		if(includeEcorePackage) {
+
+		if (includeEcorePackage) {
 			// Find all EDatatypes in the ECore-Package.
-			TreeIterator<EObject> objectIterator = EcorePackage.eINSTANCE.eAllContents();
-			while(objectIterator.hasNext()) {
+			TreeIterator<EObject> objectIterator = EcorePackage.eINSTANCE
+					.eAllContents();
+			while (objectIterator.hasNext()) {
 				EObject o = objectIterator.next();
-				if(o != null && clazz.isInstance(o)) {
+				if (o != null && clazz.isInstance(o)) {
 					result.add((T) o);
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
-	public static <T> List<T> findAllInEcorePackage(
-			Class<T> clazz) {
+	public static <T> List<T> findAllInEcorePackage(Class<T> clazz) {
 		return findAllOf(null, clazz, true);
 	}
 }

@@ -36,10 +36,10 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 		Class<?> type = EClassifier.class;
 		boolean includeEcorePackage = false;
 
-		if (setting.getEStructuralFeature() instanceof EAttribute) {
+		if (getViewModelContext().getDomainModel() instanceof EAttribute) {
 			type = EDataType.class;
 			includeEcorePackage = true;
-		} else if (setting.getEStructuralFeature() instanceof EReference) {
+		} else if (getViewModelContext().getDomainModel() instanceof EReference) {
 			type = EClass.class;
 			includeEcorePackage = false;
 		}
