@@ -18,7 +18,8 @@ public class EEnumLiteralRenderer extends SimpleControlSWTControlSWTRenderer {
 	@Override
 	protected Control createSWTControl(Composite parent, Setting setting) {
 		Label label = new Label(parent, SWT.None);
-		label.setText(setting.get(true).toString());
+		Object value = setting.get(true);
+		label.setText(value != null ? value.toString() : "(null)");
 		return label;
 	}
 
