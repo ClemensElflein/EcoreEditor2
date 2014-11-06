@@ -3,12 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-	<artifactId>org.eclipse.emf.ecp.ecoreeditor</artifactId>
-    <version>1.5.0</version>
-    <relativePath>../org.eclipse.emf.ecp.ecoreeditor/</relativePath>
-	<groupId>org.eclipse.emf.ecp.ecoreeditor.ecore</groupId>
+	<groupId>org.eclipse.emf.ecp.ecoreeditor</groupId>
+	<artifactId>ecoreeditor-parent</artifactId>
+	<version>1.5.0</version>
+	<relativePath>../ecoreeditor-parent/</relativePath>
   </parent>
-  <groupId>org.eclipse.emf.ecp.ecoreeditor.p2updatesite</groupId>
+  <groupId>org.eclipse.emf.ecp.ecoreeditor</groupId>
   <artifactId>org.eclipse.emf.ecp.ecoreeditor.p2updatesite</artifactId>
   <version>1.5.0</version>
   <packaging>eclipse-repository</packaging>
