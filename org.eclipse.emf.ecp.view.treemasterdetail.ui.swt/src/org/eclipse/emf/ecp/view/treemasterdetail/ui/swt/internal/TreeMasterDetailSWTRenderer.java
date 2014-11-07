@@ -553,7 +553,7 @@ public class TreeMasterDetailSWTRenderer extends
 				if (treeViewer.getSelection().isEmpty()) {
 					return;
 				}
-				// final Object[] root = ((Object[]) treeViewer.getInput());
+				final Object[] root = ((Object[]) treeViewer.getInput());
 
 				if (treeViewer.getSelection() instanceof IStructuredSelection) {
 					final IStructuredSelection selection = (IStructuredSelection) treeViewer
@@ -578,6 +578,22 @@ public class TreeMasterDetailSWTRenderer extends
 					 * addDeleteActionToContextMenu(editingDomain, manager,
 					 * selection); }
 					 */
+
+					boolean isRootSelected = false;
+					mainLoop: for (Object s : selection.toList()) {
+						for (Object r : root) {
+							if (s.equals(r)) {
+								isRootSelected = true;
+								break mainLoop;
+							}
+						}
+					}
+
+					if (!isRootSelected) {
+						manager.add(new Separator(GLOBAL_ADDITIONS));
+						addDeleteActionToContextMenu(editingDomain, manager,
+								selection);
+					}
 					manager.add(new Separator());
 
 					if (selection.getFirstElement() != null
