@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="treeInput" nsURI="http://www.example.org/treeInput" nsPrefix="treeInput">
-  <eClassifiers xsi:type="ecore:EClass" name="TreeInput"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TreeInput">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="treeRoots" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
 </ecore:EPackage>

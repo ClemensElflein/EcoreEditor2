@@ -6,6 +6,8 @@
 <extension  point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
 <file filePath="viewmodels/TreeInput.view"/>
 
+<file filePath="viewmodels/TreeInput.view"/>
+
 <file filePath="viewmodels/EEnum.view"/>
 
 <file filePath="viewmodels/EDataType.view"/>

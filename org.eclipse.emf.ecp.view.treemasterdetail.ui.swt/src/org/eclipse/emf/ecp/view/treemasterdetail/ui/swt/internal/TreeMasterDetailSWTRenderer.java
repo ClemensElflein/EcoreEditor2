@@ -95,8 +95,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
 
-import treeInput.TreeInput;
-
 /**
  * SWT Renderer for a {@link VTreeMasterDetail} element.
  *
@@ -254,7 +252,7 @@ public class TreeMasterDetailSWTRenderer extends
 
 			@Override
 			public Object[] getElements(Object object) {
-				return (Object[]) object;
+				return new Object[] { ((RootObject) object).getRoot() };
 			}
 		};
 		final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
@@ -271,9 +269,7 @@ public class TreeMasterDetailSWTRenderer extends
 				.setLabelProvider(getLabelProvider(adapterFactoryLabelProvider));
 		treeViewer.setAutoExpandLevel(2); // top level element is expanded, but
 											// not the children
-
-		treeViewer
-				.setInput(((TreeInput) modelElement).getTreeRoots().toArray());
+		treeViewer.setInput(new RootObject(modelElement));
 
 		// Drag and Drop
 		addDragAndDropSupport(modelElement, treeViewer, editingDomain);
@@ -477,7 +473,7 @@ public class TreeMasterDetailSWTRenderer extends
 	/**
 	 *
 	 */
-	private List<Action> readToolbarActions(final EObject modelElement,
+	private List<Action> readToolbarActions(EObject modelElement,
 			final EditingDomain editingDomain) {
 		final List<Action> actions = new ArrayList<Action>();
 		final IExtensionRegistry extensionRegistry = Platform
@@ -485,6 +481,8 @@ public class TreeMasterDetailSWTRenderer extends
 		if (extensionRegistry == null) {
 			return actions;
 		}
+
+		final EObject finalModelElement = modelElement;
 
 		final IConfigurationElement[] controls = extensionRegistry
 				.getConfigurationElementsFor("org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions"); //$NON-NLS-1$
@@ -500,14 +498,15 @@ public class TreeMasterDetailSWTRenderer extends
 				final MasterDetailAction command = (MasterDetailAction) e
 						.createExecutableExtension("command"); //$NON-NLS-1$
 
-				if (!command.shouldShow(modelElement))
+				if (!command.shouldShow(finalModelElement)) {
 					continue;
+				}
 
 				final Action newAction = new Action() {
 					@Override
 					public void run() {
 						super.run();
-						command.execute(modelElement);
+						command.execute(finalModelElement);
 					}
 				};
 
@@ -553,7 +552,8 @@ public class TreeMasterDetailSWTRenderer extends
 				if (treeViewer.getSelection().isEmpty()) {
 					return;
 				}
-				final Object[] root = ((Object[]) treeViewer.getInput());
+				final EObject root = ((RootObject) treeViewer.getInput())
+						.getRoot();
 
 				if (treeViewer.getSelection() instanceof IStructuredSelection) {
 					final IStructuredSelection selection = (IStructuredSelection) treeViewer
@@ -572,24 +572,7 @@ public class TreeMasterDetailSWTRenderer extends
 						fillContextMenu(manager, descriptors, editingDomain,
 								eObject);
 					}
-					/*
-					 * if (!selection.toList().contains(root)) { manager.add(new
-					 * Separator(GLOBAL_ADDITIONS));
-					 * addDeleteActionToContextMenu(editingDomain, manager,
-					 * selection); }
-					 */
-
-					boolean isRootSelected = false;
-					mainLoop: for (Object s : selection.toList()) {
-						for (Object r : root) {
-							if (s.equals(r)) {
-								isRootSelected = true;
-								break mainLoop;
-							}
-						}
-					}
-
-					if (!isRootSelected) {
+					if (!selection.toList().contains(root)) {
 						manager.add(new Separator(GLOBAL_ADDITIONS));
 						addDeleteActionToContextMenu(editingDomain, manager,
 								selection);
@@ -790,17 +773,47 @@ public class TreeMasterDetailSWTRenderer extends
 					}
 					childComposite = createComposite();
 
+					final Object root = manipulateSelection(((RootObject) ((TreeViewer) event
+							.getSource()).getInput()).getRoot());
 					final Map<String, Object> context = new LinkedHashMap<String, Object>();
 					context.put(DETAIL_KEY, true);
 
-					final VView view = ViewProviderHelper.getView(
-							(EObject) selected, context);
-					final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
-							.createViewModelContext(view, (EObject) selected,
-									referenceService);
-					manipulateViewContext(viewContext);
-					ECPSWTViewRenderer.INSTANCE.render(childComposite,
-							viewContext);
+					if (selected.equals(root)) {
+						context.put(ROOT_KEY, true);
+						VView vView = getVElement().getDetailView();
+						if (vView.getChildren().isEmpty()) {
+							vView = ViewProviderHelper.getView(
+									(EObject) selected, context);
+						}
+						if (DynamicEObjectImpl.class.isInstance(selected)) {
+							final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
+									.createViewModelContext(vView,
+											(EObject) selected,
+											referenceService);
+							manipulateViewContext(viewContext);
+							ECPSWTViewRenderer.INSTANCE.render(childComposite,
+									viewContext);
+
+						} else {
+							final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
+									.createViewModelContext(vView,
+											(EObject) selected,
+											referenceService);
+							manipulateViewContext(viewContext);
+							ECPSWTViewRenderer.INSTANCE.render(childComposite,
+									viewContext);
+						}
+
+					} else {
+						final VView view = ViewProviderHelper.getView(
+								(EObject) selected, context);
+						final ViewModelContext viewContext = ViewModelContextFactory.INSTANCE
+								.createViewModelContext(view,
+										(EObject) selected, referenceService);
+						manipulateViewContext(viewContext);
+						ECPSWTViewRenderer.INSTANCE.render(childComposite,
+								viewContext);
+					}
 
 					relayoutDetail();
 				} catch (final ECPRendererException e) {

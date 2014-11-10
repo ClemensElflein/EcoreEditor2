@@ -2,8 +2,6 @@ package org.eclipse.emf.ecp.ecoreeditor;
 
 import java.net.MalformedURLException;
 import java.util.EventObject;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,10 +9,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedListener;
+import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedNotification;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -29,6 +31,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import treeInput.TreeInput;
 import treeInput.TreeInputFactory;
+import treeInput.TreeInputPackage;
 
 public class EcoreEditor extends EditorPart {
 
@@ -38,8 +41,11 @@ public class EcoreEditor extends EditorPart {
 	// Use a simple CommandStack that can undo and redo nothing.
 	private BasicCommandStack commandStack = new BasicCommandStack();
 
+	// Save the TreeInput object, which is passed to the TreeMasterDetail
+	private TreeInput treeInput;
+
 	public EcoreEditor() {
-		// TODO Auto-generated constructor stub
+		treeInput = TreeInputFactory.eINSTANCE.createTreeInput();
 	}
 
 	@Override
@@ -99,7 +105,7 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 
-		List<EObject> eObjects = new LinkedList<EObject>();
+		EList<EObject> eObjects = new BasicEList<EObject>();
 
 		for (Resource resource : resourceSet.getResources()) {
 			eObjects.add(resource.getContents().get(0));
@@ -107,12 +113,11 @@ public class EcoreEditor extends EditorPart {
 
 		Log.i(eObjects.size() + " Objects found!");
 
-		TreeInput input = TreeInputFactory.eINSTANCE.createTreeInput();
-		input.setTreeRoots(eObjects);
+		treeInput.eSet(TreeInputPackage.eINSTANCE.getTreeInput_TreeRoots(),
+				eObjects);
 
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, input);
-
+			ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
 		} catch (final ECPRendererException ex) {
 			Activator
 					.getDefault()
@@ -129,9 +134,13 @@ public class EcoreEditor extends EditorPart {
 	private void loadResource() {
 		final FileEditorInput fei = (FileEditorInput) getEditorInput();
 		try {
+
 			resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(
 					URI.createURI(fei.getURI().toURL().toExternalForm()),
 					commandStack);
+
+			resourceSet.eAdapters().add(new ResourceChangedListener(treeInput));
+			resourceSet.eNotify(new ResourceChangedNotification(resourceSet));
 		} catch (MalformedURLException e) {
 			Log.e(e);
 		}

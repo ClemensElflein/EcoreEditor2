@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecp.ecoreeditor.Log;
@@ -49,15 +48,14 @@ public class ResourceSetHelpers {
 	}
 
 	private static ResourceSet createResourceSet(CommandStack commandStack) {
-		final ResourceSet resourceSet = new ResourceSetImpl();
-
 		final AdapterFactoryEditingDomain domain = new AdapterFactoryEditingDomain(
 				new ComposedAdapterFactory(
 						new AdapterFactory[] {
 								new CustomReflectiveItemProviderAdapterFactory(),
 								new ComposedAdapterFactory(
 										ComposedAdapterFactory.Descriptor.Registry.INSTANCE) }),
-				commandStack, resourceSet);
+				commandStack);
+		final ResourceSet resourceSet = domain.getResourceSet();
 		resourceSet.eAdapters().add(
 				new AdapterFactoryEditingDomain.EditingDomainProvider(domain));
 		return resourceSet;
@@ -83,7 +81,7 @@ public class ResourceSetHelpers {
 				EcoreUtil.resolveAll(resourceSet);
 				rsSize = resourceSet.getResources().size();
 			}
-
+			resourceSet.eNotify(new ResourceChangedNotification(resourceSet));
 			return true;
 		} catch (final IOException e) {
 			Log.e(e);
