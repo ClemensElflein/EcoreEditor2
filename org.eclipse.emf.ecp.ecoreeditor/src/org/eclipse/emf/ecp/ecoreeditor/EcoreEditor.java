@@ -111,11 +111,9 @@ public class EcoreEditor extends EditorPart {
 			eObjects.add(resource.getContents().get(0));
 		}
 
-		Log.i(eObjects.size() + " Objects found!");
-
 		treeInput.eSet(TreeInputPackage.eINSTANCE.getTreeInput_TreeRoots(),
 				eObjects);
-
+		Log.e(resourceSet.toString());
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
 		} catch (final ECPRendererException ex) {

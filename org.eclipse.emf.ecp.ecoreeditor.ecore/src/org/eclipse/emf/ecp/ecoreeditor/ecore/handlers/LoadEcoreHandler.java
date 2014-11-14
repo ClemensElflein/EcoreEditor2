@@ -7,6 +7,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedNotification;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal.MasterDetailAction;
@@ -26,6 +27,7 @@ public class LoadEcoreHandler extends MasterDetailAction {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		final Object selection = ((IStructuredSelection) HandlerUtil
 				.getActiveMenuSelection(event)).getFirstElement();
+
 		if (selection == null || !(selection instanceof EObject)) {
 			return null;
 		}
@@ -48,7 +50,9 @@ public class LoadEcoreHandler extends MasterDetailAction {
 		int result = dialog.open();
 		if (result == Window.OK) {
 
-			ResourceSet resourceSet = object.eResource().getResourceSet();
+			ResourceSet resourceSet = ((TreeInput) object).getTreeRoots()
+					.get(0).eResource().getResourceSet();
+			Log.e(resourceSet.toString());
 			IResource selectedResource = (IResource) dialog.getFirstResult();
 			if (!selectedResource.isAccessible()) {
 				return;
