@@ -17,6 +17,7 @@
 		<module>../org.eclipse.emf.ecp.view.model.preview.e3</module>
 		<module>../org.eclipse.emf.ecp.view.treemasterdetail.ui.swt</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.p2updatesite</module>
+		<module>../org.eclipse.emf.ecp.ecoreeditor.feature</module>
 	</modules>
 	<profiles>
 		<profile>

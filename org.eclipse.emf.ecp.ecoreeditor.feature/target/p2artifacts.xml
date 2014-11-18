@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='org.eclipse.update.feature' id='org.eclipse.emf.ecp.ecoreeditor.feature' version='1.5.0'>
+    <properties size='6'>
+      <property name='artifact.size' value='2253'/>
+      <property name='download.size' value='2253'/>
+      <property name='maven-groupId' value='org.eclipse.emf.ecp.ecoreeditor'/>
+      <property name='maven-artifactId' value='org.eclipse.emf.ecp.ecoreeditor.feature'/>
+      <property name='maven-version' value='1.5.0'/>
+      <property name='download.contentType' value='application/zip'/>
+    </properties>
+  </artifact>
+</artifacts>

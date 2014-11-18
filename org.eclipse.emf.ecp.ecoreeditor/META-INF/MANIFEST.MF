@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EcoreEditor2
 Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.5.0
 Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecp.ui.view.swt;bundle-version="1.4.0",

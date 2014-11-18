@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.eclipse.emf.ecp.ecoreeditor</groupId>
   <artifactId>org.eclipse.emf.ecp.view.model.preview.e3</artifactId>
-  <version>1.4.0.20140916-1322</version>
+  <version>1.5.0</version>
   <packaging>eclipse-plugin</packaging>
 </project>

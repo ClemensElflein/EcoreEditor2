@@ -22,7 +22,7 @@ Export-Package: org.eclipse.emf.ecp.view.model.internal.preview;versio
  n="1.4.0";x-internal:=true,org.eclipse.emf.ecp.view.model.internal.pr
  eview.actions;version="1.4.0";x-internal:=true,org.eclipse.emf.ecp.vi
  ew.model.internal.preview.e3.views;version="1.4.0";x-internal:=true
-Bundle-Version: 1.4.0.20140916-1322
+Bundle-Version: 1.5.0
 Build-Jdk: 1.6.0_45
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse Modeling Project

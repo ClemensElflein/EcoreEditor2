@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: TreeInput;singleton:=true
+Export-Package: treeInput,treeInput.impl,treeInput.util
+Bundle-Name: %pluginName
+Bundle-Version: 1.5.0
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecore;visibil
+ ity:=reexport
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+
