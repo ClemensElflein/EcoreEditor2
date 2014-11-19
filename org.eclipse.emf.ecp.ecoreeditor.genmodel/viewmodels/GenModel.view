@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model" ecorePath="/org.eclipse.emf.codegen.ecore/model/GenModel.ecore">
+  <rootEClass href="http://www.eclipse.org/emf/2002/GenModel#//GenModel"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control genAnnotations">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/GenModel#//GenBase/genAnnotations"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control copyrightText">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/copyrightText"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control modelDirectory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelDirectory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control creationCommands">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/creationCommands"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control creationIcons">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/creationIcons"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control creationSubmenus">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/creationSubmenus"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editDirectory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editDirectory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editorDirectory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editorDirectory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control modelPluginID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelPluginID"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control templateDirectory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/templateDirectory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control runtimeJar">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/runtimeJar"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control foreignModel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/foreignModel"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control dynamicTemplates">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/dynamicTemplates"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control redirection">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/redirection"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control forceOverwrite">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/forceOverwrite"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control nonExternalizedStringTag">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/nonExternalizedStringTag"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control modelName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control modelPluginClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelPluginClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editPluginClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editPluginClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editorPluginClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editorPluginClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control updateClasspath">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/updateClasspath"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control generateSchema">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/generateSchema"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control nonNLSMarkers">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/nonNLSMarkers"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control staticPackages">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/staticPackages"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control modelPluginVariables">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelPluginVariables"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control rootExtendsInterface">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/rootExtendsInterface"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control rootExtendsClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/rootExtendsClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control rootImplementsInterface">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/rootImplementsInterface"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressEMFTypes">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressEMFTypes"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressEMFMetaData">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressEMFMetaData"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressEMFModelTags">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressEMFModelTags"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressInterfaces">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressInterfaces"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control featureMapWrapperInterface">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/featureMapWrapperInterface"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control featureMapWrapperInternalInterface">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/featureMapWrapperInternalInterface"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control featureMapWrapperClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/featureMapWrapperClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control runtimeCompatibility">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/runtimeCompatibility"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control richClientPlatform">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/richClientPlatform"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control reflectiveDelegation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/reflectiveDelegation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control codeFormatting">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/codeFormatting"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control commentFormatting">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/commentFormatting"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control testsDirectory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/testsDirectory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control testSuiteClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/testSuiteClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control booleanFlagsField">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/booleanFlagsField"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control booleanFlagsReservedBits">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/booleanFlagsReservedBits"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control importerID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/importerID"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control bundleManifest">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/bundleManifest"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control featureDelegation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/featureDelegation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control containmentProxies">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/containmentProxies"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control minimalReflectiveMethods">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/minimalReflectiveMethods"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressContainment">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressContainment"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressNotification">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressNotification"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control arrayAccessors">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/arrayAccessors"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressUnsettable">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressUnsettable"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control facadeHelperClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/facadeHelperClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control complianceLevel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/complianceLevel"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control suppressGenModelAnnotations">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/suppressGenModelAnnotations"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control copyrightFields">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/copyrightFields"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control binaryCompatibleReflectiveMethods">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/binaryCompatibleReflectiveMethods"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control publicConstructors">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/publicConstructors"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control templatePluginVariables">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/templatePluginVariables"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control providerRootExtendsClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/providerRootExtendsClass"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editPluginID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editPluginID"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editPluginVariables">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editPluginVariables"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editorPluginID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editorPluginID"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control editorPluginVariables">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editorPluginVariables"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control testsPluginID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/testsPluginID"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control testsPluginVariables">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/testsPluginVariables"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control optimizedHasChildren">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/optimizedHasChildren"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control tableProviders">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/tableProviders"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control colorProviders">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/colorProviders"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control fontProviders">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/fontProviders"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control runtimeVersion">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/runtimeVersion"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control language">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/language"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control packedEnums">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/packedEnums"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control genPackages">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/genPackages"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control usedGenPackages">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/usedGenPackages"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control interfaceNamePattern">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/interfaceNamePattern"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control classNamePattern">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/classNamePattern"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control operationReflection">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/operationReflection"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control richAjaxPlatform">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/richAjaxPlatform"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control runtimePlatform">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/runtimePlatform"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control importOrganizing">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/importOrganizing"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control pluginKey">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/pluginKey"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control decoration">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/decoration"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control styleProviders">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/styleProviders"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control cleanup">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/cleanup"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control oSGiCompatible">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/oSGiCompatible"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>
