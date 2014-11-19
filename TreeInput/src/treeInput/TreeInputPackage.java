@@ -4,7 +4,6 @@ package treeInput;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
@@ -66,22 +65,13 @@ public interface TreeInputPackage extends EPackage {
 	int TREE_INPUT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Tree Roots</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TREE_INPUT__TREE_ROOTS = 0;
-
-	/**
 	 * The number of structural features of the '<em>Tree Input</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TREE_INPUT_FEATURE_COUNT = 1;
+	int TREE_INPUT_FEATURE_COUNT = 0;
 
 	/**
 	 * The number of operations of the '<em>Tree Input</em>' class.
@@ -102,17 +92,6 @@ public interface TreeInputPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTreeInput();
-
-	/**
-	 * Returns the meta object for the reference list '{@link treeInput.TreeInput#getTreeRoots <em>Tree Roots</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Tree Roots</em>'.
-	 * @see treeInput.TreeInput#getTreeRoots()
-	 * @see #getTreeInput()
-	 * @generated
-	 */
-	EReference getTreeInput_TreeRoots();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -146,14 +125,6 @@ public interface TreeInputPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TREE_INPUT = eINSTANCE.getTreeInput();
-
-		/**
-		 * The meta object literal for the '<em><b>Tree Roots</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TREE_INPUT__TREE_ROOTS = eINSTANCE.getTreeInput_TreeRoots();
 
 	}
 

@@ -4,10 +4,7 @@ package treeInput.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import treeInput.TreeInput;
 import treeInput.TreeInputFactory;
 import treeInput.TreeInputPackage;
@@ -101,15 +98,6 @@ public class TreeInputPackageImpl extends EPackageImpl implements TreeInputPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTreeInput_TreeRoots() {
-		return (EReference)treeInputEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public TreeInputFactory getTreeInputFactory() {
 		return (TreeInputFactory)getEFactoryInstance();
 	}
@@ -134,7 +122,6 @@ public class TreeInputPackageImpl extends EPackageImpl implements TreeInputPacka
 
 		// Create classes and their features
 		treeInputEClass = createEClass(TREE_INPUT);
-		createEReference(treeInputEClass, TREE_INPUT__TREE_ROOTS);
 	}
 
 	/**
@@ -168,7 +155,6 @@ public class TreeInputPackageImpl extends EPackageImpl implements TreeInputPacka
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(treeInputEClass, TreeInput.class, "TreeInput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTreeInput_TreeRoots(), ecorePackage.getEObject(), null, "treeRoots", null, 0, -1, TreeInput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
