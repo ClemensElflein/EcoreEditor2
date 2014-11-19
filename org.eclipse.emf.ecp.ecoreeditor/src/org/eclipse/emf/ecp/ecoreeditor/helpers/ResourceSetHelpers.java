@@ -81,7 +81,6 @@ public class ResourceSetHelpers {
 				EcoreUtil.resolveAll(resourceSet);
 				rsSize = resourceSet.getResources().size();
 			}
-			resourceSet.eNotify(new ResourceChangedNotification(resourceSet));
 			return true;
 		} catch (final IOException e) {
 			Log.e(e);

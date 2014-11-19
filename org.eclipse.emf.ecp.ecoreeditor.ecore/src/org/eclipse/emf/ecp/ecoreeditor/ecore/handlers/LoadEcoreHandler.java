@@ -7,8 +7,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecp.ecoreeditor.Log;
-import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedNotification;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal.MasterDetailAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -50,9 +48,8 @@ public class LoadEcoreHandler extends MasterDetailAction {
 		int result = dialog.open();
 		if (result == Window.OK) {
 
-			ResourceSet resourceSet = ((TreeInput) object).getTreeRoots()
-					.get(0).eResource().getResourceSet();
-			Log.e(resourceSet.toString());
+			ResourceSet resourceSet = (ResourceSet) (((TreeInput) object)
+					.getInput());
 			IResource selectedResource = (IResource) dialog.getFirstResult();
 			if (!selectedResource.isAccessible()) {
 				return;
@@ -61,7 +58,6 @@ public class LoadEcoreHandler extends MasterDetailAction {
 					.addResourceToSet(resourceSet, URI
 							.createFileURI(selectedResource.getLocation()
 									.toOSString()));
-			resourceSet.eNotify(new ResourceChangedNotification(resourceSet));
 		}
 	}
 

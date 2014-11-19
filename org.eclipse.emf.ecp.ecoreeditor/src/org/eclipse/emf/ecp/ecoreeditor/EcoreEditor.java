@@ -9,14 +9,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedListener;
-import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceChangedNotification;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -31,7 +25,6 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import treeInput.TreeInput;
 import treeInput.TreeInputFactory;
-import treeInput.TreeInputPackage;
 
 public class EcoreEditor extends EditorPart {
 
@@ -105,15 +98,8 @@ public class EcoreEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		loadResource();
 
-		EList<EObject> eObjects = new BasicEList<EObject>();
+		treeInput.setInput(resourceSet);
 
-		for (Resource resource : resourceSet.getResources()) {
-			eObjects.add(resource.getContents().get(0));
-		}
-
-		treeInput.eSet(TreeInputPackage.eINSTANCE.getTreeInput_TreeRoots(),
-				eObjects);
-		Log.e(resourceSet.toString());
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
 		} catch (final ECPRendererException ex) {
@@ -136,9 +122,6 @@ public class EcoreEditor extends EditorPart {
 			resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(
 					URI.createURI(fei.getURI().toURL().toExternalForm()),
 					commandStack);
-
-			resourceSet.eAdapters().add(new ResourceChangedListener(treeInput));
-			resourceSet.eNotify(new ResourceChangedNotification(resourceSet));
 		} catch (MalformedURLException e) {
 			Log.e(e);
 		}
