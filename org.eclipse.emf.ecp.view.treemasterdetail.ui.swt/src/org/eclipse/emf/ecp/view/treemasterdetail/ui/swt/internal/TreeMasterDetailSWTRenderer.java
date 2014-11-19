@@ -95,6 +95,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
 
+import treeInput.TreeInput;
+
 /**
  * SWT Renderer for a {@link VTreeMasterDetail} element.
  *
@@ -145,7 +147,10 @@ public class TreeMasterDetailSWTRenderer extends
 		/**
 		 * @return the root object
 		 */
-		public EObject getRoot() {
+		public Object getRoot() {
+			if (modelElement instanceof TreeInput) {
+				return ((TreeInput) modelElement).getInput();
+			}
 			return modelElement;
 		}
 
@@ -552,7 +557,7 @@ public class TreeMasterDetailSWTRenderer extends
 				if (treeViewer.getSelection().isEmpty()) {
 					return;
 				}
-				final EObject root = ((RootObject) treeViewer.getInput())
+				final Object root = ((RootObject) treeViewer.getInput())
 						.getRoot();
 
 				if (treeViewer.getSelection() instanceof IStructuredSelection) {
@@ -560,17 +565,21 @@ public class TreeMasterDetailSWTRenderer extends
 							.getSelection();
 
 					if (selection.size() == 1) {
-						final EObject eObject = (EObject) selection
-								.getFirstElement();
-						final EditingDomain domain = AdapterFactoryEditingDomain
-								.getEditingDomainFor(eObject);
-						if (domain == null) {
-							return;
+						if (selection.getFirstElement() instanceof EObject) {
+							final EObject eObject = (EObject) selection
+									.getFirstElement();
+							final EditingDomain domain = AdapterFactoryEditingDomain
+									.getEditingDomainFor(eObject);
+							if (domain == null) {
+								return;
+							}
+							final Collection<?> descriptors = childrenDescriptorCollector
+									.getDescriptors(eObject);
+							fillContextMenu(manager, descriptors,
+									editingDomain, eObject);
+						} else {
+							manager.removeAll();
 						}
-						final Collection<?> descriptors = childrenDescriptorCollector
-								.getDescriptors(eObject);
-						fillContextMenu(manager, descriptors, editingDomain,
-								eObject);
 					}
 					if (!selection.toList().contains(root)) {
 						manager.add(new Separator(GLOBAL_ADDITIONS));
@@ -713,6 +722,12 @@ public class TreeMasterDetailSWTRenderer extends
 	private void addDeleteActionToContextMenu(
 			final EditingDomain editingDomain, final IMenuManager manager,
 			final IStructuredSelection selection) {
+
+		for (Object obj : selection.toList()) {
+			if (!(obj instanceof EObject)) {
+				return;
+			}
+		}
 
 		final Action deleteAction = new Action() {
 			@Override
