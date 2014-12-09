@@ -11,6 +11,7 @@ import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -88,12 +89,41 @@ public class ResourceSetHelpers {
 		return false;
 	}
 
+	public static List<?> findAllOfTypeInResourceSet(EObject object,
+			EClassifier type, boolean includeEcorePackage) {
+		return ResourceSetHelpers.findAllOf(
+				object.eResource().getResourceSet(), type.getInstanceClass(),
+				includeEcorePackage);
+	}
+
 	public static <T> List<T> findAllOfTypeInResourceSet(EObject object,
 			Class<T> clazz, boolean includeEcorePackage) {
 		return ResourceSetHelpers
 				.findAllOf(object.eResource().getResourceSet(), clazz,
 						includeEcorePackage);
 	}
+
+	/*
+	 * public static <T> List<T> findAllOf(ResourceSet resourceSet, EClassifier
+	 * type, boolean includeEcorePackage) { List<T> result = new ArrayList<T>();
+	 * 
+	 * // Iterate through all EObjects in every Resource in the set and return
+	 * // all Objects of Class clazz. if (resourceSet != null) { for (Resource
+	 * resource : resourceSet.getResources()) { TreeIterator<EObject>
+	 * objectIterator = resource .getAllContents(); while
+	 * (objectIterator.hasNext()) { EObject o = objectIterator.next(); if (o
+	 * instanceof EClassifier) { if (((EClassifier) o).get) { result.add((T) o);
+	 * } } } } }
+	 * 
+	 * if (includeEcorePackage) { // Find all EDatatypes in the ECore-Package.
+	 * TreeIterator<EObject> objectIterator = EcorePackage.eINSTANCE
+	 * .eAllContents(); while (objectIterator.hasNext()) { EObject o =
+	 * objectIterator.next(); if (o instanceof ETypedElement) { if
+	 * (((ETypedElement) o).getEType().equals(type)) { result.add((T) o); } } }
+	 * }
+	 * 
+	 * return result; }
+	 */
 
 	public static <T> List<T> findAllOf(ResourceSet resourceSet,
 			Class<T> clazz, boolean includeEcorePackage) {

@@ -1,6 +1,7 @@
 package org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -91,21 +92,46 @@ public class EcoreReferenceService implements ReferenceService {
 		if (eReference.equals(EcorePackage.eINSTANCE.getEClass_ESuperTypes())) {
 			return getExistingSuperTypeFor(eReference);
 		}
+		if (eReference.equals(EcorePackage.eINSTANCE.getEReference_EOpposite())) {
+			return getExistingOppositeFor(eReference);
+		}
 		return getExistingGenericType(eReference);
 	}
 
-	private EObject getExistingGenericType(EReference eReference) {
-		List<?> classes = ResourceSetHelpers.findAllOfTypeInResourceSet(
-				context.getDomainModel(), eReference.getEType().getClass(),
-				false);
+	private EObject getExistingOppositeFor(EReference eReference) {
+		EReference editReference = (EReference) context.getDomainModel();
 
-		// Substract already present SuperTypes from the List
-		// The cast is fine, as we know that the eReference must be manyValued.
-		classes.removeAll((List<?>) context.getDomainModel().eGet(eReference));
+		List<EReference> allReferences = ResourceSetHelpers
+				.findAllOfTypeInResourceSet(context.getDomainModel(),
+						EReference.class, false);
+
+		// Remove the DomainModel from the List, as it can't be its own opposite
+		allReferences.remove(context.getDomainModel());
+
+		// Remove all references which do not reference our target type
+		// If the reference type is null, allow all references and set the type
+		// on selection later on.
+		if (editReference.getEReferenceType() != null) {
+			Iterator<EReference> iterator = allReferences.iterator();
+			while (iterator.hasNext()) {
+				EReference ref = iterator.next();
+				if (!editReference.getEReferenceType().equals(
+						ref.getEContainingClass()))
+					iterator.remove();
+			}
+		}
+
+		return select(allReferences, "Select EOpposite",
+				"Select the opposite EReference");
+	}
+
+	private EObject getExistingGenericType(EReference eReference) {
+		List<?> classes = ResourceSetHelpers
+				.findAllOfTypeInResourceSet(context.getDomainModel(),
+						eReference.getEReferenceType(), false);
 
 		return select(classes, "Select " + eReference.getName(), "Select a "
-				+ eReference.getEType().getName() + " to add to "
-				+ ((ENamedElement) context.getDomainModel()).getName());
+				+ eReference.getEType().getName());
 
 	}
 
@@ -122,6 +148,24 @@ public class EcoreReferenceService implements ReferenceService {
 	public void addModelElement(EObject eObject, EReference eReference) {
 		// eObject.eSet(EcorePackage.eINSTANCE.getEAttribute_EAttributeType(),
 		// eReference);
+
+		// If we set the opposite and the current eReference does not have any
+		// type set,
+		// we can also set the type of the current eReference.
+
+		if (eReference.equals(EcorePackage.eINSTANCE.getEReference_EOpposite())) {
+			/*
+			 * EReference editReference = (EReference) context.getDomainModel();
+			 * EReference selectedReference = (EReference) eObject; if
+			 * (editReference.getEReferenceType() == null) {
+			 * editReference.setEType(selectedReference.getEContainingClass());
+			 * }
+			 * 
+			 * editReference.setEOpposite((EReference) eObject);
+			 */
+			return;
+		}
+
 		if (!eReference.isMany()) {
 			context.getDomainModel().eSet(eReference, eObject);
 		} else {
