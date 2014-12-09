@@ -3,6 +3,7 @@
 package treeInput.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import treeInput.TreeInput;
@@ -20,6 +21,7 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 		TreeInput {
 
 	private Object input = null;
+	private TreeInput.TreeEditCallback treeEditCallback = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -28,6 +30,13 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 	 */
 	protected TreeInputImpl() {
 		super();
+		setTreeEditCallback(new TreeEditCallback() {
+
+			@Override
+			public void onSelectionChanged(EObject newSelection) {
+				// nop
+			}
+		});
 	}
 
 	/**
@@ -48,6 +57,16 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public void setInput(Object input) {
 		this.input = input;
+	}
+
+	@Override
+	public TreeEditCallback getTreeEditCallback() {
+		return this.treeEditCallback;
+	}
+
+	@Override
+	public void setTreeEditCallback(TreeEditCallback callback) {
+		this.treeEditCallback = callback;
 	}
 
 } // TreeInputImpl

@@ -8,8 +8,59 @@
             default="false"
             extensions="ecore2"
             id="EcoreEditor2.editor1"
-            name="name">
+            name="Ecore Editor">
       </editor>
    </extension>
-   
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.emf.ecp.ecoreeditor.commands.category"
+            name="Ecore Actions">
+      </category>
+      <command
+            categoryId="org.eclipse.emf.ecp.ecoreeditor.commands.category"
+            id="org.eclipse.emf.ecp.ecoreeditor.new"
+            name="New Element">
+      </command>
+      <command
+            categoryId="org.eclipse.emf.ecp.ecoreeditor.commands.category"
+            id="org.eclipse.emf.ecp.ecoreeditor.delete"
+            name="Delete Element">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            commandId="org.eclipse.emf.ecp.ecoreeditor.delete">
+      </handler>
+      <handler
+            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            commandId="org.eclipse.emf.ecp.ecoreeditor.new">
+      </handler>
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.emf.ecp.ecoreeditor.new"
+            contextId="org.eclipse.emf.ecp.ecoreeditor.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+N">
+      </key>
+      <key
+            commandId="org.eclipse.emf.ecp.ecoreeditor.delete"
+            contextId="org.eclipse.emf.ecp.ecoreeditor.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="org.eclipse.emf.ecp.ecoreeditor.context"
+			parentId="org.eclipse.ui.contexts.window"
+            name="Ecore Editor">
+      </context>
+   </extension>
 </plugin>

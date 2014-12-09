@@ -7,9 +7,6 @@
      <viewService
            class="org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices.EcoreReferenceService">
      </viewService>
-     <viewService
-           class="org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices.SuperTypesReferenceService">
-     </viewService>
    </extension>
    <extension
          point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">

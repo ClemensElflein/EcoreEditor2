@@ -780,7 +780,16 @@ public class TreeMasterDetailSWTRenderer extends
 			final Object treeSelected = ((IStructuredSelection) event
 					.getSelection()).getFirstElement();
 			final Object selected = manipulateSelection(treeSelected);
+			final EObject input = getViewModelContext().getDomainModel();
+
 			if (selected instanceof EObject) {
+
+				if (input instanceof TreeInput
+						&& ((TreeInput) input).getTreeEditCallback() != null) {
+					((TreeInput) input).getTreeEditCallback()
+							.internalOnSelectionChanged((EObject) selected);
+				}
+
 				try {
 					if (childComposite != null) {
 						childComposite.dispose();
@@ -839,6 +848,12 @@ public class TreeMasterDetailSWTRenderer extends
 									Activator.getDefault().getBundle()
 											.getSymbolicName(), e.getMessage(),
 									e));
+				}
+			} else {
+				if (input instanceof TreeInput
+						&& ((TreeInput) input).getTreeEditCallback() != null) {
+					((TreeInput) input).getTreeEditCallback()
+							.internalOnSelectionChanged(null);
 				}
 			}
 		}
