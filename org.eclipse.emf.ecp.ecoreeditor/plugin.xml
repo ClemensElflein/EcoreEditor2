@@ -20,7 +20,12 @@
       <command
             categoryId="org.eclipse.emf.ecp.ecoreeditor.commands.category"
             id="org.eclipse.emf.ecp.ecoreeditor.new"
-            name="New Element">
+            name="New Child Element">
+      </command>
+      <command
+            categoryId="org.eclipse.emf.ecp.ecoreeditor.commands.category"
+            id="org.eclipse.emf.ecp.ecoreeditor.new.sibling"
+            name="New Sibling">
       </command>
       <command
             categoryId="org.eclipse.emf.ecp.ecoreeditor.commands.category"
@@ -38,7 +43,10 @@
             class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.new">
       </handler>
-      
+      <handler
+            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            commandId="org.eclipse.emf.ecp.ecoreeditor.new.sibling">
+      </handler>      
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -47,6 +55,12 @@
             contextId="org.eclipse.emf.ecp.ecoreeditor.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="Ctrl+N">
+      </key>
+      <key
+            commandId="org.eclipse.emf.ecp.ecoreeditor.new.sibling"
+            contextId="org.eclipse.emf.ecp.ecoreeditor.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+N">
       </key>
       <key
             commandId="org.eclipse.emf.ecp.ecoreeditor.delete"

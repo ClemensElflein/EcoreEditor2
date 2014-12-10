@@ -10,7 +10,7 @@
 		<tycho-version>0.21.0</tycho-version>
 	</properties>
 	<modules>
-		<module>../TreeInput</module>
+		<module>../org.eclipse.emf.ecp.ecoreeditor.treeinput</module>
 		<module>../org.eclipse.emf.ecore.viewmodel</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.ecore</module>

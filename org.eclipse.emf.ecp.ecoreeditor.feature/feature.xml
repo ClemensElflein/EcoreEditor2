@@ -36,4 +36,31 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="org.eclipse.emf.ecp.ecoreeditor.genmodel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.emf.ecp.ecoreeditor.treeinput"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecp.view.model.preview.e3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

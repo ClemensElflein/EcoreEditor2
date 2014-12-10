@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)",
  org.eclipse.emf.ecp.view.model.common;bundle-version="[1.4.0,2.0.0)",
  org.eclipse.emf.ecp.ui.view.swt;bundle-version="[1.4.0,2.0.0)",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.6.0",
- TreeInput;bundle-version="0.1.0"
+ org.eclipse.emf.ecp.ecoreeditor.treeinput;bundle-version="0.1.0"
 Export-Package: org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.inter
  nal;version="1.4.0";x-internal:=true,org.eclipse.emf.edit.ui.action.e
  cp;version="1.4.0";x-internal:=true

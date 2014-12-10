@@ -96,6 +96,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
 
 import treeInput.TreeInput;
+import treeInput.TreeInput.TreeController;
 
 /**
  * SWT Renderer for a {@link VTreeMasterDetail} element.
@@ -275,6 +276,13 @@ public class TreeMasterDetailSWTRenderer extends
 		treeViewer.setAutoExpandLevel(2); // top level element is expanded, but
 											// not the children
 		treeViewer.setInput(new RootObject(modelElement));
+
+		// Create a TreeController to allow manipulation of the treeViewer from
+		// outside
+		if (modelElement instanceof TreeInput) {
+			((TreeInput) modelElement).setTreeController(new TreeController(
+					treeViewer));
+		}
 
 		// Drag and Drop
 		addDragAndDropSupport(modelElement, treeViewer, editingDomain);

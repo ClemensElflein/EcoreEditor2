@@ -3,6 +3,7 @@
 package treeInput;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.TreeViewer;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
@@ -23,6 +24,10 @@ public interface TreeInput extends EObject {
 
 	public void setTreeEditCallback(TreeEditCallback callback);
 
+	public TreeController getController();
+
+	public void setTreeController(TreeController controller);
+
 	public abstract static class TreeEditCallback {
 
 		private EObject currentSelection = null;
@@ -38,4 +43,17 @@ public interface TreeInput extends EObject {
 
 		public abstract void onSelectionChanged(EObject newSelection);
 	}
+
+	public static final class TreeController {
+		private TreeViewer treeViewer;
+
+		public TreeController(TreeViewer viewer) {
+			this.treeViewer = viewer;
+		}
+
+		public TreeViewer getViewer() {
+			return treeViewer;
+		}
+	}
+
 } // TreeInput

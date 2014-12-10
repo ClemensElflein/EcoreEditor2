@@ -15,7 +15,7 @@
       <provided namespace='java.package' name='org.eclipse.emf.ecp.ecoreeditor.helpers' version='0.0.0'/>
       <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
     </provides>
-    <requires size='33'>
+    <requires size='38'>
       <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.ui.view.swt' range='1.4.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.edit.ui' range='0.0.0'/>
@@ -25,6 +25,10 @@
       <required namespace='osgi.bundle' name='org.eclipse.jface.databinding' range='1.6.200'/>
       <required namespace='osgi.bundle' name='org.eclipse.core.databinding.property' range='1.4.200'/>
       <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='3.10.1'/>
+      <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.ui.workbench' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.view.context' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.jface' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.core.resources' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.common.command' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.common.notify' range='0.0.0'/>
@@ -46,6 +50,7 @@
       <required namespace='java.package' name='org.eclipse.emf.edit.command' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.edit.domain' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.edit.provider' range='0.0.0'/>
+      <required namespace='java.package' name='org.eclipse.emf.edit.ui.action.ecp' range='1.4.0'/>
       <required namespace='java.package' name='org.eclipse.ui.dialogs' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.ui.part' range='0.0.0'/>
       <required namespace='java.package' name='treeInput' range='0.0.0'/>

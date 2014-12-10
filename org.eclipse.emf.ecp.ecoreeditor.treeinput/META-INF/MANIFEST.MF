@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: TreeInput;singleton:=true
+Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor.treeinput;singleton:=true
 Bundle-Version: 1.5.0
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
@@ -13,3 +13,4 @@ Export-Package: treeInput,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.jface.viewers

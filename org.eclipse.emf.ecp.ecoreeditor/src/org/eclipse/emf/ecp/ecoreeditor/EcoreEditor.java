@@ -30,21 +30,26 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -186,38 +191,72 @@ public class EcoreEditor extends EditorPart {
 			return;
 		}
 
-		final EditingDomain editingDomain = AdapterFactoryEditingDomain
+		EditingDomain editingDomain = AdapterFactoryEditingDomain
 				.getEditingDomainFor(currentSelection);
-
-		createNewElementDialog(editingDomain, currentSelection).open();
 
 		switch (commandName) {
 		case "org.eclipse.emf.ecp.ecoreeditor.delete":
-			Log.e(currentSelection.toString());
-
 			editingDomain.getCommandStack().execute(
 					RemoveCommand.create(editingDomain, currentSelection));
-
-			// treeViewer.setSelection(new StructuredSelection(
-			// getViewModelContext().getDomainModel()));
+			break;
+		case "org.eclipse.emf.ecp.ecoreeditor.new":
+			createNewElementDialog(editingDomain, currentSelection,
+					"Create Child").open();
+			break;
+		case "org.eclipse.emf.ecp.ecoreeditor.new.sibling":
+			// Get Parent of current Selection
+			/*
+			 * EStructuralFeature containingFeature = currentSelection
+			 * .eContainingFeature(); EObject containingClass =
+			 * containingFeature.getEContainingClass(); EditingDomain
+			 * parentEditingDomain = AdapterFactoryEditingDomain
+			 * .getEditingDomainFor(containingClass);
+			 * 
+			 * if (containingFeature != null) {
+			 * createNewElementDialog(parentEditingDomain, containingClass,
+			 * "Create Sibling").open(); }
+			 */
 			break;
 		}
 	}
 
-	private PopupDialog createNewElementDialog(EditingDomain editingDomain,
-			EObject selection) {
+	private Dialog createNewElementDialog(EditingDomain editingDomain,
+			EObject selection, final String title) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
-		PopupDialog diag = new PopupDialog(Display.getDefault()
-				.getActiveShell(), PopupDialog.INFOPOPUP_SHELLSTYLE, true,
-				false, false, false, "Add Element", "") {
+		Dialog diag = new Dialog(Display.getDefault().getActiveShell()) {
+
 			@Override
-			protected Control createContents(Composite parent) {
-				final PopupDialog currentDialog = this;
+			protected void setShellStyle(int newShellStyle) {
+				super.setShellStyle(SWT.TITLE);
+			}
+
+			@Override
+			protected Button createButton(Composite parent, int id,
+					String label, boolean defaultButton) {
+				return null;
+			}
+
+			@Override
+			protected void createButtonsForButtonBar(Composite parent) {
+				GridLayout layout = (GridLayout) parent.getLayout();
+				layout.marginHeight = 0;
+			}
+
+			@Override
+			protected void configureShell(Shell newShell) {
+				super.configureShell(newShell);
+				newShell.setText(title);
+			}
+
+			@Override
+			protected Control createDialogArea(Composite parent) {
+				// Control area = super.createDialogArea(parent);
+				parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+				// parent.setData(null);
+				final Dialog currentDialog = this;
 				final List<Action> actions = fillContextMenu(
 						childrenDescriptorCollector.getDescriptors(selection),
 						editingDomain, selection);
-
-				parent.setLayout(new FillLayout());
 
 				TableViewer list = new TableViewer(parent);
 				list.setContentProvider(new ArrayContentProvider());
@@ -315,9 +354,21 @@ public class EcoreEditor extends EditorPart {
 					// cp.getEValue()));
 					// }
 
+					EObject newElement = cp.getEValue();
+
 					domain.getCommandStack().execute(
 							AddCommand.create(domain, eObject, reference,
-									cp.getEValue()));
+									newElement));
+
+					// Select the newly added element, if possible
+					if (treeInput.getController() != null) {
+						TreeViewer viewer = treeInput.getController()
+								.getViewer();
+						viewer.refresh();
+						viewer.setSelection(new StructuredSelection(newElement));
+					} else {
+						Log.e("TreeController was null!");
+					}
 				}
 			});
 		}

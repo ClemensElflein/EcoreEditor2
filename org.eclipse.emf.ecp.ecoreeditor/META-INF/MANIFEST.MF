@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide;bundle-version="3.10.1",
  org.eclipse.ui,
  org.eclipse.ui.workbench,
- org.eclipse.emf.ecp.view.context
+ org.eclipse.emf.ecp.view.context,
+ org.eclipse.jface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.resources,
