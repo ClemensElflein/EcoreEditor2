@@ -1,7 +1,10 @@
 package org.eclipse.emf.ecp.ecoreeditor;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
+import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IPath;
@@ -12,18 +15,36 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
+import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildActionWithAccelerator;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
+import org.eclipse.emf.ecp.ui.view.swt.ECPSWTView;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -48,6 +69,8 @@ public class EcoreEditor extends EditorPart {
 	private TreeInput treeInput;
 
 	private IMenuManager menuManager;
+
+	private ECPSWTView rootView;
 
 	public EcoreEditor() {
 		treeInput = TreeInputFactory.eINSTANCE.createTreeInput();
@@ -121,7 +144,7 @@ public class EcoreEditor extends EditorPart {
 		treeInput.setInput(resourceSet);
 
 		try {
-			ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
+			rootView = ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
 		} catch (final ECPRendererException ex) {
 			Activator
 					.getDefault()
@@ -165,11 +188,8 @@ public class EcoreEditor extends EditorPart {
 
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain
 				.getEditingDomainFor(currentSelection);
-		MenuManager asdf = new MenuManager();
-		asdf.add(new Action("test") {
-		});
-		menuManager.add(asdf);
-		asdf.setVisible(true);
+
+		createNewElementDialog(editingDomain, currentSelection).open();
 
 		switch (commandName) {
 		case "org.eclipse.emf.ecp.ecoreeditor.delete":
@@ -182,5 +202,125 @@ public class EcoreEditor extends EditorPart {
 			// getViewModelContext().getDomainModel()));
 			break;
 		}
+	}
+
+	private PopupDialog createNewElementDialog(EditingDomain editingDomain,
+			EObject selection) {
+		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
+		PopupDialog diag = new PopupDialog(Display.getDefault()
+				.getActiveShell(), PopupDialog.INFOPOPUP_SHELLSTYLE, true,
+				false, false, false, "Add Element", "") {
+			@Override
+			protected Control createContents(Composite parent) {
+				final PopupDialog currentDialog = this;
+				final List<Action> actions = fillContextMenu(
+						childrenDescriptorCollector.getDescriptors(selection),
+						editingDomain, selection);
+
+				parent.setLayout(new FillLayout());
+
+				TableViewer list = new TableViewer(parent);
+				list.setContentProvider(new ArrayContentProvider());
+				list.setLabelProvider(new LabelProvider() {
+					@Override
+					public String getText(Object element) {
+						Action action = (Action) element;
+						StringBuilder builder = new StringBuilder(action
+								.getText());
+						if (action.getAccelerator() > 0) {
+							builder.append(" [");
+							builder.append(Character.toUpperCase((char) action
+									.getAccelerator()));
+							builder.append("]");
+						}
+						return builder.toString();
+					}
+
+					@Override
+					public Image getImage(Object element) {
+						return ((Action) element).getImageDescriptor()
+								.createImage();
+					}
+				});
+				list.setInput(actions.toArray());
+				list.addOpenListener(new IOpenListener() {
+
+					@Override
+					public void open(OpenEvent event) {
+						Action action = (Action) ((StructuredSelection) event
+								.getSelection()).getFirstElement();
+						action.run();
+						currentDialog.close();
+					}
+				});
+				list.getControl().addKeyListener(new KeyListener() {
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						// NOP
+					}
+
+					@Override
+					public void keyPressed(KeyEvent e) {
+						for (Action a : actions) {
+							if (a.getAccelerator() == e.keyCode) {
+								a.run();
+								currentDialog.close();
+								break;
+							}
+						}
+					}
+				});
+				return parent;
+			}
+		};
+		return diag;
+	}
+
+	private List<Action> fillContextMenu(Collection<?> descriptors,
+			final EditingDomain domain, final EObject eObject) {
+
+		List<Action> result = new ArrayList<Action>();
+
+		for (final Object descriptor : descriptors) {
+
+			final CommandParameter cp = (CommandParameter) descriptor;
+			if (!CommandParameter.class.isInstance(descriptor)) {
+				continue;
+			}
+			if (cp.getEReference() == null) {
+				continue;
+			}
+			if (!cp.getEReference().isMany()
+					&& eObject.eIsSet(cp.getEStructuralFeature())) {
+				continue;
+			} else if (cp.getEReference().isMany()
+					&& cp.getEReference().getUpperBound() != -1
+					&& cp.getEReference().getUpperBound() <= ((List<?>) eObject
+							.eGet(cp.getEReference())).size()) {
+				continue;
+			}
+
+			result.add(new CreateChildActionWithAccelerator(domain,
+					new StructuredSelection(eObject), descriptor) {
+				@Override
+				public void run() {
+					super.run();
+
+					final EReference reference = ((CommandParameter) descriptor)
+							.getEReference();
+					// if (!reference.isContainment()) {
+					// domain.getCommandStack().execute(
+					// AddCommand.create(domain, eObject.eContainer(), null,
+					// cp.getEValue()));
+					// }
+
+					domain.getCommandStack().execute(
+							AddCommand.create(domain, eObject, reference,
+									cp.getEValue()));
+				}
+			});
+		}
+		return result;
 	}
 }

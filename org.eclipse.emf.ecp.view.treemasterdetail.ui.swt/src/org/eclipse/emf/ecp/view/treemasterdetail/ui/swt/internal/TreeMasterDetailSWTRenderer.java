@@ -709,6 +709,7 @@ public class TreeMasterDetailSWTRenderer extends
 							AddCommand.create(domain, eObject, reference,
 									cp.getEValue()));
 				}
+
 			});
 		}
 
