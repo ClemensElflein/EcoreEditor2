@@ -29,10 +29,10 @@ public class EcoreReferenceService implements ReferenceService {
 	public void instantiate(ViewModelContext context) {
 		this.context = context;
 	}
-
+	
 	@Override
-	public EObject getNewElementFor(EReference eReference) {
-		return null;
+	public void addNewModelElements(EObject eObject, EReference eReference) {
+	
 	}
 
 	private EObject getExistingSuperTypeFor(EReference eReference) {
@@ -83,19 +83,22 @@ public class EcoreReferenceService implements ReferenceService {
 	}
 
 	@Override
-	public EObject getExistingElementFor(EReference eReference) {
+	public void addExistingModelElements(EObject eObject, EReference eReference) {
+		EObject existingElement = null;
 		// Check, if the target is EDataType
 		if (context.getDomainModel() instanceof EAttribute
 				&& eReference.getEReferenceType() instanceof EClassifier) {
-			return getExistingDataTypeFor(eReference);
+			existingElement = getExistingDataTypeFor(eReference);
 		}
 		if (eReference.equals(EcorePackage.eINSTANCE.getEClass_ESuperTypes())) {
-			return getExistingSuperTypeFor(eReference);
+			existingElement = getExistingSuperTypeFor(eReference);
 		}
 		if (eReference.equals(EcorePackage.eINSTANCE.getEReference_EOpposite())) {
-			return getExistingOppositeFor(eReference);
+			existingElement = getExistingOppositeFor(eReference);
 		}
-		return getExistingGenericType(eReference);
+		existingElement = getExistingGenericType(eReference);
+	
+		addModelElement(existingElement, eReference);
 	}
 
 	private EObject getExistingOppositeFor(EReference eReference) {
@@ -143,8 +146,8 @@ public class EcoreReferenceService implements ReferenceService {
 	public int getPriority() {
 		return 0;
 	}
+	
 
-	@Override
 	public void addModelElement(EObject eObject, EReference eReference) {
 		// eObject.eSet(EcorePackage.eINSTANCE.getEAttribute_EAttributeType(),
 		// eReference);

@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildActionWithAccelerator;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTView;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -58,9 +60,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-
-import treeInput.TreeInput;
-import treeInput.TreeInputFactory;
 
 public class EcoreEditor extends EditorPart {
 
@@ -194,34 +193,34 @@ public class EcoreEditor extends EditorPart {
 		EditingDomain editingDomain = AdapterFactoryEditingDomain
 				.getEditingDomainFor(currentSelection);
 
-		switch (commandName) {
-		case "org.eclipse.emf.ecp.ecoreeditor.delete":
+		
+		if("org.eclipse.emf.ecp.ecoreeditor.delete".equals(commandName)) {
 			editingDomain.getCommandStack().execute(
 					RemoveCommand.create(editingDomain, currentSelection));
-			break;
-		case "org.eclipse.emf.ecp.ecoreeditor.new":
-			createNewElementDialog(editingDomain, currentSelection,
-					"Create Child").open();
-			break;
-		case "org.eclipse.emf.ecp.ecoreeditor.new.sibling":
-			// Get Parent of current Selection
-			/*
-			 * EStructuralFeature containingFeature = currentSelection
-			 * .eContainingFeature(); EObject containingClass =
-			 * containingFeature.getEContainingClass(); EditingDomain
-			 * parentEditingDomain = AdapterFactoryEditingDomain
-			 * .getEditingDomainFor(containingClass);
-			 * 
-			 * if (containingFeature != null) {
-			 * createNewElementDialog(parentEditingDomain, containingClass,
-			 * "Create Sibling").open(); }
-			 */
-			break;
 		}
+		else if("org.eclipse.emf.ecp.ecoreeditor.new".endsWith(commandName)) {
+		createNewElementDialog(editingDomain, currentSelection,
+				"Create Child").open();
+		}
+		else if("org.eclipse.emf.ecp.ecoreeditor.new.sibling".equals(commandName)) {
+		// Get Parent of current Selection
+		/*
+		 * EStructuralFeature containingFeature = currentSelection
+		 * .eContainingFeature(); EObject containingClass =
+		 * containingFeature.getEContainingClass(); EditingDomain
+		 * parentEditingDomain = AdapterFactoryEditingDomain
+		 * .getEditingDomainFor(containingClass);
+		 * 
+		 * if (containingFeature != null) {
+		 * createNewElementDialog(parentEditingDomain, containingClass,
+		 * "Create Sibling").open(); }
+		 */
+		}
+	
 	}
 
-	private Dialog createNewElementDialog(EditingDomain editingDomain,
-			EObject selection, final String title) {
+	private Dialog createNewElementDialog(final EditingDomain editingDomain,
+			final EObject selection, final String title) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		Dialog diag = new Dialog(Display.getDefault().getActiveShell()) {
 

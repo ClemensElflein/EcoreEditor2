@@ -10,7 +10,7 @@
    </extension>
    <extension
          point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">
-         <MasterDetailAction
+      <MasterDetailAction
             command="org.eclipse.emf.ecp.ecoreeditor.ecore.handlers.LoadEcoreHandler"
             imagePath="icons/preview.png"
             label="Add Ecore"
