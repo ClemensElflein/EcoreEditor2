@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="ECP RCP" sequenceNumber="243">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
+<unit id="org.hamcrest.core" version="0.0.0"/>
+<unit id="org.hamcrest.library" version="0.0.0"/>
+<unit id="org.hamcrest.library.source" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.ide" version="0.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.4"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.emfstore.client.transaction.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.client.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.common.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.server.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.example.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.client.ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.emfstore.ecore.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/emf-store/releases_14"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.graphiti.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.graphiti.export.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.net4j.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.cdo.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ocl.all.sdk.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.mockito.mockito-all" version="0.0.0"/>
+<repository location="http://build.eclipse.org/rt/rap/base-platforms/2.3/extra-dependencies/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.log4j.source" version="0.0.0"/>
+<unit id="org.objenesis.source" version="0.0.0"/>
+<unit id="org.apache.log4j" version="0.0.0"/>
+<unit id="org.objenesis" version="0.0.0"/>
+<unit id="org.h2.source" version="0.0.0"/>
+<unit id="org.h2" version="0.0.0"/>
+<unit id="javax.validation" version="0.0.0"/>
+<unit id="javax.validation.source" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/edapt/releases/10x/100"/>
+</location>
+<location path="${eclipse_home}" type="Profile"/>
+</locations>
+</target>
