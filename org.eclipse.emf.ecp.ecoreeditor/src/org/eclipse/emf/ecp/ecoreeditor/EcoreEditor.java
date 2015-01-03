@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildActionWithAccelerator;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTView;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -59,8 +61,6 @@ import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-import treeInput.TreeInput;
-import treeInput.TreeInputFactory;
 
 public class EcoreEditor extends EditorPart {
 

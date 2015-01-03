@@ -1,13 +1,13 @@
 /**
  */
-package treeInput.impl;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import treeInput.TreeInput;
-import treeInput.TreeInputFactory;
-import treeInput.TreeInputPackage;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,7 +34,7 @@ public class TreeInputPackageImpl extends EPackageImpl implements TreeInputPacka
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see treeInput.TreeInputPackage#eNS_URI
+	 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */

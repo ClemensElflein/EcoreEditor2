@@ -1,13 +1,12 @@
 /**
  */
-package treeInput.impl;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import treeInput.TreeInput;
-import treeInput.TreeInputPackage;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '

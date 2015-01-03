@@ -40,8 +40,7 @@ Import-Package: org.eclipse.core.commands;version="0.0.0",
  org.eclipse.swt.events;version="0.0.0",
  org.eclipse.swt.graphics;version="0.0.0",
  org.eclipse.swt.layout;version="0.0.0",
- org.eclipse.swt.widgets;version="0.0.0",
- treeInput
+ org.eclipse.swt.widgets;version="0.0.0"
 Bundle-ManifestVersion: 2
 
 Name: org/eclipse/emf/ecp/view/treemasterdetail/ui/swt/internal/Master

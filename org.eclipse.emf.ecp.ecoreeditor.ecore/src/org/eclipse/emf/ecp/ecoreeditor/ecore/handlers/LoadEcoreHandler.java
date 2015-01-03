@@ -8,6 +8,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal.MasterDetailAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -16,8 +17,6 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-
-import treeInput.TreeInput;
 
 public class LoadEcoreHandler extends MasterDetailAction {
 

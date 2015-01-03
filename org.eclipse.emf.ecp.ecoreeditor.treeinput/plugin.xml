@@ -10,7 +10,7 @@
       <!-- @generated treeInput -->
       <package
             uri="http://www.example.org/treeInput"
-            class="treeInput.TreeInputPackage"
+            class="org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage"
             genModel="model/treeInput.genmodel"/>
    </extension>
 

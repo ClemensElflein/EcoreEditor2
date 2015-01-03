@@ -1,6 +1,6 @@
 /**
  */
-package treeInput;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EPackage;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see treeInput.TreeInputFactory
+ * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory
  * @model kind="package"
  * @generated
  */
@@ -52,14 +52,14 @@ public interface TreeInputPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	TreeInputPackage eINSTANCE = treeInput.impl.TreeInputPackageImpl.init();
+	TreeInputPackage eINSTANCE = org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link treeInput.impl.TreeInputImpl <em>Tree Input</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputImpl <em>Tree Input</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see treeInput.impl.TreeInputImpl
-	 * @see treeInput.impl.TreeInputPackageImpl#getTreeInput()
+	 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputImpl
+	 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputPackageImpl#getTreeInput()
 	 * @generated
 	 */
 	int TREE_INPUT = 0;
@@ -84,11 +84,11 @@ public interface TreeInputPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link treeInput.TreeInput <em>Tree Input</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput <em>Tree Input</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Tree Input</em>'.
-	 * @see treeInput.TreeInput
+	 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput
 	 * @generated
 	 */
 	EClass getTreeInput();
@@ -117,11 +117,11 @@ public interface TreeInputPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link treeInput.impl.TreeInputImpl <em>Tree Input</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputImpl <em>Tree Input</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see treeInput.impl.TreeInputImpl
-		 * @see treeInput.impl.TreeInputPackageImpl#getTreeInput()
+		 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputImpl
+		 * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputPackageImpl#getTreeInput()
 		 * @generated
 		 */
 		EClass TREE_INPUT = eINSTANCE.getTreeInput();

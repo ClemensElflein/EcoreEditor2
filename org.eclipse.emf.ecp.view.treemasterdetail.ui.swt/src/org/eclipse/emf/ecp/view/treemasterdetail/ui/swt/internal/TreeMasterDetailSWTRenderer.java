@@ -30,6 +30,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput.TreeController;
 import org.eclipse.emf.ecp.edit.spi.ReferenceService;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -94,9 +96,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
-
-import treeInput.TreeInput;
-import treeInput.TreeInput.TreeController;
 
 /**
  * SWT Renderer for a {@link VTreeMasterDetail} element.

@@ -1,16 +1,13 @@
 /**
  */
-package treeInput.impl;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import treeInput.*;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.*;
 
 /**
  * <!-- begin-user-doc -->

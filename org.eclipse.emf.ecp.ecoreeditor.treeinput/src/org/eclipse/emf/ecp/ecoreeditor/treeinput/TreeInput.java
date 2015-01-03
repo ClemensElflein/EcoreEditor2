@@ -1,6 +1,6 @@
 /**
  */
-package treeInput;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -10,7 +10,7 @@ import org.eclipse.jface.viewers.TreeViewer;
  * <em><b>Tree Input</b></em>'. <!-- end-user-doc -->
  *
  *
- * @see treeInput.TreeInputPackage#getTreeInput()
+ * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage#getTreeInput()
  * @model
  * @generated
  */

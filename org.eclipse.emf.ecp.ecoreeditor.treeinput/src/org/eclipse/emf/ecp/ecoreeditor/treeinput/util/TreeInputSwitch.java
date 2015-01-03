@@ -1,13 +1,11 @@
 /**
  */
-package treeInput.util;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput.util;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
-
-import treeInput.*;
+import org.eclipse.emf.ecp.ecoreeditor.treeinput.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -19,7 +17,7 @@ import treeInput.*;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see treeInput.TreeInputPackage
+ * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage
  * @generated
  */
 public class TreeInputSwitch<T> extends Switch<T> {

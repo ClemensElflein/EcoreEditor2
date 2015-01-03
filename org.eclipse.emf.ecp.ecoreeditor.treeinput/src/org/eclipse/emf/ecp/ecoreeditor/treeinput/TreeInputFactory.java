@@ -1,6 +1,6 @@
 /**
  */
-package treeInput;
+package org.eclipse.emf.ecp.ecoreeditor.treeinput;
 
 import org.eclipse.emf.ecore.EFactory;
 
@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EFactory;
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
- * @see treeInput.TreeInputPackage
+ * @see org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputPackage
  * @generated
  */
 public interface TreeInputFactory extends EFactory {
@@ -19,7 +19,7 @@ public interface TreeInputFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	TreeInputFactory eINSTANCE = treeInput.impl.TreeInputFactoryImpl.init();
+	TreeInputFactory eINSTANCE = org.eclipse.emf.ecp.ecoreeditor.treeinput.impl.TreeInputFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Tree Input</em>'.
