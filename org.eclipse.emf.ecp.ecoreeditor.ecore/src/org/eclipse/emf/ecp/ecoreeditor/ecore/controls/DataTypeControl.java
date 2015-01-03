@@ -106,7 +106,14 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 
 						return null;
 					}
-				}), new EMFUpdateValueStrategy());
+				}), new EMFUpdateValueStrategy().setConverter(new Converter(EClassifier.class, String.class) {
+					@Override
+					public Object convert(Object fromObject) {
+						if(fromObject == null)
+							return "";
+						return ((EClassifier)fromObject).getName();
+					}
+				}));
 		return new Binding[] { binding };
 	}
 
