@@ -11,7 +11,7 @@
  * Eugen Neufeld - Refactoring
  * Alexandra Buzila - Refactoring
  ******************************************************************************/
-package org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal;
+package org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +29,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput.TreeController;
@@ -257,8 +258,9 @@ public class TreeMasterDetailSWTRenderer extends
 
 			@Override
 			public Object[] getElements(Object object) {
-				return new Object[] { ((RootObject) object).getRoot() };
+				return new Object[] {((RootObject) object).getRoot()};
 			}
+			
 		};
 		final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
 				adapterFactory);
@@ -497,7 +499,7 @@ public class TreeMasterDetailSWTRenderer extends
 		final EObject finalModelElement = modelElement;
 
 		final IConfigurationElement[] controls = extensionRegistry
-				.getConfigurationElementsFor("org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions"); //$NON-NLS-1$
+				.getConfigurationElementsFor("org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.masterDetailActions"); //$NON-NLS-1$
 		for (final IConfigurationElement e : controls) {
 			try {
 				final String location = e.getAttribute("location"); //$NON-NLS-1$
@@ -636,7 +638,7 @@ public class TreeMasterDetailSWTRenderer extends
 		}
 
 		final IConfigurationElement[] controls = extensionRegistry
-				.getConfigurationElementsFor("org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions"); //$NON-NLS-1$
+				.getConfigurationElementsFor("org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.masterDetailActions"); //$NON-NLS-1$
 		for (final IConfigurationElement e : controls) {
 			try {
 				final String location = e.getAttribute("location"); //$NON-NLS-1$

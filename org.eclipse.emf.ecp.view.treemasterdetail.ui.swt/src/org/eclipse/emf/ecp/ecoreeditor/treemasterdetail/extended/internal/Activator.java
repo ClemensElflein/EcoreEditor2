@@ -9,7 +9,7 @@
  * Contributors:
  * Anas Chakfeh - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal;
+package org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.internal;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

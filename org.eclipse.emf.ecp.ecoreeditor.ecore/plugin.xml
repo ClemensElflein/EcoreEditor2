@@ -9,7 +9,7 @@
      </viewService>
    </extension>
    <extension
-         point="org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.masterDetailActions">
+         point="org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.masterDetailActions">
          <MasterDetailAction
             command="org.eclipse.emf.ecp.ecoreeditor.ecore.handlers.LoadEcoreHandler"
             imagePath="icons/preview.png"

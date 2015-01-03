@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
-import org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal.MasterDetailAction;
+import org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.internal.MasterDetailAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
