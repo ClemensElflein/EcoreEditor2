@@ -29,6 +29,7 @@
       <required namespace='osgi.bundle' name='org.eclipse.ui.workbench' range='0.0.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.view.context' range='0.0.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.jface' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.ecoreeditor.treeinput' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.core.resources' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.common.command' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.emf.common.notify' range='0.0.0'/>
@@ -53,7 +54,6 @@
       <required namespace='java.package' name='org.eclipse.emf.edit.ui.action.ecp' range='1.4.0'/>
       <required namespace='java.package' name='org.eclipse.ui.dialogs' range='0.0.0'/>
       <required namespace='java.package' name='org.eclipse.ui.part' range='0.0.0'/>
-      <required namespace='java.package' name='treeInput' range='0.0.0'/>
     </requires>
     <artifacts size='1'>
       <artifact classifier='osgi.bundle' id='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0'/>

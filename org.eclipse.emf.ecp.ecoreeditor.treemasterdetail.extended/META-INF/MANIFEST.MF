@@ -8,14 +8,11 @@ Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/emfcli
  438cb147
 Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.internal.Activator
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)",
- org.eclipse.emf.ecp.edit;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.emf.ecp.view.treemasterdetail.model;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.emf.ecp.ui.view;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.emf.ecp.view.model.common;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.emf.ecp.ui.view.swt;bundle-version="[1.4.0,2.0.0)",
+ org.eclipse.emf.ecp.edit;bundle-version="[1.4.0,1.5.0)",
+ org.eclipse.emf.ecp.view.treemasterdetail.model;bundle-version="[1.4.0,1.5.0)",
+ org.eclipse.emf.ecp.ui.view.swt;bundle-version="[1.4.0,1.5.0)",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.6.0",
- org.eclipse.emf.ecp.ecoreeditor.treeinput;bundle-version="0.1.0",
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecp.ecoreeditor.treeinput;bundle-version="0.1.0"
 Export-Package: org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended.internal;version="1.4.0";x-internal:=true,
  org.eclipse.emf.edit.ui.action.ecp;version="1.4.0";x-internal:=true
 Bundle-Version: 1.5.0
@@ -26,6 +23,7 @@ Bundle-Name: View Model Vertical UI SWT
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven
 Import-Package: org.eclipse.core.commands;version="0.0.0",
+ org.eclipse.emf.ecp.view.treemasterdetail.ui.swt.internal;version="1.4.0",
  org.eclipse.emf.edit.ui.dnd;version="0.0.0",
  org.eclipse.emf.edit.ui.provider;version="0.0.0",
  org.eclipse.jface.action;version="0.0.0",
