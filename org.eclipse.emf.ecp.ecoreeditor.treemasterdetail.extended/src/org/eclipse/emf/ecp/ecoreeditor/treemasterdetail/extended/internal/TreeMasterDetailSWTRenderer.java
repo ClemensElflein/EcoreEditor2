@@ -276,7 +276,7 @@ public class TreeMasterDetailSWTRenderer extends
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
 		treeViewer
 				.setLabelProvider(getLabelProvider(adapterFactoryLabelProvider));
-		treeViewer.setAutoExpandLevel(2); // top level element is expanded, but
+		treeViewer.setAutoExpandLevel(4); // top level element is expanded, but
 											// not the children
 		treeViewer.setInput(new RootObject(modelElement));
 

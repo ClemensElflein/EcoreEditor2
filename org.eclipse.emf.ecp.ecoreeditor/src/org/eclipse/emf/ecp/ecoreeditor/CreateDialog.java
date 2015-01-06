@@ -29,6 +29,15 @@ public class CreateDialog extends Dialog {
 		super(parent);
 		newObject = createdInstance;
 	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Create new "+newObject.eClass().getName());
+	}
+	
+	
+	
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
