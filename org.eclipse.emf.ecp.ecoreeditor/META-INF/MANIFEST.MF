@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
  org.eclipse.emf.ecp.view.context,
  org.eclipse.jface,
- org.eclipse.emf.ecp.ecoreeditor.treeinput
+ org.eclipse.emf.ecp.ecoreeditor.treeinput,
+ org.eclipse.osgi
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.resources,

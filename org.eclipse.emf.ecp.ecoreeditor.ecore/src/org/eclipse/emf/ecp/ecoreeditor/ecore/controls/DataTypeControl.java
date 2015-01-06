@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 	@Override
@@ -116,5 +117,10 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 				}));
 		return new Binding[] { binding };
 	}
-
+	
+	@Override
+	protected boolean isUnsettable() {
+		// We unset the property via databinding as soon as the input is invalid
+		return false;
+	}
 }
