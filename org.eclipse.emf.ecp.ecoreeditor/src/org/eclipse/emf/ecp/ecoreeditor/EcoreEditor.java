@@ -356,18 +356,22 @@ public class EcoreEditor extends EditorPart {
 
 					EObject newElement = cp.getEValue();
 
-					domain.getCommandStack().execute(
-							AddCommand.create(domain, eObject, reference,
-									newElement));
-
-					// Select the newly added element, if possible
-					if (treeInput.getController() != null) {
-						TreeViewer viewer = treeInput.getController()
-								.getViewer();
-						viewer.refresh();
-						viewer.setSelection(new StructuredSelection(newElement));
-					} else {
-						Log.e("TreeController was null!");
+					int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
+					
+					if(result == Window.OK) {
+						domain.getCommandStack().execute(
+								AddCommand.create(domain, eObject, reference,
+										newElement));
+	
+						// Select the newly added element, if possible
+						if (treeInput.getController() != null) {
+							TreeViewer viewer = treeInput.getController()
+									.getViewer();
+							viewer.refresh();
+							viewer.setSelection(new StructuredSelection(newElement));
+						} else {
+							Log.e("TreeController was null!");
+						}
 					}
 				}
 			});
