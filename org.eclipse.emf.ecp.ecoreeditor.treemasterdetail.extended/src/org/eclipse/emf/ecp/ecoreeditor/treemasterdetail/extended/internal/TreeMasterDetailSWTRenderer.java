@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreValidator;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput.TreeController;
@@ -849,7 +850,6 @@ public class TreeMasterDetailSWTRenderer extends
 						ECPSWTViewRenderer.INSTANCE.render(childComposite,
 								viewContext);
 					}
-
 					relayoutDetail();
 				} catch (final ECPRendererException e) {
 					Activator

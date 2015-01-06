@@ -1,20 +1,24 @@
 package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.text.Style;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecp.ecoreeditor.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.IconButton;
 import org.eclipse.emf.ecp.ecoreeditor.IconButton.Icon;
 import org.eclipse.emf.ecp.ecoreeditor.Log;
@@ -28,7 +32,10 @@ import org.eclipse.emf.ecp.view.spi.swt.layout.GridDescriptionFactory;
 import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridCell;
 import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridDescription;
 import org.eclipse.emf.ecp.view.template.style.mandatory.model.VTMandatoryStyleProperty;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
+import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -48,6 +55,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -64,8 +72,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 
@@ -79,9 +90,9 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 		return GridDescriptionFactory.INSTANCE.createSimpleGrid(2,3, this);
 	}
 	
-	private final void addColumn(TableViewer viewer, EStructuralFeature feature, EditingSupport editingSupport) {
+	private final void addColumn(TableViewer viewer, String columnName, EStructuralFeature feature, EditingSupport editingSupport) {
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.LEFT);
-		tvc.getColumn().setText(feature.getName());
+		tvc.getColumn().setText(columnName);
 		tvc.setLabelProvider(new CellLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
@@ -143,7 +154,9 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 	}
 
 	private void createControl(Composite container) {
-		EObject eObject= getViewModelContext().getDomainModel();
+		EEnum eObject= (EEnum) getViewModelContext().getDomainModel();
+		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
+		
 		
 		Composite parent = new Composite(container, SWT.NONE);
 		// Create a RowLayout.
@@ -163,10 +176,10 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 		
 		
 		// Create the buttons in the ButtonRow
-		new IconButton(buttonRow, Icon.ADD);
-		new IconButton(buttonRow, Icon.DELETE);
-		new IconButton(buttonRow, Icon.UP);
-		new IconButton(buttonRow, Icon.DOWN);
+		Button btnAdd = new IconButton(buttonRow, Icon.ADD);
+		Button btnDelete = new IconButton(buttonRow, Icon.DELETE);
+		Button btnUp = new IconButton(buttonRow, Icon.UP);
+		Button btnDown = new IconButton(buttonRow, Icon.DOWN);
 
 		
 		// Create the TableViewer and all of its columns
@@ -176,8 +189,9 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 		
 		ObservableListContentProvider contentProvider = new ObservableListContentProvider();
 		
-		addColumn(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Literal(), new GenericEditingSupport(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Literal()));
-		addColumn(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Value(), new GenericEditingSupport(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Value(), new Converter(String.class, int.class) {
+		addColumn(viewer, "Name", EcorePackage.eINSTANCE.getENamedElement_Name(), new GenericEditingSupport(viewer, EcorePackage.eINSTANCE.getENamedElement_Name()));
+		addColumn(viewer, "Literal", EcorePackage.eINSTANCE.getEEnumLiteral_Literal(), new GenericEditingSupport(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Literal()));
+		addColumn(viewer, "Value", EcorePackage.eINSTANCE.getEEnumLiteral_Value(), new GenericEditingSupport(viewer, EcorePackage.eINSTANCE.getEEnumLiteral_Value(), new Converter(String.class, int.class) {
 			@Override
 			public Object convert(Object fromObject) {
 				try {
@@ -188,59 +202,58 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 			}
 		}));
 		
-		// Drag and Drop
-		/*final int dndOperations = DND.DROP_MOVE;
-		final Transfer[] transfers = new Transfer[] { LocalTransfer
-				.getInstance() };
-		viewer.addDragSupport(dndOperations, transfers,
-				new ViewerDragAdapter(viewer));
-		viewer.addDropSupport(dndOperations, transfers, new ViewerDropAdapter(viewer) {
-			
-			@Override
-			public void drop(DropTargetEvent event) {
-				
-				int dropLocation = determineLocation(event);
-				Object target = determineTarget(event);
-				
-				EList<EEnumLiteral> literals = (EList<EEnumLiteral>) eObject.eGet(EcorePackage.Literals.EENUM__ELITERALS);
-				if(dropLocation == 1) {
-					// Move the data in front of the target
-					for(int i = 0; i < literals.size(); i++) {
-						if(literals.get(i) == target) {
-							EEnumLiteral literal = (EEnumLiteral) ((StructuredSelection)event.data).getFirstElement();
-							if(target != literal) {
-								MoveCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(eObject), eObject, EcorePackage.Literals.EENUM__ELITERALS, literal, i-1).execute();
-							}
-						}
-					}
-				} else if(dropLocation == 2 || dropLocation == 3) {
-					// Move the data in after the target
-					for(int i = 0; i < literals.size(); i++) {
-						if(literals.get(i) == target) {
-							MoveCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(eObject), eObject, EcorePackage.Literals.EENUM__ELITERALS, (EEnumLiteral) ((StructuredSelection)event.data).getFirstElement(), i).execute();						
-						}
-					}
-				}
-				viewer.refresh();
-				super.drop(event);
-			}
-			
-			@Override
-			public boolean validateDrop(Object target, int operation,
-					TransferData transferType) {
-				return true;
-			}
-			
-			@Override
-			public boolean performDrop(Object data) {
-				return false;
-			}
-		});*/
-		
 		
 		viewer.setContentProvider(contentProvider);
 		viewer.setInput(EMFProperties.list(EcorePackage.Literals.EENUM__ELITERALS).observe(eObject));
-	
+		
+		
+		// Handle the button clicks and perform events accordingly
+		Listener buttonListener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				if(event.widget == btnUp) {
+					// Get the currently selected Item and move it up
+					EEnumLiteral selectedItem = (EEnumLiteral) ((StructuredSelection)viewer.getSelection()).getFirstElement();
+					int currentPosition = eObject.getELiterals().indexOf(selectedItem);
+					if(currentPosition > 0) {
+						Command moveCommand = new MoveCommand(editingDomain, eObject.getELiterals(), currentPosition, currentPosition - 1);
+						if(moveCommand.canExecute()) {
+							editingDomain.getCommandStack().execute(moveCommand);
+						}
+					}
+				} else if(event.widget == btnDown) {
+					// Get the currently selected Item and move it down
+					EEnumLiteral selectedItem = (EEnumLiteral) ((StructuredSelection)viewer.getSelection()).getFirstElement();
+					int currentPosition = eObject.getELiterals().indexOf(selectedItem);
+					if(currentPosition < eObject.getELiterals().size() - 1) {
+						Command moveCommand = new MoveCommand(editingDomain, eObject.getELiterals(), currentPosition, currentPosition + 1);
+						if(moveCommand.canExecute()) {
+							editingDomain.getCommandStack().execute(moveCommand);
+						}
+					}
+				} else if(event.widget == btnDelete) {
+					// We support removing multiple elements, just enable multiselect in the TableViewer
+					// but this would lead to confusion when moving elements
+					List<?> selectedItems = ((StructuredSelection)viewer.getSelection()).toList();
+					Command removeCommand = new RemoveCommand(editingDomain, eObject.getELiterals(), selectedItems);
+					if(removeCommand.canExecute()) {
+						editingDomain.getCommandStack().execute(removeCommand);
+					}
+				} else if(event.widget == btnAdd) {
+					CreateDialog dialog = new CreateDialog(Display.getCurrent().getActiveShell(), EcorePackage.Literals.EENUM_LITERAL);
+					int result = dialog.open();
+					if(result == Window.OK) {
+						Command addCommand = AddCommand.create(editingDomain, eObject, EcorePackage.Literals.EENUM__ELITERALS, dialog.getCreatedInstance());
+						editingDomain.getCommandStack().execute(addCommand);
+					}
+				}
+			}
+		};
+		
+		btnUp.addListener(SWT.Selection, buttonListener);
+		btnDown.addListener(SWT.Selection, buttonListener);
+		btnDelete.addListener(SWT.Selection, buttonListener);
+		btnAdd.addListener(SWT.Selection, buttonListener);
 	}
 
 	private static class GenericEditingSupport extends EditingSupport {
