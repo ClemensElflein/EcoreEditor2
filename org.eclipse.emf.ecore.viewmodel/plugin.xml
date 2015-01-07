@@ -4,21 +4,75 @@
 
 
 <extension  point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
-<file filePath="viewmodels/TreeInput.view"/>
+
+
+<file filePath="viewmodels/TreeInput.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EEnum.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EDataType.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EReference.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EAttribute.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EClass.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
+<file filePath="viewmodels/EPackage.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
 
 <file filePath="viewmodels/TreeInput.view"/>
 
-<file filePath="viewmodels/EEnum.view"/>
 
-<file filePath="viewmodels/EDataType.view"/>
 
-<file filePath="viewmodels/EReference.view"/>
 
-<file filePath="viewmodels/EAttribute.view"/>
+<file filePath="simple_viewmodels/EEnum.view"/>
 
-<file filePath="viewmodels/EClass.view"/>
+<file filePath="simple_viewmodels/EDataType.view"/>
 
-<file filePath="viewmodels/EPackage.view"/>
+<file filePath="simple_viewmodels/EReference.view"/>
+
+<file filePath="simple_viewmodels/EAttribute.view"/>
+
+<file filePath="simple_viewmodels/EClass.view"/>
+
+<file filePath="simple_viewmodels/EPackage.view"/>
+
 </extension>
 
 
