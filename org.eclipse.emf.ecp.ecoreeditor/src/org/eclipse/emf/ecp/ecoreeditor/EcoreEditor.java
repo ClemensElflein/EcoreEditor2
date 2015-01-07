@@ -16,6 +16,7 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildActionWithAccelerator;
@@ -204,18 +205,10 @@ public class EcoreEditor extends EditorPart {
 					"Create Child").open();
 			break;
 		case "org.eclipse.emf.ecp.ecoreeditor.new.sibling":
-			// Get Parent of current Selection
-			/*
-			 * EStructuralFeature containingFeature = currentSelection
-			 * .eContainingFeature(); EObject containingClass =
-			 * containingFeature.getEContainingClass(); EditingDomain
-			 * parentEditingDomain = AdapterFactoryEditingDomain
-			 * .getEditingDomainFor(containingClass);
-			 * 
-			 * if (containingFeature != null) {
-			 * createNewElementDialog(parentEditingDomain, containingClass,
-			 * "Create Sibling").open(); }
-			 */
+			// Get Parent of current Selection and show the dialog for it
+			EObject parent = currentSelection.eContainer();
+			EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
+			createNewElementDialog(parentEditingDomain, parent, "Create Sibling").open();
 			break;
 		}
 	}
