@@ -10,11 +10,14 @@ import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class CreateDialog extends Dialog {
@@ -28,12 +31,14 @@ public class CreateDialog extends Dialog {
 	public CreateDialog(Shell parent, EObject createdInstance) {
 		super(parent);
 		newObject = createdInstance;
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Create new "+newObject.eClass().getName());
+		newShell.setMinimumSize(300, 150);
 	}
 	
 	
@@ -42,19 +47,31 @@ public class CreateDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		
-		Composite wrapper = new Composite(parent, SWT.NONE);
+	    GridData parentData = new GridData(SWT.FILL, SWT.FILL, true, true);
+	    parent.setLayout(new GridLayout(1, true));
+	    parent.setLayoutData(parentData);
+		
+		ScrolledComposite wrapper = new ScrolledComposite(parent, SWT.V_SCROLL);
+		wrapper.setExpandHorizontal(true);
+		wrapper.setExpandVertical(true);
 		FillLayout wrapperLayout = new FillLayout();
 		wrapperLayout.marginHeight = 10;
 		wrapperLayout.marginWidth = 10;
 		wrapper.setLayout(wrapperLayout);
+		wrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		
 		Composite emfFormsParent = new Composite(wrapper, SWT.NONE);
+		wrapper.setContent(emfFormsParent);
 		emfFormsParent.setLayout(new GridLayout());
 		
 		try {
 			ECPSWTViewRenderer.INSTANCE.render(emfFormsParent, newObject);
 		} catch (ECPRendererException e) {
 		}
+		
+		wrapper.setMinSize(wrapper.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
 		return parent;
 	}
 	
