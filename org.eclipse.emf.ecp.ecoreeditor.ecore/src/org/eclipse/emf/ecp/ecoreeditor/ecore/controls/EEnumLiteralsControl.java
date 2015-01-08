@@ -90,7 +90,7 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 		return GridDescriptionFactory.INSTANCE.createSimpleGrid(2,3, this);
 	}
 	
-	private final void addColumn(TableViewer viewer, String columnName, EStructuralFeature feature, EditingSupport editingSupport) {
+	private final void addColumn(TableViewer viewer, String columnName, final EStructuralFeature feature, EditingSupport editingSupport) {
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.LEFT);
 		tvc.getColumn().setText(columnName);
 		tvc.setLabelProvider(new CellLabelProvider() {
@@ -154,8 +154,8 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 	}
 
 	private void createControl(Composite container) {
-		EEnum eObject= (EEnum) getViewModelContext().getDomainModel();
-		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
+		final EEnum eObject= (EEnum) getViewModelContext().getDomainModel();
+		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
 		
 		
 		Composite parent = new Composite(container, SWT.NONE);
@@ -176,14 +176,14 @@ public class EEnumLiteralsControl extends AbstractSWTRenderer<VControl> {
 		
 		
 		// Create the buttons in the ButtonRow
-		Button btnAdd = new IconButton(buttonRow, Icon.ADD);
-		Button btnDelete = new IconButton(buttonRow, Icon.DELETE);
-		Button btnUp = new IconButton(buttonRow, Icon.UP);
-		Button btnDown = new IconButton(buttonRow, Icon.DOWN);
+		final Button btnAdd = new IconButton(buttonRow, Icon.ADD);
+		final Button btnDelete = new IconButton(buttonRow, Icon.DELETE);
+		final Button btnUp = new IconButton(buttonRow, Icon.UP);
+		final Button btnDown = new IconButton(buttonRow, Icon.DOWN);
 
 		
 		// Create the TableViewer and all of its columns
-		TableViewer viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER);
+		final TableViewer viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER);
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		

@@ -195,26 +195,22 @@ public class EcoreEditor extends EditorPart {
 		EditingDomain editingDomain = AdapterFactoryEditingDomain
 				.getEditingDomainFor(currentSelection);
 
-		switch (commandName) {
-		case "org.eclipse.emf.ecp.ecoreeditor.delete":
+		if("org.eclipse.emf.ecp.ecoreeditor.delete".equals(commandName)) {
 			editingDomain.getCommandStack().execute(
 					RemoveCommand.create(editingDomain, currentSelection));
-			break;
-		case "org.eclipse.emf.ecp.ecoreeditor.new":
+		} else if("org.eclipse.emf.ecp.ecoreeditor.new".equals(commandName)) {
 			createNewElementDialog(editingDomain, currentSelection,
 					"Create Child").open();
-			break;
-		case "org.eclipse.emf.ecp.ecoreeditor.new.sibling":
+		} else if("org.eclipse.emf.ecp.ecoreeditor.new.sibling".equals(commandName)) {
 			// Get Parent of current Selection and show the dialog for it
 			EObject parent = currentSelection.eContainer();
 			EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
 			createNewElementDialog(parentEditingDomain, parent, "Create Sibling").open();
-			break;
 		}
 	}
 
-	private Dialog createNewElementDialog(EditingDomain editingDomain,
-			EObject selection, final String title) {
+	private Dialog createNewElementDialog(final EditingDomain editingDomain,
+			final EObject selection, final String title) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		Dialog diag = new Dialog(Display.getDefault().getActiveShell()) {
 

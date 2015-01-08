@@ -66,7 +66,7 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 	}
 
 	@Override
-	protected Binding[] createBindings(Viewer viewer, Setting setting) {
+	protected Binding[] createBindings(final Viewer viewer, final Setting setting) {
 		final Binding binding = getDataBindingContext().bindValue(
 				WidgetProperties.text().observe(
 						((ComboViewer) viewer).getCombo()),

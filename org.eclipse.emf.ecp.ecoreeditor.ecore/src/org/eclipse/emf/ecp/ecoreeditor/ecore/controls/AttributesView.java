@@ -45,7 +45,7 @@ public class AttributesView extends AbstractSWTRenderer<VControl> {
 		return GridDescriptionFactory.INSTANCE.createSimpleGrid(1,1, this);
 	}
 	
-	private final void addColumn(TableViewer viewer, EStructuralFeature feature) {
+	private final void addColumn(final TableViewer viewer, final EStructuralFeature feature) {
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.LEFT);
 		tvc.getColumn().setText(feature.getName());
 		tvc.setLabelProvider(new CellLabelProvider() {
