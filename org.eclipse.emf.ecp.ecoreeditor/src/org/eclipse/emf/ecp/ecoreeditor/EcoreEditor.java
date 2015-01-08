@@ -1,15 +1,21 @@
 package org.eclipse.emf.ecp.ecoreeditor;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
@@ -45,6 +51,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -131,6 +138,13 @@ public class EcoreEditor extends EditorPart {
 		IMenuService mSvc = (IMenuService) site.getService(IMenuService.class);
 		menuManager = site.getActionBars().getMenuManager();
 
+		// Load fontawesome
+		/*Log.i("Now loading Fontawesome 2!");
+		Log.i(FileLocator.find(Activator.getDefault().getBundle(), new Path("fonts/fontawesome-webfont.ttf"), null).toString());
+		
+		Display.getCurrent().loadFont(FileLocator.find(Activator.getDefault().getBundle(), new Path("fonts/fontawesome-webfont.ttf"), null).toString());
+		*/
+		
 	}
 
 	@Override
