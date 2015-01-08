@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository version='1.1.0'?>
 <artifacts size='1'>
-  <artifact classifier='osgi.bundle' id='org.eclipse.emf.ecp.ecoreeditor.viewmodel' version='1.5.0'>
+  <artifact classifier='osgi.bundle' id='org.eclipse.emf.ecp.ecoreeditor.viewmodel' version='1.5.0.201501081226'>
     <properties size='5'>
-      <property name='artifact.size' value='6250'/>
-      <property name='download.size' value='6250'/>
+      <property name='artifact.size' value='6607'/>
+      <property name='download.size' value='6607'/>
       <property name='maven-groupId' value='org.eclipse.emf.ecp.ecoreeditor'/>
       <property name='maven-artifactId' value='org.eclipse.emf.ecp.ecoreeditor.viewmodel'/>
-      <property name='maven-version' value='1.5.0'/>
+      <property name='maven-version' value='1.5.0-SNAPSHOT'/>
     </properties>
   </artifact>
 </artifacts>

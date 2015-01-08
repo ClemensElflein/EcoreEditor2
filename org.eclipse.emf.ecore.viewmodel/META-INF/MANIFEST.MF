@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.emf.ecore.viewmodel
 Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor.viewmodel;singleton:=true
-Bundle-Version: 1.5.0
+Bundle-Version: 1.5.0.qualifier
 Require-Bundle: org.eclipse.emf.ecp.view.model.provider.xmi
