@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory;
+import org.eclipse.emf.ecp.ecoreeditor.ui.MasterDetailRenderer;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTView;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecp.view.spi.model.util.ViewModelUtil;
 import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -44,16 +46,9 @@ public class EcoreEditor extends EditorPart {
 	// Use a simple CommandStack that can undo and redo nothing.
 	private BasicCommandStack commandStack = new BasicCommandStack();
 
-	// Save the TreeInput object, which is passed to the TreeMasterDetail
-	private TreeInput treeInput;
-
 	private IMenuManager menuManager;
 
-	private ECPSWTView rootView;
-
-	public EcoreEditor() {
-		treeInput = TreeInputFactory.eINSTANCE.createTreeInput();
-	}
+	private MasterDetailRenderer rootView;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -126,18 +121,7 @@ public class EcoreEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		loadResource();
-
-		treeInput.setInput(resourceSet);
-
-		try {
-			rootView = ECPSWTViewRenderer.INSTANCE.render(parent, treeInput);
-		} catch (final ECPRendererException ex) {
-			Activator
-					.getDefault()
-					.getLog()
-					.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, ex
-							.getMessage(), ex));
-		}
+		this.rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
 	}
 
 	/*

@@ -1,8 +1,7 @@
-package org.eclipse.emf.ecp.ecoreeditor.masterdetail;
+package org.eclipse.emf.ecp.ecoreeditor.ui;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,15 +10,14 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
+import org.eclipse.emf.ecp.ecoreeditor.Activator;
 import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildAction;
 import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.ecp.view.spi.model.VControl;
 import org.eclipse.emf.ecp.view.spi.renderer.NoPropertyDescriptorFoundExeption;
 import org.eclipse.emf.ecp.view.spi.renderer.NoRendererFoundException;
-import org.eclipse.emf.ecp.view.spi.swt.AbstractSWTRenderer;
 import org.eclipse.emf.ecp.view.spi.swt.layout.GridDescriptionFactory;
 import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridCell;
 import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridDescription;
@@ -55,8 +53,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
-public class MasterDetailRenderer extends AbstractSWTRenderer<VControl> {
+public class MasterDetailRenderer extends Composite {
 
+	private final Object input;
+	private final EditingDomain editingDomain;
+	
 	private TreeViewer treeViewer = null;
 	private Composite detailPanel = null;
 	private Composite detailContainer = null;
@@ -67,53 +68,40 @@ public class MasterDetailRenderer extends AbstractSWTRenderer<VControl> {
 		context.put("detail", true);
 	}
 	
-	@Override
-	public SWTGridDescription getGridDescription(SWTGridDescription gridDescription) {
-		return GridDescriptionFactory.INSTANCE.createSimpleGrid(1, 1, this);
+	
+	public MasterDetailRenderer(Composite parent, int style, Object input) {
+		super(parent, style);
+		this.input = input;
+		this.editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
+		renderControl();
 	}
-
-	@Override
-	protected Control renderControl(SWTGridCell cell, Composite parent) throws NoRendererFoundException,
-			NoPropertyDescriptorFoundExeption {
+	
+	protected Control renderControl() {
 		// Create the Form with two panels
 		FormLayout parentLayout = new FormLayout();
-		parent.setLayout(parentLayout);
-		parent.setBackground(new Color(Display.getCurrent(), 255,0,0));;
+		this.setLayout(parentLayout);
+		this.setBackground(new Color(Display.getCurrent(), 255,0,0));;
 		
-		createTree(parent);
-		createDetailPanel(parent);
+		createTree(this);
+		createDetailPanel(this);
 		
 		initializeTree();
 		
-		return parent;
+		return this;
 	}
 	
 	private void initializeTree() {
-		final TreeInput treeInput = (TreeInput) getViewModelContext().getDomainModel();
-		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(treeInput);
-
 		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(new AdapterFactory[] {
 				new CustomReflectiveItemProviderAdapterFactory(),
 				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
 
 		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-			adapterFactory) {
+			adapterFactory);
 
-			@Override
-			public Object[] getElements(Object object) {
-				return new Object[] { treeInput.getInput() };
-			}
-		};
-		final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new
-			AdapterFactoryLabelProvider(adapterFactory);
-
-	
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
-		//treeViewer.setLabelProvider(adapterFactoryLabelProvider);
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory), new DiagnosticDecorator(editingDomain, treeViewer)));
 		
-		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory), new DiagnosticDecorator(editingDomain, treeViewer, Activator.getDefault().getDialogSettings())));
-		
-		treeViewer.setInput(treeInput);
+		treeViewer.setInput(input);
 	}
 	
 
@@ -269,7 +257,7 @@ public class MasterDetailRenderer extends AbstractSWTRenderer<VControl> {
 			public void run() {
 				super.run();
 				editingDomain.getCommandStack().execute(removeCommand);
-				treeViewer.setSelection(new StructuredSelection(getViewModelContext().getDomainModel()));
+				treeViewer.setSelection(new StructuredSelection(input));
 			}
 		};
 		
@@ -280,4 +268,5 @@ public class MasterDetailRenderer extends AbstractSWTRenderer<VControl> {
 		deleteAction.setText("Delete"); //$NON-NLS-1$
 		manager.add(deleteAction);
 	}
+	
 }

@@ -6,7 +6,7 @@
       <editor
             class="org.eclipse.emf.ecp.ecoreeditor.EcoreEditor"
             default="false"
-            extensions="ecore2"
+            extensions="ecore"
             id="EcoreEditor2.editor1"
             name="Ecore Editor">
       </editor>
