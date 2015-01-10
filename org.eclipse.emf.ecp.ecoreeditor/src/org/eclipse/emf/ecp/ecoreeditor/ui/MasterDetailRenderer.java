@@ -7,20 +7,15 @@ import java.util.Map;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.Activator;
 import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildAction;
-import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.ecp.view.spi.renderer.NoPropertyDescriptorFoundExeption;
-import org.eclipse.emf.ecp.view.spi.renderer.NoRendererFoundException;
-import org.eclipse.emf.ecp.view.spi.swt.layout.GridDescriptionFactory;
-import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridCell;
-import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridDescription;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -43,14 +38,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
 public class MasterDetailRenderer extends Composite {
@@ -79,8 +72,9 @@ public class MasterDetailRenderer extends Composite {
 	protected Control renderControl() {
 		// Create the Form with two panels
 		FormLayout parentLayout = new FormLayout();
+		parentLayout.marginWidth = 5;
+		parentLayout.marginHeight = 5;
 		this.setLayout(parentLayout);
-		this.setBackground(new Color(Display.getCurrent(), 255,0,0));;
 		
 		createTree(this);
 		createDetailPanel(this);
@@ -100,14 +94,14 @@ public class MasterDetailRenderer extends Composite {
 
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
 		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory), new DiagnosticDecorator(editingDomain, treeViewer)));
-		
+		new ColumnViewerInformationControlToolTipSupport(treeViewer, new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
+		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setInput(input);
 	}
 	
 
 	private Control createTree(final Composite parent) {
-		treeViewer = new TreeViewer(parent);
-		treeViewer.getControl().setBackground(new Color(Display.getCurrent(), 0, 255, 0));
+		treeViewer = new TreeViewer(parent, SWT.BORDER);
 		
 		// Add selection listener to show the detail page
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -146,8 +140,7 @@ public class MasterDetailRenderer extends Composite {
 			detailPanel.dispose();
 		}
 		
-		detailPanel = new Composite(parent, SWT.NONE);
-		detailPanel.setBackground(new Color(Display.getCurrent(), 0, 255, 255));
+		detailPanel = new Composite(parent, SWT.BORDER);
 		detailPanel.setLayout(new GridLayout());
 		
 		// Put the Details panel right to the tree and fix it to the right side of the form

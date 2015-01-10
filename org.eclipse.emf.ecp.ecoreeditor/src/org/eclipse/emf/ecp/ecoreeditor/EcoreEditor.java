@@ -6,33 +6,23 @@ import java.util.EventObject;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
-import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInput;
-import org.eclipse.emf.ecp.ecoreeditor.treeinput.TreeInputFactory;
 import org.eclipse.emf.ecp.ecoreeditor.ui.MasterDetailRenderer;
-import org.eclipse.emf.ecp.ui.view.ECPRendererException;
-import org.eclipse.emf.ecp.ui.view.swt.ECPSWTView;
-import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
-import org.eclipse.emf.ecp.view.spi.context.ViewModelContextFactory;
-import org.eclipse.emf.ecp.view.spi.model.VViewFactory;
-import org.eclipse.emf.ecp.view.spi.model.util.ViewModelUtil;
-import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.internal.quickaccess.ViewProvider;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -98,14 +88,6 @@ public class EcoreEditor extends EditorPart {
 
 		IMenuService mSvc = (IMenuService) site.getService(IMenuService.class);
 		menuManager = site.getActionBars().getMenuManager();
-
-		// Load fontawesome
-		/*Log.i("Now loading Fontawesome 2!");
-		Log.i(FileLocator.find(Activator.getDefault().getBundle(), new Path("fonts/fontawesome-webfont.ttf"), null).toString());
-		
-		Display.getCurrent().loadFont(FileLocator.find(Activator.getDefault().getBundle(), new Path("fonts/fontawesome-webfont.ttf"), null).toString());
-		*/
-		
 	}
 
 	@Override
@@ -121,6 +103,8 @@ public class EcoreEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		loadResource();
+		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		parent.setBackgroundMode(SWT.INHERIT_FORCE);
 		this.rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
 	}
 
