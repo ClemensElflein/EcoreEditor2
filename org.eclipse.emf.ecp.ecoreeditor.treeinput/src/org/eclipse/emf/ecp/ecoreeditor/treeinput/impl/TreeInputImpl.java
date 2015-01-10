@@ -20,8 +20,6 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 		TreeInput {
 
 	private Object input = null;
-	private TreeInput.TreeEditCallback treeEditCallback = null;
-	private TreeController treeController = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -30,13 +28,6 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 	 */
 	protected TreeInputImpl() {
 		super();
-		setTreeEditCallback(new TreeEditCallback() {
-
-			@Override
-			public void onSelectionChanged(EObject newSelection) {
-				// nop
-			}
-		});
 	}
 
 	/**
@@ -58,25 +49,4 @@ public class TreeInputImpl extends MinimalEObjectImpl.Container implements
 	public void setInput(Object input) {
 		this.input = input;
 	}
-
-	@Override
-	public TreeEditCallback getTreeEditCallback() {
-		return this.treeEditCallback;
-	}
-
-	@Override
-	public void setTreeEditCallback(TreeEditCallback callback) {
-		this.treeEditCallback = callback;
-	}
-
-	@Override
-	public TreeController getController() {
-		return this.treeController;
-	}
-
-	@Override
-	public void setTreeController(TreeController controller) {
-		this.treeController = controller;
-	}
-
 } // TreeInputImpl

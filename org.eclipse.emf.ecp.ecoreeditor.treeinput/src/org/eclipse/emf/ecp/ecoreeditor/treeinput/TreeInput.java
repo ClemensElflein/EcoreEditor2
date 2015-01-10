@@ -20,40 +20,4 @@ public interface TreeInput extends EObject {
 
 	public void setInput(Object input);
 
-	public TreeEditCallback getTreeEditCallback();
-
-	public void setTreeEditCallback(TreeEditCallback callback);
-
-	public TreeController getController();
-
-	public void setTreeController(TreeController controller);
-
-	public abstract static class TreeEditCallback {
-
-		private EObject currentSelection = null;
-
-		public final void internalOnSelectionChanged(EObject newSelection) {
-			currentSelection = newSelection;
-			this.onSelectionChanged(newSelection);
-		}
-
-		public final EObject getCurrentSelection() {
-			return currentSelection;
-		}
-
-		public abstract void onSelectionChanged(EObject newSelection);
-	}
-
-	public static final class TreeController {
-		private TreeViewer treeViewer;
-
-		public TreeController(TreeViewer viewer) {
-			this.treeViewer = viewer;
-		}
-
-		public TreeViewer getViewer() {
-			return treeViewer;
-		}
-	}
-
 } // TreeInput
