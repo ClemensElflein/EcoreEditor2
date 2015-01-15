@@ -30,6 +30,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -38,13 +42,18 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
 
 public class MasterDetailRenderer extends Composite {
 
@@ -52,6 +61,7 @@ public class MasterDetailRenderer extends Composite {
 	private final EditingDomain editingDomain;
 	
 	private TreeViewer treeViewer = null;
+	private Composite headerPanel = null;
 	private Composite detailPanel = null;
 	private Composite detailContainer = null;
 	
@@ -76,6 +86,7 @@ public class MasterDetailRenderer extends Composite {
 		parentLayout.marginHeight = 5;
 		this.setLayout(parentLayout);
 		
+		createHeader(this);
 		createTree(this);
 		createDetailPanel(this);
 		
@@ -99,6 +110,79 @@ public class MasterDetailRenderer extends Composite {
 		treeViewer.setInput(input);
 	}
 	
+	protected void createHeader(Composite parent) {
+		final Composite headerComposite = new Composite(parent, SWT.NONE);
+		final GridLayout headerLayout = GridLayoutFactory.fillDefaults().create();
+		headerComposite.setLayout(headerLayout);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(headerComposite);
+		headerComposite.setBackground(new Color(parent.getDisplay(), 220, 240, 247));
+
+			final Composite header = getPageHeader(headerComposite);
+			//final List<Action> actions = readToolbarActions(modelElement, editingDomain);
+
+			final ToolBar toolBar = new ToolBar(header, SWT.FLAT | SWT.RIGHT);
+			final FormData formData = new FormData();
+			formData.right = new FormAttachment(100, 0);
+			toolBar.setLayoutData(formData);
+			toolBar.layout();
+			final ToolBarManager toolBarManager = new ToolBarManager(toolBar);
+
+			/* Add actions to header */
+			/*for (final Action action : actions) {
+				toolBarManager.add(action);
+			}*/
+			toolBarManager.update(true);
+			header.layout();
+
+		this.headerPanel = headerComposite;
+		// Put the Header on the top
+		FormData headerFormData = new FormData(SWT.DEFAULT, 30);
+		headerFormData.right = new FormAttachment(100, 0);
+		headerFormData.top = new FormAttachment(0,0);
+		headerFormData.left= new FormAttachment(0,0);
+		
+		this.headerPanel.setLayoutData(headerFormData);
+	}
+
+	
+	private Composite getPageHeader(Composite parent) {
+		final Composite header = new Composite(parent, SWT.FILL);
+		final FormLayout layout = new FormLayout();
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
+		header.setLayout(layout);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(header);
+
+		header.setBackground(parent.getBackground());
+
+		final Label titleImage = new Label(header, SWT.FILL);
+		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault()
+			.getBundle()
+			.getResource("icons/view.png")); //$NON-NLS-1$
+		titleImage.setImage(new Image(parent.getDisplay(), imageDescriptor.getImageData()));
+		final FormData titleImageData = new FormData();
+		final int imageOffset = -titleImage.computeSize(SWT.DEFAULT, SWT.DEFAULT).y / 2;
+		titleImageData.top = new FormAttachment(50, imageOffset);
+		titleImageData.left = new FormAttachment(0, 10);
+		titleImage.setLayoutData(titleImageData);
+
+		final Label title = new Label(header, SWT.WRAP);
+		
+		FontDescriptor boldDescriptor = FontDescriptor.createFrom(title.getFont()).setHeight(12).setStyle(SWT.BOLD);
+		
+		Font boldFont = boldDescriptor.createFont(title.getDisplay());
+		title.setForeground(new Color(parent.getDisplay(), 25, 76, 127));
+		title.setFont( boldFont );
+		
+		title.setText("Ecore Editor"); //$NON-NLS-1$
+
+		final FormData titleData = new FormData();
+		title.setLayoutData(titleData);
+		titleData.left = new FormAttachment(titleImage, 5, SWT.DEFAULT);
+
+		return header;
+
+	}
 
 	private Control createTree(final Composite parent) {
 		treeViewer = new TreeViewer(parent, SWT.BORDER);
@@ -129,7 +213,7 @@ public class MasterDetailRenderer extends Composite {
 		// Put the TreeViewer on the left hand side of the form
 		FormData treeFormData = new FormData(300, SWT.DEFAULT);
 		treeFormData.bottom = new FormAttachment(100, 0);
-		treeFormData.top = new FormAttachment(0,0);
+		treeFormData.top = new FormAttachment(headerPanel, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
 		
 		return treeViewer.getControl();
@@ -146,7 +230,7 @@ public class MasterDetailRenderer extends Composite {
 		// Put the Details panel right to the tree and fix it to the right side of the form
 		FormData detailFormData = new FormData();
 		detailFormData.left = new FormAttachment(treeViewer.getControl(), 5);
-		detailFormData.top  = new FormAttachment(0, 0);
+		detailFormData.top  = new FormAttachment(headerPanel, 5);
 		detailFormData.bottom = new FormAttachment(100,0);
 		detailFormData.right = new FormAttachment(100, 0);
 		detailPanel.setLayoutData(detailFormData);
