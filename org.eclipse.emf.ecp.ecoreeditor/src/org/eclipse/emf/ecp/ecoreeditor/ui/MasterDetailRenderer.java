@@ -82,8 +82,7 @@ public class MasterDetailRenderer extends Composite {
 	protected Control renderControl() {
 		// Create the Form with two panels
 		FormLayout parentLayout = new FormLayout();
-		parentLayout.marginWidth = 5;
-		parentLayout.marginHeight = 5;
+
 		this.setLayout(parentLayout);
 		
 		createHeader(this);
@@ -212,7 +211,8 @@ public class MasterDetailRenderer extends Composite {
 		
 		// Put the TreeViewer on the left hand side of the form
 		FormData treeFormData = new FormData(300, SWT.DEFAULT);
-		treeFormData.bottom = new FormAttachment(100, 0);
+		treeFormData.bottom = new FormAttachment(100, 5);
+		treeFormData.left = new FormAttachment(0, 5);
 		treeFormData.top = new FormAttachment(headerPanel, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
 		
@@ -231,8 +231,8 @@ public class MasterDetailRenderer extends Composite {
 		FormData detailFormData = new FormData();
 		detailFormData.left = new FormAttachment(treeViewer.getControl(), 5);
 		detailFormData.top  = new FormAttachment(headerPanel, 5);
-		detailFormData.bottom = new FormAttachment(100,0);
-		detailFormData.right = new FormAttachment(100, 0);
+		detailFormData.bottom = new FormAttachment(100,5);
+		detailFormData.right = new FormAttachment(100, 5);
 		detailPanel.setLayoutData(detailFormData);
 		
 		parent.layout(true, true);
