@@ -10,26 +10,23 @@
 		<tycho-version>0.21.0</tycho-version>
 	</properties>
 	<modules>
-		<module>../org.eclipse.emf.ecp.ecoreeditor.treeinput</module>
-		<module>../org.eclipse.emf.ecore.viewmodel</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.ecore</module>
-		<module>../org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.p2updatesite</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.feature</module>
 	</modules>
 	<profiles>
 		<profile>
-			<id>platform-luna</id>
+			<id>platform-mars</id>
 			<activation>
 				<property>
 					<name>platform-version-name</name>
-					<value>luna</value>
+					<value>mars</value>
 				</property>
 			</activation>
 			<properties>
-				<eclipse-site>http://download.eclipse.org/releases/luna</eclipse-site>
-				<platform-version>[4.4.1)</platform-version>
+				<eclipse-site>http://download.eclipse.org/releases/mars</eclipse-site>
+				<platform-version>[4.5.0)</platform-version>
 			</properties>
 		</profile>
 	</profiles>
@@ -37,7 +34,7 @@
 		<repository>
 			<id>eclipse-platform</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/luna</url>
+			<url>http://download.eclipse.org/releases/mars</url>
 		</repository>
 	</repositories>
 	<build>
