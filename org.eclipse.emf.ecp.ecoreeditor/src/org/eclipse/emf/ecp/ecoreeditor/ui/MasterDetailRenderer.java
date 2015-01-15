@@ -345,5 +345,15 @@ public class MasterDetailRenderer extends Composite {
 		deleteAction.setText("Delete"); //$NON-NLS-1$
 		manager.add(deleteAction);
 	}
+
+	public Object getCurrentSelection() {
+		if(!(treeViewer.getSelection() instanceof StructuredSelection))
+			return null;
+		return ((StructuredSelection)treeViewer.getSelection()).getFirstElement();
+	}
+
+	public void setSelection(StructuredSelection structuredSelection) {
+		treeViewer.setSelection(structuredSelection);
+	}
 	
 }

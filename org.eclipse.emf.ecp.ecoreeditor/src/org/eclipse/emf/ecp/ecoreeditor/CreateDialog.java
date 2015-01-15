@@ -39,6 +39,8 @@ public class CreateDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText("Create new "+newObject.eClass().getName());
 		newShell.setMinimumSize(300, 150);
+		newShell.setBackground(new Color(newShell.getDisplay(), 255, 255, 255));
+		newShell.setBackgroundMode(SWT.INHERIT_FORCE);
 	}
 	
 	

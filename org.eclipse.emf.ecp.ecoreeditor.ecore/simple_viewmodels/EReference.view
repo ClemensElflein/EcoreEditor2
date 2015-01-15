@@ -21,11 +21,6 @@
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature/changeable"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control lowerBound">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/lowerBound"/>
-    </domainModelReference>
-  </children>
   <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control upperBound">
     <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/upperBound"/>
