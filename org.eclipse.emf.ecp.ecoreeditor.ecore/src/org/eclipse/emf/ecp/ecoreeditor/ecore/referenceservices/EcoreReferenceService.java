@@ -12,9 +12,14 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.Diagnostician;
+import org.eclipse.emf.ecore.util.EcoreValidator;
 import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.edit.spi.ReferenceService;
 import org.eclipse.emf.ecp.view.spi.context.ViewModelContext;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -146,6 +151,7 @@ public class EcoreReferenceService implements ReferenceService {
 
 	@Override
 	public void addModelElement(EObject eObject, EReference eReference) {
+		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(context.getDomainModel());
 		// eObject.eSet(EcorePackage.eINSTANCE.getEAttribute_EAttributeType(),
 		// eReference);
 
@@ -154,15 +160,22 @@ public class EcoreReferenceService implements ReferenceService {
 		// we can also set the type of the current eReference.
 
 		if (eReference.equals(EcorePackage.eINSTANCE.getEReference_EOpposite())) {
-			/*
-			 * EReference editReference = (EReference) context.getDomainModel();
-			 * EReference selectedReference = (EReference) eObject; if
-			 * (editReference.getEReferenceType() == null) {
-			 * editReference.setEType(selectedReference.getEContainingClass());
-			 * }
-			 * 
-			 * editReference.setEOpposite((EReference) eObject);
-			 */
+			
+			EReference editReference = (EReference) context.getDomainModel();
+			EReference selectedReference = (EReference) eObject; 
+			// Set the opposite for the other reference as well
+			editingDomain.getCommandStack().execute(SetCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(selectedReference), selectedReference, EcorePackage.Literals.EREFERENCE__EOPPOSITE, editReference));
+			
+			if (editReference.getEReferenceType() == null) {
+				editingDomain.getCommandStack().execute(
+						SetCommand.create(editingDomain, editReference, EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, selectedReference.getEContainingClass())
+				);
+			}
+			editingDomain.getCommandStack().execute(
+					SetCommand.create(editingDomain, editReference, EcorePackage.Literals.EREFERENCE__EOPPOSITE, eObject)
+			);
+			
+			
 			return;
 		}
 
@@ -181,6 +194,6 @@ public class EcoreReferenceService implements ReferenceService {
 
 	@Override
 	public void openInNewContext(EObject eObject) {
-		throw new UnsupportedOperationException();
+		
 	}
 }
