@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.eclipse.emf.ecp.ecoreeditor.toolbarActions" name="ToolbarActions" schema="schema/org.eclipse.emf.ecp.ecoreeditor.toolbarActions.exsd"/>
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -84,5 +85,12 @@
             class="org.eclipse.emf.ecp.ecoreeditor.PopupFactory"
             locationURI="org.eclipse.emf.ecp.ecoreeditor.menuContribution1">
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
+      <action
+            toolbarAction="org.eclipse.emf.ecp.ecoreeditor.toolbaractions.LoadEcoreAction">
+      </action>
+         
    </extension>
 </plugin>

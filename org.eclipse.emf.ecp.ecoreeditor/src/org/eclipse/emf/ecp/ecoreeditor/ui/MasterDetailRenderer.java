@@ -1,10 +1,15 @@
 package org.eclipse.emf.ecp.ecoreeditor.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
@@ -54,9 +59,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
+import org.osgi.framework.FrameworkUtil;
 
 public class MasterDetailRenderer extends Composite {
 
+	private final static String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
+	
 	private final Object input;
 	private final EditingDomain editingDomain;
 	
@@ -116,22 +124,20 @@ public class MasterDetailRenderer extends Composite {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(headerComposite);
 		headerComposite.setBackground(new Color(parent.getDisplay(), 220, 240, 247));
 
-			final Composite header = getPageHeader(headerComposite);
-			//final List<Action> actions = readToolbarActions(modelElement, editingDomain);
+		final Composite header = getPageHeader(headerComposite);
+		
+		final ToolBar toolBar = new ToolBar(header, SWT.FLAT | SWT.RIGHT);
+		final FormData formData = new FormData();
+		formData.right = new FormAttachment(100, 0);
+		toolBar.setLayoutData(formData);
+		toolBar.layout();
+		final ToolBarManager toolBarManager = new ToolBarManager(toolBar);
 
-			final ToolBar toolBar = new ToolBar(header, SWT.FLAT | SWT.RIGHT);
-			final FormData formData = new FormData();
-			formData.right = new FormAttachment(100, 0);
-			toolBar.setLayoutData(formData);
-			toolBar.layout();
-			final ToolBarManager toolBarManager = new ToolBarManager(toolBar);
-
-			/* Add actions to header */
-			/*for (final Action action : actions) {
-				toolBarManager.add(action);
-			}*/
-			toolBarManager.update(true);
-			header.layout();
+		/* Add actions to header */
+		readToolbarActions(toolBarManager);
+		
+		toolBarManager.update(true);
+		header.layout();
 
 		this.headerPanel = headerComposite;
 		// Put the Header on the top
@@ -356,4 +362,36 @@ public class MasterDetailRenderer extends Composite {
 		treeViewer.setSelection(structuredSelection);
 	}
 	
+	private void readToolbarActions(ToolBarManager toolbar) {
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		if (registry == null) {
+			return;
+		}
+		
+	    IConfigurationElement[] config =
+	            registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
+        try {
+          for (IConfigurationElement e : config) {
+            final Object o =
+                e.createExecutableExtension("toolbarAction");
+            if (o instanceof IToolbarAction) {
+            	final IToolbarAction action = (IToolbarAction)o;
+            	final Action newAction = new Action() {
+					@Override
+					public void run() {
+						super.run();
+						action.execute(input);
+					}
+				};
+
+				newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(action.getClass())
+					.getResource(action.getImagePath())));
+				newAction.setText(action.getLabel());
+				toolbar.add(newAction);
+            }
+          }
+        } catch (CoreException ex) {
+          ex.printStackTrace();
+        }
+	}
 }
