@@ -35,11 +35,6 @@ public class EcoreReferenceService implements ReferenceService {
 		this.context = context;
 	}
 
-	@Override
-	public EObject getNewElementFor(EReference eReference) {
-		return null;
-	}
-
 	private EObject getExistingSuperTypeFor(EReference eReference) {
 		List<EClass> classes = ResourceSetHelpers.findAllOfTypeInResourceSet(
 				context.getDomainModel(), EClass.class, false);
@@ -87,7 +82,6 @@ public class EcoreReferenceService implements ReferenceService {
 
 	}
 
-	@Override
 	public EObject getExistingElementFor(EReference eReference) {
 		// Check, if the target is EDataType
 		if (context.getDomainModel() instanceof EAttribute
@@ -149,7 +143,6 @@ public class EcoreReferenceService implements ReferenceService {
 		return 0;
 	}
 
-	@Override
 	public void addModelElement(EObject eObject, EReference eReference) {
 		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(context.getDomainModel());
 		// eObject.eSet(EcorePackage.eINSTANCE.getEAttribute_EAttributeType(),
@@ -195,5 +188,15 @@ public class EcoreReferenceService implements ReferenceService {
 	@Override
 	public void openInNewContext(EObject eObject) {
 		
+	}
+
+	@Override
+	public void addNewModelElements(EObject eObject, EReference eReference) {
+		// NOOP, we always want to reference existing elements for now
+	}
+
+	@Override
+	public void addExistingModelElements(EObject eObject, EReference eReference) {
+		addModelElement(getExistingElementFor(eReference), eReference);
 	}
 }
