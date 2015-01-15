@@ -122,7 +122,7 @@ public class MasterDetailRenderer extends Composite {
 		final GridLayout headerLayout = GridLayoutFactory.fillDefaults().create();
 		headerComposite.setLayout(headerLayout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(headerComposite);
-		headerComposite.setBackground(new Color(parent.getDisplay(), 220, 240, 247));
+		headerComposite.setBackground(new Color(parent.getDisplay(), 207, 222, 238));
 
 		final Composite header = getPageHeader(headerComposite);
 		
