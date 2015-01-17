@@ -24,6 +24,8 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -56,7 +58,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 
-public class EcoreEditor extends EditorPart {
+public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 
 	// The Resource loaded from the provided EditorInput
 	private ResourceSet resourceSet;
@@ -134,6 +136,12 @@ public class EcoreEditor extends EditorPart {
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
 		this.rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
+		getEditorSite().setSelectionProvider(rootView.getSelectionProvider());
+		
+		EditingDomainActionBarContributor actionBarProvider = new EditingDomainActionBarContributor();
+		actionBarProvider.init(getEditorSite().getActionBars());
+		actionBarProvider.setActiveEditor(this);
+		actionBarProvider.activate();
 	}
 
 	/*
@@ -336,5 +344,13 @@ public class EcoreEditor extends EditorPart {
 			});
 		}
 		return result;
+	}
+
+	@Override
+	public EditingDomain getEditingDomain() {
+		if(rootView == null) {
+			return null;
+		}
+		return rootView.getEditingDomain();
 	}
 }

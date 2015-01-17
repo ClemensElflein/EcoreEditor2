@@ -1,6 +1,5 @@
 package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,6 +45,7 @@ import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -415,5 +415,13 @@ public class MasterDetailRenderer extends Composite {
 		final EditingDomainViewerDropAdapter editingDomainViewerDropAdapter = new EditingDomainViewerDropAdapter(
 				editingDomain, treeViewer);
 		treeViewer.addDropSupport(dndOperations, transfers, editingDomainViewerDropAdapter);
+	}
+
+	public ISelectionProvider getSelectionProvider() {
+		return treeViewer;
+	}
+
+	public EditingDomain getEditingDomain() {
+		return editingDomain;
 	}
 }
