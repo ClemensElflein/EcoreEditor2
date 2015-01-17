@@ -26,5 +26,11 @@
 <file filePath="viewmodels/GenModel.view"/>
 
    </extension>
+   <extension
+         point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
+      <action
+            toolbarAction="org.eclipse.emf.ecp.ecoreeditor.genmodel.toolbaractions.GenerateJavaCodeAction">
+      </action>
+   </extension>
 
 </plugin>
