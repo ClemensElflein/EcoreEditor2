@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor.actions;
+package org.eclipse.emf.ecp.ecoreeditor.internal.actions;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;

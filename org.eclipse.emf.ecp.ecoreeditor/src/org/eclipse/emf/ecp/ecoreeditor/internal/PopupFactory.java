@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import org.eclipse.ui.menus.ExtensionContributionFactory;
 import org.eclipse.ui.menus.IContributionRoot;

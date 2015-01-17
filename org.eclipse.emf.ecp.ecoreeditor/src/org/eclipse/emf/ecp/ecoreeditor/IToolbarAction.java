@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor.ui;
+package org.eclipse.emf.ecp.ecoreeditor;
 
 
 public interface IToolbarAction {

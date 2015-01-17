@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
 

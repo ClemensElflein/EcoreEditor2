@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.eclipse.emf.ecp.ecoreeditor.EcoreEditor"
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
             default="false"
             extensions="ecore"
             id="EcoreEditor2.editor1"
@@ -37,15 +37,15 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.delete">
       </handler>
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.new">
       </handler>
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.handlers.ShortcutHandler"
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.new.sibling">
       </handler>      
    </extension>
@@ -82,14 +82,14 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            class="org.eclipse.emf.ecp.ecoreeditor.PopupFactory"
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.PopupFactory"
             locationURI="org.eclipse.emf.ecp.ecoreeditor.menuContribution1">
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
       <action
-            toolbarAction="org.eclipse.emf.ecp.ecoreeditor.toolbaractions.LoadEcoreAction">
+            toolbarAction="org.eclipse.emf.ecp.ecoreeditor.internal.toolbaractions.LoadEcoreAction">
       </action>
          
    </extension>

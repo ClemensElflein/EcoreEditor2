@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
-import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildActionWithAccelerator;
-import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
-import org.eclipse.emf.ecp.ecoreeditor.ui.MasterDetailRenderer;
+import org.eclipse.emf.ecp.ecoreeditor.internal.actions.CreateChildActionWithAccelerator;
+import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.ResourceSetHelpers;
+import org.eclipse.emf.ecp.ecoreeditor.internal.ui.MasterDetailRenderer;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;

@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor.ui;
+package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,8 +16,9 @@ import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSup
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
-import org.eclipse.emf.ecp.ecoreeditor.Activator;
-import org.eclipse.emf.ecp.ecoreeditor.actions.CreateChildAction;
+import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
+import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
+import org.eclipse.emf.ecp.ecoreeditor.internal.actions.CreateChildAction;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
@@ -376,6 +377,10 @@ public class MasterDetailRenderer extends Composite {
                 e.createExecutableExtension("toolbarAction");
             if (o instanceof IToolbarAction) {
             	final IToolbarAction action = (IToolbarAction)o;
+            	if(!action.canExecute(input)) {
+            		continue;
+            	}
+            	
             	final Action newAction = new Action() {
 					@Override
 					public void run() {
