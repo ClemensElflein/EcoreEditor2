@@ -28,6 +28,9 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.ui.dnd.EditingDomainViewerDropAdapter;
+import org.eclipse.emf.edit.ui.dnd.LocalTransfer;
+import org.eclipse.emf.edit.ui.dnd.ViewerDragAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
@@ -48,6 +51,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -65,59 +70,60 @@ import org.osgi.framework.FrameworkUtil;
 public class MasterDetailRenderer extends Composite {
 
 	private final static String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
-	
+
 	private final Object input;
 	private final EditingDomain editingDomain;
-	
+
 	private TreeViewer treeViewer = null;
 	private Composite headerPanel = null;
 	private Composite detailPanel = null;
 	private Composite detailContainer = null;
-	
+
 	private static Map<String, Object> context = new LinkedHashMap<String, Object>();
-	
+
 	static {
 		context.put("detail", true);
 	}
-	
-	
+
 	public MasterDetailRenderer(Composite parent, int style, Object input) {
 		super(parent, style);
 		this.input = input;
 		this.editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
 		renderControl();
 	}
-	
+
 	protected Control renderControl() {
 		// Create the Form with two panels
 		FormLayout parentLayout = new FormLayout();
 
 		this.setLayout(parentLayout);
-		
+
 		createHeader(this);
 		createTree(this);
 		createDetailPanel(this);
-		
+
 		initializeTree();
-		
+
 		return this;
 	}
-	
+
 	private void initializeTree() {
 		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(new AdapterFactory[] {
 				new CustomReflectiveItemProviderAdapterFactory(),
 				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
 
 		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-			adapterFactory);
+				adapterFactory);
 
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
-		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory), new DiagnosticDecorator(editingDomain, treeViewer)));
-		new ColumnViewerInformationControlToolTipSupport(treeViewer, new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory),
+				new DiagnosticDecorator(editingDomain, treeViewer)));
+		new ColumnViewerInformationControlToolTipSupport(treeViewer,
+				new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
 		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setInput(input);
 	}
-	
+
 	protected void createHeader(Composite parent) {
 		final Composite headerComposite = new Composite(parent, SWT.NONE);
 		final GridLayout headerLayout = GridLayoutFactory.fillDefaults().create();
@@ -126,7 +132,7 @@ public class MasterDetailRenderer extends Composite {
 		headerComposite.setBackground(new Color(parent.getDisplay(), 207, 222, 238));
 
 		final Composite header = getPageHeader(headerComposite);
-		
+
 		final ToolBar toolBar = new ToolBar(header, SWT.FLAT | SWT.RIGHT);
 		final FormData formData = new FormData();
 		formData.right = new FormAttachment(100, 0);
@@ -136,7 +142,7 @@ public class MasterDetailRenderer extends Composite {
 
 		/* Add actions to header */
 		readToolbarActions(toolBarManager);
-		
+
 		toolBarManager.update(true);
 		header.layout();
 
@@ -144,13 +150,12 @@ public class MasterDetailRenderer extends Composite {
 		// Put the Header on the top
 		FormData headerFormData = new FormData(SWT.DEFAULT, 30);
 		headerFormData.right = new FormAttachment(100, 0);
-		headerFormData.top = new FormAttachment(0,0);
-		headerFormData.left= new FormAttachment(0,0);
-		
+		headerFormData.top = new FormAttachment(0, 0);
+		headerFormData.left = new FormAttachment(0, 0);
+
 		this.headerPanel.setLayoutData(headerFormData);
 	}
 
-	
 	private Composite getPageHeader(Composite parent) {
 		final Composite header = new Composite(parent, SWT.FILL);
 		final FormLayout layout = new FormLayout();
@@ -162,9 +167,8 @@ public class MasterDetailRenderer extends Composite {
 		header.setBackground(parent.getBackground());
 
 		final Label titleImage = new Label(header, SWT.FILL);
-		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault()
-			.getBundle()
-			.getResource("icons/view.png")); //$NON-NLS-1$
+		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
+				.getResource("icons/view.png")); //$NON-NLS-1$
 		titleImage.setImage(new Image(parent.getDisplay(), imageDescriptor.getImageData()));
 		final FormData titleImageData = new FormData();
 		final int imageOffset = -titleImage.computeSize(SWT.DEFAULT, SWT.DEFAULT).y / 2;
@@ -173,13 +177,13 @@ public class MasterDetailRenderer extends Composite {
 		titleImage.setLayoutData(titleImageData);
 
 		final Label title = new Label(header, SWT.WRAP);
-		
+
 		FontDescriptor boldDescriptor = FontDescriptor.createFrom(title.getFont()).setHeight(12).setStyle(SWT.BOLD);
-		
+
 		Font boldFont = boldDescriptor.createFont(title.getDisplay());
 		title.setForeground(new Color(parent.getDisplay(), 25, 76, 127));
-		title.setFont( boldFont );
-		
+		title.setFont(boldFont);
+
 		title.setText("Ecore Editor"); //$NON-NLS-1$
 
 		final FormData titleData = new FormData();
@@ -192,60 +196,61 @@ public class MasterDetailRenderer extends Composite {
 
 	private Control createTree(final Composite parent) {
 		treeViewer = new TreeViewer(parent, SWT.BORDER);
-		
+
 		// Add selection listener to show the detail page
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				createDetailPanel(parent);
-				Object selectedObject = ((StructuredSelection)event.getSelection()).getFirstElement();
-				if(selectedObject instanceof EObject) {
-					EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor((EObject)selectedObject);
-					
+				Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
+				if (selectedObject instanceof EObject) {
+					EditingDomain editingDomain = AdapterFactoryEditingDomain
+							.getEditingDomainFor((EObject) selectedObject);
+
 					try {
-						ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject)selectedObject, context);
+						ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
 						detailPanel.layout(true, true);
 					} catch (ECPRendererException e) {
 					}
-					
+
 					fillContextMenu(treeViewer, editingDomain);
 				}
 			}
 		});
 		
-		
-		
+		addDragAndDropSupport(treeViewer, editingDomain);
+
 		// Put the TreeViewer on the left hand side of the form
 		FormData treeFormData = new FormData(300, SWT.DEFAULT);
 		treeFormData.bottom = new FormAttachment(100, -5);
 		treeFormData.left = new FormAttachment(0, 5);
 		treeFormData.top = new FormAttachment(headerPanel, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
-		
+
 		return treeViewer.getControl();
 	}
-	
+
 	private Control createDetailPanel(Composite parent) {
-		if(detailPanel != null) {
+		if (detailPanel != null) {
 			detailPanel.dispose();
 		}
-		
+
 		detailPanel = new Composite(parent, SWT.BORDER);
 		detailPanel.setLayout(new GridLayout());
-		
-		// Put the Details panel right to the tree and fix it to the right side of the form
+
+		// Put the Details panel right to the tree and fix it to the right side
+		// of the form
 		FormData detailFormData = new FormData();
 		detailFormData.left = new FormAttachment(treeViewer.getControl(), 5);
-		detailFormData.top  = new FormAttachment(headerPanel, 5);
-		detailFormData.bottom = new FormAttachment(100,-5);
+		detailFormData.top = new FormAttachment(headerPanel, 5);
+		detailFormData.bottom = new FormAttachment(100, -5);
 		detailFormData.right = new FormAttachment(100, -5);
 		detailPanel.setLayoutData(detailFormData);
-		
+
 		parent.layout(true, true);
 		return detailPanel;
 	}
-	
 
 	private void fillContextMenu(final TreeViewer treeViewer, final EditingDomain editingDomain) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
@@ -277,15 +282,19 @@ public class MasterDetailRenderer extends Composite {
 		final Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
 	}
-	
+
 	/**
-	 * @param manager The menu manager responsible for the context menu
-	 * @param descriptors The menu items to be added
-	 * @param domain The editing domain of the current EObject
-	 * @param eObject The model element
+	 * @param manager
+	 *            The menu manager responsible for the context menu
+	 * @param descriptors
+	 *            The menu items to be added
+	 * @param domain
+	 *            The editing domain of the current EObject
+	 * @param eObject
+	 *            The model element
 	 */
 	private void fillContextMenu(IMenuManager manager, Collection<?> descriptors, final EditingDomain domain,
-		final EObject eObject) {
+			final EObject eObject) {
 		for (final Object descriptor : descriptors) {
 
 			final CommandParameter cp = (CommandParameter) descriptor;
@@ -298,7 +307,7 @@ public class MasterDetailRenderer extends Composite {
 			if (!cp.getEReference().isMany() && eObject.eIsSet(cp.getEStructuralFeature())) {
 				continue;
 			} else if (cp.getEReference().isMany() && cp.getEReference().getUpperBound() != -1
-				&& cp.getEReference().getUpperBound() <= ((List<?>) eObject.eGet(cp.getEReference())).size()) {
+					&& cp.getEReference().getUpperBound() <= ((List<?>) eObject.eGet(cp.getEReference())).size()) {
 				continue;
 			}
 
@@ -310,11 +319,11 @@ public class MasterDetailRenderer extends Composite {
 					final EReference reference = ((CommandParameter) descriptor).getEReference();
 					// if (!reference.isContainment()) {
 					// domain.getCommandStack().execute(
-					// AddCommand.create(domain, eObject.eContainer(), null, cp.getEValue()));
+					// AddCommand.create(domain, eObject.eContainer(), null,
+					// cp.getEValue()));
 					// }
 
-					domain.getCommandStack().execute(
-						AddCommand.create(domain, eObject, reference, cp.getEValue()));
+					domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, cp.getEValue()));
 				}
 			});
 		}
@@ -327,15 +336,15 @@ public class MasterDetailRenderer extends Composite {
 	 * @param selection
 	 */
 	private void addDeleteActionToContextMenu(final EditingDomain editingDomain, final IMenuManager manager,
-		final IStructuredSelection selection) {
+			final IStructuredSelection selection) {
 
 		// Create the RemovEommand and check, if it can be executed.
 		// If it can't, don't create a menu item
 		final Command removeCommand = RemoveCommand.create(editingDomain, selection.toList());
-		
-		if(!removeCommand.canExecute())
+
+		if (!removeCommand.canExecute())
 			return;
-		
+
 		final Action deleteAction = new Action() {
 			@Override
 			public void run() {
@@ -344,59 +353,67 @@ public class MasterDetailRenderer extends Composite {
 				treeViewer.setSelection(new StructuredSelection(input));
 			}
 		};
-		
+
 		final String deleteImagePath = "icons/delete.png";//$NON-NLS-1$
-		deleteAction.setImageDescriptor(ImageDescriptor.createFromURL(Activator.getDefault()
-			.getBundle()
-			.getResource(deleteImagePath)));
+		deleteAction.setImageDescriptor(ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
+				.getResource(deleteImagePath)));
 		deleteAction.setText("Delete"); //$NON-NLS-1$
 		manager.add(deleteAction);
 	}
 
 	public Object getCurrentSelection() {
-		if(!(treeViewer.getSelection() instanceof StructuredSelection))
+		if (!(treeViewer.getSelection() instanceof StructuredSelection))
 			return null;
-		return ((StructuredSelection)treeViewer.getSelection()).getFirstElement();
+		return ((StructuredSelection) treeViewer.getSelection()).getFirstElement();
 	}
 
 	public void setSelection(StructuredSelection structuredSelection) {
 		treeViewer.setSelection(structuredSelection);
 	}
-	
+
 	private void readToolbarActions(ToolBarManager toolbar) {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		if (registry == null) {
 			return;
 		}
-		
-	    IConfigurationElement[] config =
-	            registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
-        try {
-          for (IConfigurationElement e : config) {
-            final Object o =
-                e.createExecutableExtension("toolbarAction");
-            if (o instanceof IToolbarAction) {
-            	final IToolbarAction action = (IToolbarAction)o;
-            	if(!action.canExecute(input)) {
-            		continue;
-            	}
-            	
-            	final Action newAction = new Action() {
-					@Override
-					public void run() {
-						super.run();
-						action.execute(input);
-					}
-				};
 
-				newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(action.getClass())
-					.getResource(action.getImagePath())));
-				newAction.setText(action.getLabel());
-				toolbar.add(newAction);
-            }
-          }
-        } catch (CoreException ex) {
-          ex.printStackTrace();
-        }
+		IConfigurationElement[] config = registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
+		try {
+			for (IConfigurationElement e : config) {
+				final Object o = e.createExecutableExtension("toolbarAction");
+				if (o instanceof IToolbarAction) {
+					final IToolbarAction action = (IToolbarAction) o;
+					if (!action.canExecute(input)) {
+						continue;
+					}
+
+					final Action newAction = new Action() {
+						@Override
+						public void run() {
+							super.run();
+							action.execute(input);
+						}
+					};
+
+					newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
+							action.getClass()).getResource(action.getImagePath())));
+					newAction.setText(action.getLabel());
+					toolbar.add(newAction);
+				}
+			}
+		} catch (CoreException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void addDragAndDropSupport(final TreeViewer treeViewer,
+			EditingDomain editingDomain) {
+
+		final int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+		final Transfer[] transfers = new Transfer[] { LocalTransfer.getInstance() };
+		treeViewer.addDragSupport(dndOperations, transfers, new ViewerDragAdapter(treeViewer));
+		final EditingDomainViewerDropAdapter editingDomainViewerDropAdapter = new EditingDomainViewerDropAdapter(
+				editingDomain, treeViewer);
+		treeViewer.addDropSupport(dndOperations, transfers, editingDomainViewerDropAdapter);
 	}
 }
