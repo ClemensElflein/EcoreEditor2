@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
+import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.actions.CreateChildAction;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -50,6 +51,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -62,6 +64,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -353,8 +356,18 @@ public class MasterDetailRenderer extends Composite {
 					// AddCommand.create(domain, eObject.eContainer(), null,
 					// cp.getEValue()));
 					// }
+					EObject newElement = cp.getEValue();
 
-					domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, cp.getEValue()));
+					int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
+					
+					if(result == Window.OK) {
+						domain.getCommandStack().execute(
+								AddCommand.create(domain, eObject, reference,
+										newElement));
+	
+						// Select the newly added element, if possible
+						setSelection(new StructuredSelection(newElement));
+					}
 				}
 			});
 		}
