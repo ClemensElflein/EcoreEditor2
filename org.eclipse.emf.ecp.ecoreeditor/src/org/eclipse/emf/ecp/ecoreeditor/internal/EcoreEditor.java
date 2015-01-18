@@ -1,6 +1,10 @@
+/*
+ * @author Clemens Elflein
+ */
 package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import java.net.MalformedURLException;
+import java.security.spec.DSAGenParameterSpec;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
@@ -16,8 +20,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
-import org.eclipse.emf.ecp.ecoreeditor.internal.actions.CreateChildActionWithAccelerator;
+import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.ResourceSetHelpers;
+import org.eclipse.emf.ecp.ecoreeditor.internal.ui.CreateChildActionWithAccelerator;
+import org.eclipse.emf.ecp.ecoreeditor.internal.ui.CreateNewChildDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.ui.MasterDetailRenderer;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
@@ -58,18 +64,23 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 
+/**
+ * The Class EcoreEditor it is the generic part for editing any EObject
+ */
 public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 
-	// The Resource loaded from the provided EditorInput
+	/** The Resource loaded from the provided EditorInput */
 	private ResourceSet resourceSet;
 
-	// Use a simple CommandStack that can undo and redo nothing.
+	/** The command stack. It is used to mark the editor as dirty as well as undo/redo operations */
 	private BasicCommandStack commandStack = new BasicCommandStack();
 
-	private IMenuManager menuManager;
-
+	/** The root view. It is the main Editor panel. */
 	private MasterDetailRenderer rootView;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (ResourceSetHelpers.save(resourceSet)) {
@@ -80,6 +91,9 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+	 */
 	@Override
 	public void doSaveAs() {
 		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
@@ -93,6 +107,9 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+	 */
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
@@ -111,40 +128,53 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 			}
 		});
 
-		// Activate our context, so that our keybindings are more important than
+		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
 				.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
-
-		IMenuService mSvc = (IMenuService) site.getService(IMenuService.class);
-		menuManager = site.getActionBars().getMenuManager();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.EditorPart#isDirty()
+	 */
 	@Override
 	public boolean isDirty() {
 		return commandStack.isSaveNeeded();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
+	 */
 	@Override
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		// Load the resource from the provided input and display the editor
 		loadResource();
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
+		
 		this.rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
+		
+		// We need to set the selectionProvider for the editor, so that the EditingDomainActionBarContributor
+		// knows the currently selected object to copy/paste
 		getEditorSite().setSelectionProvider(rootView.getSelectionProvider());
 		
+		// The EditingDomainActionBarContributor hooks undo/redo/copy/cut/paste actions to the
+		// editor's actionbar and enables all these actions.
 		EditingDomainActionBarContributor actionBarProvider = new EditingDomainActionBarContributor();
 		actionBarProvider.init(getEditorSite().getActionBars());
 		actionBarProvider.setActiveEditor(this);
 		actionBarProvider.activate();
 	}
 
-	/*
+	/**
 	 * Loads the Resource from the EditorInput and sets the EcoreEditor.resource
 	 * field.
 	 */
@@ -160,16 +190,24 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+	 */
 	@Override
 	public void setFocus() {
-		// NOP
+		// NOOP
 	}
 
-	// Receives ExecutionEvents from ShortcutHandler and different actions
-	// accordingly.
+	/**
+	 * Receives ExecutionEvents from ShortcutHandler and different actions
+	 * accordingly.
+	 * 
+	 * @param event the event
+	 */
 	public void processEvent(ExecutionEvent event) {
 		Object selection = rootView.getCurrentSelection();
-		
+
+		// We only create or delete elements for EObjects
 		if(!(selection instanceof EObject)) {
 			return;
 		}
@@ -194,158 +232,23 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		}
 	}
 	
+	/**
+	 * Creates the new element dialog.
+	 *
+	 * @param editingDomain the editing domain
+	 * @param selection the selection
+	 * @param title the title
+	 * @return the dialog
+	 */
 	private Dialog createNewElementDialog(final EditingDomain editingDomain,
 			final EObject selection, final String title) {
-		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
-		Dialog diag = new Dialog(Display.getDefault().getActiveShell()) {
-
-			@Override
-			protected void setShellStyle(int newShellStyle) {
-				super.setShellStyle(SWT.TITLE);
-			}
-
-			@Override
-			protected Button createButton(Composite parent, int id,
-					String label, boolean defaultButton) {
-				return null;
-			}
-
-			@Override
-			protected void createButtonsForButtonBar(Composite parent) {
-				GridLayout layout = (GridLayout) parent.getLayout();
-				layout.marginHeight = 0;
-			}
-
-			@Override
-			protected void configureShell(Shell newShell) {
-				super.configureShell(newShell);
-				newShell.setText(title);
-			}
-
-			@Override
-			protected Control createDialogArea(Composite parent) {
-				// Control area = super.createDialogArea(parent);
-				parent.setLayoutData(new GridData(GridData.FILL_BOTH));
-				// parent.setData(null);
-				final Dialog currentDialog = this;
-				final List<Action> actions = fillContextMenu(
-						childrenDescriptorCollector.getDescriptors(selection),
-						editingDomain, selection);
-
-				TableViewer list = new TableViewer(parent);
-				list.setContentProvider(new ArrayContentProvider());
-				list.setLabelProvider(new LabelProvider() {
-					@Override
-					public String getText(Object element) {
-						Action action = (Action) element;
-						StringBuilder builder = new StringBuilder(action
-								.getText());
-						if (action.getAccelerator() > 0) {
-							builder.append(" [");
-							builder.append(Character.toUpperCase((char) action
-									.getAccelerator()));
-							builder.append("]");
-						}
-						return builder.toString();
-					}
-
-					@Override
-					public Image getImage(Object element) {
-						return ((Action) element).getImageDescriptor()
-								.createImage();
-					}
-				});
-				list.setInput(actions.toArray());
-				list.addOpenListener(new IOpenListener() {
-
-					@Override
-					public void open(OpenEvent event) {
-						Action action = (Action) ((StructuredSelection) event
-								.getSelection()).getFirstElement();
-						action.run();
-						currentDialog.close();
-					}
-				});
-				list.getControl().addKeyListener(new KeyListener() {
-
-					@Override
-					public void keyReleased(KeyEvent e) {
-						// NOP
-					}
-
-					@Override
-					public void keyPressed(KeyEvent e) {
-						for (Action a : actions) {
-							if (a.getAccelerator() == e.keyCode) {
-								a.run();
-								currentDialog.close();
-								break;
-							}
-						}
-					}
-				});
-				return parent;
-			}
-		};
-		return diag;
+		return new CreateNewChildDialog(Display.getCurrent().getActiveShell(), title, selection, rootView.getSelectionProvider());
 	}
 
-	private List<Action> fillContextMenu(Collection<?> descriptors,
-			final EditingDomain domain, final EObject eObject) {
-
-		List<Action> result = new ArrayList<Action>();
-
-		for (final Object descriptor : descriptors) {
-
-			final CommandParameter cp = (CommandParameter) descriptor;
-			if (!CommandParameter.class.isInstance(descriptor)) {
-				continue;
-			}
-			if (cp.getEReference() == null) {
-				continue;
-			}
-			if (!cp.getEReference().isMany()
-					&& eObject.eIsSet(cp.getEStructuralFeature())) {
-				continue;
-			} else if (cp.getEReference().isMany()
-					&& cp.getEReference().getUpperBound() != -1
-					&& cp.getEReference().getUpperBound() <= ((List<?>) eObject
-							.eGet(cp.getEReference())).size()) {
-				continue;
-			}
-
-			result.add(new CreateChildActionWithAccelerator(domain,
-					new StructuredSelection(eObject), descriptor) {
-				@Override
-				public void run() {
-					super.run();
-
-					final EReference reference = ((CommandParameter) descriptor)
-							.getEReference();
-					// if (!reference.isContainment()) {
-					// domain.getCommandStack().execute(
-					// AddCommand.create(domain, eObject.eContainer(), null,
-					// cp.getEValue()));
-					// }
-
-					EObject newElement = cp.getEValue();
-
-					int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
-					
-					if(result == Window.OK) {
-						domain.getCommandStack().execute(
-								AddCommand.create(domain, eObject, reference,
-										newElement));
 	
-						// Select the newly added element, if possible
-						rootView.setSelection(new StructuredSelection(newElement));
-					}
-				}
-			});
-		}
-		return result;
-	}
-
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.edit.domain.IEditingDomainProvider#getEditingDomain()
+	 */
 	@Override
 	public EditingDomain getEditingDomain() {
 		if(rootView == null) {

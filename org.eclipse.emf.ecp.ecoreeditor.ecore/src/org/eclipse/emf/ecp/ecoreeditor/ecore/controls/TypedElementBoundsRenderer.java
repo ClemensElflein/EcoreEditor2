@@ -4,7 +4,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecp.ecoreeditor.internal.Log;
+import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.view.spi.core.swt.AbstractControlSWTRenderer;
 import org.eclipse.emf.ecp.view.spi.core.swt.SimpleControlSWTControlSWTRenderer;
 import org.eclipse.emf.ecp.view.spi.core.swt.SimpleControlSWTRenderer;

@@ -9,7 +9,7 @@
  * Contributors:
  * IBM - Initial API and implementation
  */
-package org.eclipse.emf.ecp.ecoreeditor.internal.actions;
+package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
 import java.util.Collection;
 

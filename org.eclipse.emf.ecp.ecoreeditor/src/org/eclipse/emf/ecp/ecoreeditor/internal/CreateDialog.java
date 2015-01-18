@@ -1,3 +1,6 @@
+/*
+ * @author Clemens Elflein
+ */
 package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import org.eclipse.emf.common.util.Diagnostic;
@@ -17,23 +20,42 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * The Class CreateDialog allows initializing newly created EObjects
+ * It also can be used to create an EObject and initialize it directly
+ */
 public class CreateDialog extends Dialog {
 
+	/** The new object. */
 	private EObject newObject;
 	
+	/**
+	 * Instantiates a new dialog
+	 *
+	 * @param parent the parent
+	 * @param toCreate the EClass which should be created
+	 */
 	public CreateDialog(Shell parent, EClass toCreate) {
 		this(parent, EcoreFactory.eINSTANCE.create(toCreate));
 	}
 	
+	/**
+	 * Instantiates a new dialog
+	 *
+	 * @param parent the parent
+	 * @param createdInstance an EObject to initialize
+	 */
 	public CreateDialog(Shell parent, EObject createdInstance) {
 		super(parent);
 		newObject = createdInstance;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+	 */
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -46,6 +68,9 @@ public class CreateDialog extends Dialog {
 	
 	
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		
@@ -77,6 +102,9 @@ public class CreateDialog extends Dialog {
 		return parent;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
 	@Override
 	protected void okPressed() {
 		Diagnostic result = Diagnostician.INSTANCE.validate(newObject);
@@ -95,6 +123,12 @@ public class CreateDialog extends Dialog {
 		}
 	}
 
+	/**
+	 * Gets the created instance or the updated one, if it was passed in the constructor.
+	 * All fields are initialized with user inputs
+	 * 
+	 * @return the created instance
+	 */
 	public EObject getCreatedInstance() {
 		return newObject;
 	}

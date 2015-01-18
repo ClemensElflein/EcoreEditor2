@@ -1,3 +1,6 @@
+/*
+ * @author Clemens Elflein
+ */
 package org.eclipse.emf.ecp.ecoreeditor.internal.helpers;
 
 import java.io.IOException;
@@ -18,14 +21,24 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecp.ecoreeditor.internal.Log;
+import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ResourceSetHelpers.
+ * It is a utility class to perform operations on ResourceSet objects.
+ */
 public class ResourceSetHelpers {
 
-	// Saves all changes in a ResourceSet
+	/**
+	 * Save all changes in a ResourceSet
+	 *
+	 * @param resourceSet the resource set
+	 * @return true, if successful
+	 */
 	public static boolean save(ResourceSet resourceSet) {
 		try {
 			for (Resource resource : resourceSet.getResources()) {
@@ -38,6 +51,13 @@ public class ResourceSetHelpers {
 		return false;
 	}
 
+	/**
+	 * Load resource set with proxies.
+	 *
+	 * @param resourceURI the resource uri (= File to load)
+	 * @param commandStack the command stack
+	 * @return the resource set
+	 */
 	public static ResourceSet loadResourceSetWithProxies(URI resourceURI,
 			BasicCommandStack commandStack) {
 		// Create a ResourceSet and add the requested Resource
@@ -48,6 +68,12 @@ public class ResourceSetHelpers {
 		return null;
 	}
 
+	/**
+	 * Creates a ResourceSet with a CommandStack attached to it
+	 *
+	 * @param commandStack the command stack
+	 * @return the resource set
+	 */
 	private static ResourceSet createResourceSet(CommandStack commandStack) {
 		final AdapterFactoryEditingDomain domain = new AdapterFactoryEditingDomain(
 				new ComposedAdapterFactory(
@@ -62,6 +88,13 @@ public class ResourceSetHelpers {
 		return resourceSet;
 	}
 
+	/**
+	 * Loads a resource from resourceURI and adds it to the resourceSet.
+	 *
+	 * @param resourceSet the resource set
+	 * @param resourceURI the resource uri
+	 * @return true, if successful
+	 */
 	public static boolean addResourceToSet(ResourceSet resourceSet,
 			URI resourceURI) {
 		try {
@@ -75,8 +108,6 @@ public class ResourceSetHelpers {
 			// resolve all proxies
 			int rsSize = resourceSet.getResources().size();
 
-			Log.i("Added Resource! Old Size:" + rsSizeOld + "; New Size:"
-					+ rsSize);
 			EcoreUtil.resolveAll(resourceSet);
 			while (rsSize != resourceSet.getResources().size()) {
 				EcoreUtil.resolveAll(resourceSet);
@@ -89,6 +120,14 @@ public class ResourceSetHelpers {
 		return false;
 	}
 
+	/**
+	 * Find all of type in resource set.
+	 *
+	 * @param object the object
+	 * @param type the type
+	 * @param includeEcorePackage the include ecore package
+	 * @return the list
+	 */
 	public static List<?> findAllOfTypeInResourceSet(EObject object,
 			EClassifier type, boolean includeEcorePackage) {
 		return ResourceSetHelpers.findAllOf(
@@ -96,6 +135,15 @@ public class ResourceSetHelpers {
 				includeEcorePackage);
 	}
 
+	/**
+	 * Find all of type in resource set.
+	 *
+	 * @param <T> the generic type
+	 * @param object the object
+	 * @param clazz the clazz
+	 * @param includeEcorePackage the include ecore package
+	 * @return the list
+	 */
 	public static <T> List<T> findAllOfTypeInResourceSet(EObject object,
 			Class<T> clazz, boolean includeEcorePackage) {
 		return ResourceSetHelpers
@@ -103,28 +151,15 @@ public class ResourceSetHelpers {
 						includeEcorePackage);
 	}
 
-	/*
-	 * public static <T> List<T> findAllOf(ResourceSet resourceSet, EClassifier
-	 * type, boolean includeEcorePackage) { List<T> result = new ArrayList<T>();
-	 * 
-	 * // Iterate through all EObjects in every Resource in the set and return
-	 * // all Objects of Class clazz. if (resourceSet != null) { for (Resource
-	 * resource : resourceSet.getResources()) { TreeIterator<EObject>
-	 * objectIterator = resource .getAllContents(); while
-	 * (objectIterator.hasNext()) { EObject o = objectIterator.next(); if (o
-	 * instanceof EClassifier) { if (((EClassifier) o).get) { result.add((T) o);
-	 * } } } } }
-	 * 
-	 * if (includeEcorePackage) { // Find all EDatatypes in the ECore-Package.
-	 * TreeIterator<EObject> objectIterator = EcorePackage.eINSTANCE
-	 * .eAllContents(); while (objectIterator.hasNext()) { EObject o =
-	 * objectIterator.next(); if (o instanceof ETypedElement) { if
-	 * (((ETypedElement) o).getEType().equals(type)) { result.add((T) o); } } }
-	 * }
-	 * 
-	 * return result; }
+	/**
+	 * Find all of type in the ResourceSet
+	 *
+	 * @param <T> the generic type
+	 * @param resourceSet the resource set
+	 * @param clazz the clazz
+	 * @param includeEcorePackage the include ecore package
+	 * @return the list
 	 */
-
 	public static <T> List<T> findAllOf(ResourceSet resourceSet,
 			Class<T> clazz, boolean includeEcorePackage) {
 		List<T> result = new ArrayList<T>();
@@ -159,6 +194,13 @@ public class ResourceSetHelpers {
 		return result;
 	}
 
+	/**
+	 * Find all of type in EcorePackage.
+	 *
+	 * @param <T> the generic type
+	 * @param clazz the clazz
+	 * @return the list
+	 */
 	public static <T> List<T> findAllInEcorePackage(Class<T> clazz) {
 		return findAllOf(null, clazz, true);
 	}

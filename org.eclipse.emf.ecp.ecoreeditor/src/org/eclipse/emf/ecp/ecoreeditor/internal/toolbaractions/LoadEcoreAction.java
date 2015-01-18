@@ -1,3 +1,6 @@
+/*
+ * @author Clemens Elflein
+ */
 package org.eclipse.emf.ecp.ecoreeditor.internal.toolbaractions;
 
 import org.eclipse.core.resources.IResource;
@@ -14,18 +17,32 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
+
+/**
+ * The Class LoadEcoreAction.
+ * It displays the "Load Ecore" action in the editor's toolbar, if appropriate.
+ */
 public class LoadEcoreAction extends Object implements IToolbarAction {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getLabel()
+	 */
 	@Override
 	public String getLabel() {
 		return "Load Ecore";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getImagePath()
+	 */
 	@Override
 	public String getImagePath() {
 		return "icons/chart_organisation_add.png";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#execute(java.lang.Object)
+	 */
 	@Override
 	public void execute(Object currentObject) {
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
@@ -48,6 +65,9 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#canExecute(java.lang.Object)
+	 */
 	@Override
 	public boolean canExecute(Object object) {
 		// We cannot execute the action on objects other than ResourceSet

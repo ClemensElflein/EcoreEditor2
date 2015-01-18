@@ -1,3 +1,6 @@
+/*
+ * @author Clemens Elflein
+ */
 package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
 import java.util.Collection;
@@ -18,7 +21,6 @@ import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
-import org.eclipse.emf.ecp.ecoreeditor.internal.actions.CreateChildAction;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
@@ -27,6 +29,7 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.dnd.EditingDomainViewerDropAdapter;
 import org.eclipse.emf.edit.ui.dnd.LocalTransfer;
@@ -74,26 +77,60 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
 
-public class MasterDetailRenderer extends Composite {
+/**
+ * The Class MasterDetailRenderer.
+ * It is the base renderer for the editor.
+ * 
+ * It takes any object as input and renders a tree on the left-hand side.
+ * When selecting an item in the tree (that is an EObject) EMF-Forms is used to render the detail pane on the right-hand side
+ * 
+ * MasterDetailRenderer implements IEditingDomainProvider to allow Undo/Redo/Copy/Cut/Paste actions to be performed externally.
+ * 
+ * MasterDetailRenderer provides an ISelectionProvider to get the currently selected items in the tree
+ * 
+ */
+public class MasterDetailRenderer extends Composite implements IEditingDomainProvider {
 
+	/** The Toolbar action extensionpoint ID. */
 	private final static String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
 
+	/** The input. */
 	private final Object input;
+	
+	/** The editing domain. */
 	private final EditingDomain editingDomain;
 
+	/** The tree viewer. */
 	private TreeViewer treeViewer = null;
+	
+	/** The vertical sash. */
 	private Sash verticalSash = null;
+	
+	/** The header panel. */
 	private Composite headerPanel = null;
+	
+	/** The detail scrollable composite. */
 	private ScrolledComposite detailScrollableComposite = null;
+	
+	/** The detail panel. */
 	private Composite detailPanel = null;
 	
 
+	/** The context. It is used in the same way as in TreeMasterDetail.
+	 * It allows custom viewmodels for the detail panel */
 	private static Map<String, Object> context = new LinkedHashMap<String, Object>();
 
 	static {
 		context.put("detail", true);
 	}
 
+	/**
+	 * Instantiates a new master detail renderer.
+	 *
+	 * @param parent the parent
+	 * @param style the style
+	 * @param input the input
+	 */
 	public MasterDetailRenderer(Composite parent, int style, Object input) {
 		super(parent, style);
 		this.input = input;
@@ -101,84 +138,36 @@ public class MasterDetailRenderer extends Composite {
 		renderControl();
 	}
 
+	/**
+	 * Render the control
+	 *
+	 * @return the control
+	 */
 	protected Control renderControl() {
-		// Create the Form with two panels
+		// Create the Form with two panels and a header
 		FormLayout parentLayout = new FormLayout();
-
 		this.setLayout(parentLayout);
 
+		// First create the header with the toolbar, then the separator.
 		createHeader(this);
 		createSash(this);
-		createTree(this);
-		createDetaiScrollableComposite(this);
 		
-
+		// Attach the tree and the detail container to the Sash
+		createTree(this);
+		createDetailScrollableComposite(this);
+		
+		// Set the Label and Content providers, set the input and select the default
 		initializeTree();
 
 		return this;
 	}
 
-	private void createSash(final Composite parent) {
-		final Sash sash = new Sash(parent, SWT.VERTICAL);
-		// Put the TreeViewer on the left hand side of the form
-		FormData sashFormData = new FormData();
-		sashFormData.bottom = new FormAttachment(100, -5);
-		sashFormData.left = new FormAttachment(0, 300);
-		sashFormData.top = new FormAttachment(headerPanel, 5);
-		sash.setLayoutData(sashFormData);
-		
-		sash.addListener(SWT.Selection, new Listener () {
-		    public void handleEvent(Event e) {
-		        sash.setLocation(e.x, e.y);
-		 
-				FormData sashFormData = new FormData();
-				sashFormData.bottom = new FormAttachment(100, -5);
-				sashFormData.left = new FormAttachment(0, e.x);
-				sashFormData.top = new FormAttachment(headerPanel, 5);
-				sash.setLayoutData(sashFormData);
-		        parent.layout(true);;
-		    }
-		});
-		
-		this.verticalSash = sash;
-	}
 
-	private void initializeTree() {
-		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(new AdapterFactory[] {
-				new CustomReflectiveItemProviderAdapterFactory(),
-				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
-
-		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-				adapterFactory);
-
-		treeViewer.setContentProvider(adapterFactoryContentProvider);
-		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory),
-				new DiagnosticDecorator(editingDomain, treeViewer)));
-		new ColumnViewerInformationControlToolTipSupport(treeViewer,
-				new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
-		treeViewer.setAutoExpandLevel(3);
-		treeViewer.setInput(input);
-		
-		// Scan the input for the first EObject and select it
-		EObject initialSelection = findInitialSelection(adapterFactoryContentProvider, input);
-		if(initialSelection != null) {
-			treeViewer.setSelection(new StructuredSelection(initialSelection), true);
-		}
-	}
-	
-	private EObject findInitialSelection(AdapterFactoryContentProvider contentProvider, Object input) {
-		if(input instanceof EObject) {
-			return (EObject)input;
-		}
-		for(Object child : contentProvider.getChildren(input)) {
-			EObject childSelector = findInitialSelection(contentProvider, child);
-			if(childSelector != null) {
-				return childSelector;
-			}
-		}
-		return null;
-	}
-
+	/**
+	 * Creates the header with the toolbar and its containing actions
+	 *
+	 * @param parent the parent
+	 */
 	protected void createHeader(Composite parent) {
 		final Composite headerComposite = new Composite(parent, SWT.NONE);
 		final GridLayout headerLayout = GridLayoutFactory.fillDefaults().create();
@@ -188,6 +177,7 @@ public class MasterDetailRenderer extends Composite {
 
 		final Composite header = getPageHeader(headerComposite);
 
+		// Create the toolbar and add it to the header
 		final ToolBar toolBar = new ToolBar(header, SWT.FLAT | SWT.RIGHT);
 		final FormData formData = new FormData();
 		formData.right = new FormAttachment(100, 0);
@@ -202,7 +192,7 @@ public class MasterDetailRenderer extends Composite {
 		header.layout();
 
 		this.headerPanel = headerComposite;
-		// Put the Header on the top
+		// Put the Header on the top and make it 30px high
 		FormData headerFormData = new FormData(SWT.DEFAULT, 30);
 		headerFormData.right = new FormAttachment(100, 0);
 		headerFormData.top = new FormAttachment(0, 0);
@@ -211,6 +201,13 @@ public class MasterDetailRenderer extends Composite {
 		this.headerPanel.setLayoutData(headerFormData);
 	}
 
+	/**
+	 * Gets the page header. 
+	 * This is the part of the toolbar with the icon and title
+	 *
+	 * @param parent the parent
+	 * @return the page header
+	 */
 	private Composite getPageHeader(Composite parent) {
 		final Composite header = new Composite(parent, SWT.FILL);
 		final FormLayout layout = new FormLayout();
@@ -223,7 +220,7 @@ public class MasterDetailRenderer extends Composite {
 
 		final Label titleImage = new Label(header, SWT.FILL);
 		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
-				.getResource("icons/view.png")); //$NON-NLS-1$
+				.getResource("icons/view.png"));
 		titleImage.setImage(new Image(parent.getDisplay(), imageDescriptor.getImageData()));
 		final FormData titleImageData = new FormData();
 		final int imageOffset = -titleImage.computeSize(SWT.DEFAULT, SWT.DEFAULT).y / 2;
@@ -248,7 +245,45 @@ public class MasterDetailRenderer extends Composite {
 		return header;
 
 	}
+	
+	/**
+	 * Creates the sash for separation of the tree and the detail pane
+	 *
+	 * @param parent the parent
+	 */
+	private void createSash(final Composite parent) {
+		final Sash sash = new Sash(parent, SWT.VERTICAL);
+		
+		// Make the left panel 300px wide and put it below the header
+		FormData sashFormData = new FormData();
+		sashFormData.bottom = new FormAttachment(100, -5);
+		sashFormData.left = new FormAttachment(0, 300);
+		sashFormData.top = new FormAttachment(headerPanel, 5);
+		sash.setLayoutData(sashFormData);
+		
+		// As soon as the sash is moved, layout the parent to reflect the changes
+		sash.addListener(SWT.Selection, new Listener () {
+		    public void handleEvent(Event e) {
+		        sash.setLocation(e.x, e.y);
+		 
+				FormData sashFormData = new FormData();
+				sashFormData.bottom = new FormAttachment(100, -5);
+				sashFormData.left = new FormAttachment(0, e.x);
+				sashFormData.top = new FormAttachment(headerPanel, 5);
+				sash.setLayoutData(sashFormData);
+		        parent.layout(true);;
+		    }
+		});
+		
+		this.verticalSash = sash;
+	}
 
+	/**
+	 * Creates the tree.
+	 *
+	 * @param parent the parent
+	 * @return the control
+	 */
 	private Control createTree(final Composite parent) {
 		treeViewer = new TreeViewer(parent, SWT.BORDER);
 
@@ -257,23 +292,27 @@ public class MasterDetailRenderer extends Composite {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
+				// Create a new detail panel in the scrollable composite. Disposes any old panels.
 				createDetailPanel();
+				
+				// Get the selected object, if it is an EObject, render the details using EMF Forms
 				Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
 				if (selectedObject instanceof EObject) {
-					EditingDomain editingDomain = AdapterFactoryEditingDomain
-							.getEditingDomainFor((EObject) selectedObject);
-
 					try {
 						ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
 						detailPanel.layout(true, true);
 					} catch (ECPRendererException e) {
 					}
+					// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
 					detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					
+					// Set the context menu for creation of new elements
 					fillContextMenu(treeViewer, editingDomain);
 				}
 			}
 		});
 		
+		// Allow DnD in the tree
 		addDragAndDropSupport(treeViewer, editingDomain);
 
 		// Put the TreeViewer on the left hand side of the form
@@ -287,7 +326,12 @@ public class MasterDetailRenderer extends Composite {
 		return treeViewer.getControl();
 	}
 	
-	private void createDetaiScrollableComposite(Composite parent) {
+	/**
+	 * Creates the detail scrollable composite.
+	 *
+	 * @param parent the parent
+	 */
+	private void createDetailScrollableComposite(Composite parent) {
 		detailScrollableComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER);
 		detailScrollableComposite.setExpandHorizontal(true);
 		detailScrollableComposite.setExpandVertical(true);
@@ -301,8 +345,16 @@ public class MasterDetailRenderer extends Composite {
 		detailScrollableComposite.setLayoutData(detailFormData);
 
 	}
+	
+	
 
+	/**
+	 * Creates the detail panel.
+	 *
+	 * @return the control
+	 */
 	private Control createDetailPanel() {
+		// Dispose old panels to avoid memory leaks
 		if (detailPanel != null) {
 			detailPanel.dispose();
 		}
@@ -314,7 +366,61 @@ public class MasterDetailRenderer extends Composite {
 		detailScrollableComposite.layout(true, true);
 		return detailPanel;
 	}
+	
+	/**
+	 * Initialize the treeViewer
+	 */
+	private void initializeTree() {
+		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(new AdapterFactory[] {
+				new CustomReflectiveItemProviderAdapterFactory(),
+				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
 
+		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
+				adapterFactory);
+
+		treeViewer.setContentProvider(adapterFactoryContentProvider);
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory),
+				new DiagnosticDecorator(editingDomain, treeViewer)));
+		new ColumnViewerInformationControlToolTipSupport(treeViewer,
+				new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
+		treeViewer.setAutoExpandLevel(3);
+		treeViewer.setInput(input);
+		
+		// Scan the input for the first EObject and select it
+		EObject initialSelection = findInitialSelection(adapterFactoryContentProvider, input);
+		if(initialSelection != null) {
+			treeViewer.setSelection(new StructuredSelection(initialSelection), true);
+		}
+	}
+	
+	/**
+	 * Find initial selection.
+	 * Recursively finds the first EObject in the input.
+	 *
+	 * @param contentProvider the content provider
+	 * @param input the input
+	 * @return the EObject to select by default
+	 */
+	private EObject findInitialSelection(AdapterFactoryContentProvider contentProvider, Object input) {
+		if(input instanceof EObject) {
+			return (EObject)input;
+		}
+		for(Object child : contentProvider.getChildren(input)) {
+			EObject childSelector = findInitialSelection(contentProvider, child);
+			if(childSelector != null) {
+				return childSelector;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Fill context menu.
+	 * Fills the context menu. Adds create actions for all possible children and a delete action.
+	 *
+	 * @param treeViewer the tree viewer
+	 * @param editingDomain the editing domain
+	 */
 	private void fillContextMenu(final TreeViewer treeViewer, final EditingDomain editingDomain) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		final MenuManager menuMgr = new MenuManager();
@@ -347,14 +453,12 @@ public class MasterDetailRenderer extends Composite {
 	}
 
 	/**
-	 * @param manager
-	 *            The menu manager responsible for the context menu
-	 * @param descriptors
-	 *            The menu items to be added
-	 * @param domain
-	 *            The editing domain of the current EObject
-	 * @param eObject
-	 *            The model element
+	 * Fill context menu.
+	 *
+	 * @param manager            The menu manager responsible for the context menu
+	 * @param descriptors            The menu items to be added
+	 * @param domain            The editing domain of the current EObject
+	 * @param eObject            The model element
 	 */
 	private void fillContextMenu(IMenuManager manager, Collection<?> descriptors, final EditingDomain domain,
 			final EObject eObject) {
@@ -404,9 +508,11 @@ public class MasterDetailRenderer extends Composite {
 	}
 
 	/**
-	 * @param editingDomain
-	 * @param manager
-	 * @param selection
+	 * Adds the delete action to context menu.
+	 *
+	 * @param editingDomain the editing domain
+	 * @param manager the manager
+	 * @param selection the selection
 	 */
 	private void addDeleteActionToContextMenu(final EditingDomain editingDomain, final IMenuManager manager,
 			final IStructuredSelection selection) {
@@ -434,16 +540,31 @@ public class MasterDetailRenderer extends Composite {
 		manager.add(deleteAction);
 	}
 
+	/**
+	 * Gets the current selection.
+	 *
+	 * @return the current selection
+	 */
 	public Object getCurrentSelection() {
 		if (!(treeViewer.getSelection() instanceof StructuredSelection))
 			return null;
 		return ((StructuredSelection) treeViewer.getSelection()).getFirstElement();
 	}
 
+	/**
+	 * Sets the selection.
+	 *
+	 * @param structuredSelection the new selection
+	 */
 	public void setSelection(StructuredSelection structuredSelection) {
 		treeViewer.setSelection(structuredSelection);
 	}
 
+	/**
+	 * Read toolbar actions from all extensions
+	 *
+	 * @param toolbar the toolbar to add the actions to
+	 */
 	private void readToolbarActions(ToolBarManager toolbar) {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		if (registry == null) {
@@ -479,6 +600,12 @@ public class MasterDetailRenderer extends Composite {
 		}
 	}
 
+	/**
+	 * Adds the drag and drop support to the treeViewer
+	 *
+	 * @param treeViewer the tree viewer
+	 * @param editingDomain the editing domain
+	 */
 	private void addDragAndDropSupport(final TreeViewer treeViewer,
 			EditingDomain editingDomain) {
 
@@ -490,10 +617,20 @@ public class MasterDetailRenderer extends Composite {
 		treeViewer.addDropSupport(dndOperations, transfers, editingDomainViewerDropAdapter);
 	}
 
+	/**
+	 * Gets the selection provider.
+	 *
+	 * @return the selection provider
+	 */
 	public ISelectionProvider getSelectionProvider() {
 		return treeViewer;
 	}
 
+	/**
+	 * Gets the editing domain.
+	 *
+	 * @return the editing domain
+	 */
 	public EditingDomain getEditingDomain() {
 		return editingDomain;
 	}
