@@ -62,8 +62,11 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.ToolBar;
 import org.osgi.framework.FrameworkUtil;
 
@@ -75,9 +78,10 @@ public class MasterDetailRenderer extends Composite {
 	private final EditingDomain editingDomain;
 
 	private TreeViewer treeViewer = null;
+	private Sash verticalSash = null;
 	private Composite headerPanel = null;
 	private Composite detailPanel = null;
-	private Composite detailContainer = null;
+	
 
 	private static Map<String, Object> context = new LinkedHashMap<String, Object>();
 
@@ -99,12 +103,38 @@ public class MasterDetailRenderer extends Composite {
 		this.setLayout(parentLayout);
 
 		createHeader(this);
+		createSash(this);
 		createTree(this);
 		createDetailPanel(this);
 
 		initializeTree();
 
 		return this;
+	}
+
+	private void createSash(final Composite parent) {
+		final Sash sash = new Sash(parent, SWT.VERTICAL);
+		// Put the TreeViewer on the left hand side of the form
+		FormData sashFormData = new FormData();
+		sashFormData.bottom = new FormAttachment(100, -5);
+		sashFormData.left = new FormAttachment(0, 300);
+		sashFormData.top = new FormAttachment(headerPanel, 5);
+		sash.setLayoutData(sashFormData);
+		
+		sash.addListener(SWT.Selection, new Listener () {
+		    public void handleEvent(Event e) {
+		        sash.setLocation(e.x, e.y);
+		 
+				FormData sashFormData = new FormData();
+				sashFormData.bottom = new FormAttachment(100, -5);
+				sashFormData.left = new FormAttachment(0, e.x);
+				sashFormData.top = new FormAttachment(headerPanel, 5);
+				sash.setLayoutData(sashFormData);
+		        parent.layout(true);;
+		    }
+		});
+		
+		this.verticalSash = sash;
 	}
 
 	private void initializeTree() {
@@ -222,9 +252,10 @@ public class MasterDetailRenderer extends Composite {
 		addDragAndDropSupport(treeViewer, editingDomain);
 
 		// Put the TreeViewer on the left hand side of the form
-		FormData treeFormData = new FormData(300, SWT.DEFAULT);
+		FormData treeFormData = new FormData();
 		treeFormData.bottom = new FormAttachment(100, -5);
 		treeFormData.left = new FormAttachment(0, 5);
+		treeFormData.right = new FormAttachment(verticalSash, -2);
 		treeFormData.top = new FormAttachment(headerPanel, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
 
@@ -242,7 +273,7 @@ public class MasterDetailRenderer extends Composite {
 		// Put the Details panel right to the tree and fix it to the right side
 		// of the form
 		FormData detailFormData = new FormData();
-		detailFormData.left = new FormAttachment(treeViewer.getControl(), 5);
+		detailFormData.left = new FormAttachment(verticalSash, 2);
 		detailFormData.top = new FormAttachment(headerPanel, 5);
 		detailFormData.bottom = new FormAttachment(100, -5);
 		detailFormData.right = new FormAttachment(100, -5);
