@@ -12,6 +12,7 @@
 	<modules>
 		<module>../org.eclipse.emf.ecp.ecoreeditor</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.ecore</module>
+		<module>../org.eclipse.emf.ecp.ecoreeditor.genmodel</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.p2updatesite</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.feature</module>
 	</modules>
