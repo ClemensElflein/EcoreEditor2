@@ -29,25 +29,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor.viewmodel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.emf.ecp.ecoreeditor.genmodel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor.treeinput"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor.treemasterdetail.extended"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

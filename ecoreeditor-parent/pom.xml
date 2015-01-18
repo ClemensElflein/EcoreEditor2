@@ -12,6 +12,7 @@
 	<modules>
 		<module>../org.eclipse.emf.ecp.ecoreeditor</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.ecore</module>
+		<module>../org.eclipse.emf.ecp.ecoreeditor.genmodel</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.p2updatesite</module>
 		<module>../org.eclipse.emf.ecp.ecoreeditor.feature</module>
 	</modules>
@@ -35,6 +36,11 @@
 			<id>eclipse-platform</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/mars</url>
+		</repository>
+		<repository>
+			<id>ecp-mars</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/ecp/releases/releases_15/</url>
 		</repository>
 	</repositories>
 	<build>

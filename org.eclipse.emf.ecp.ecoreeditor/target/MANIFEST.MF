@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true
-Export-Package: org.eclipse.emf.ecp.ecoreeditor;x-internal:=true,org.e
- clipse.emf.ecp.ecoreeditor.helpers;x-internal:=true
+Export-Package: org.eclipse.emf.ecp.ecoreeditor,org.eclipse.emf.ecp.ec
+ oreeditor.internal;x-internal:=true,org.eclipse.emf.ecp.ecoreeditor.i
+ nternal.helpers;x-internal:=true
 Bundle-Name: EcoreEditor2
-Bundle-Version: 1.5.0.201501152107
+Bundle-Version: 1.5.0.201501181847
 Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecp.ui.view.s
  wt;bundle-version="1.4.0",org.eclipse.emf.edit.ui,org.junit,org.eclip
  se.core.databinding;bundle-version="1.4.2",org.eclipse.emf.ecp.view.t
@@ -13,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecp.ui.view.s
  se.ui,org.eclipse.ui.workbench,org.eclipse.emf.ecp.view.context,org.e
  clipse.jface,org.eclipse.osgi
 Bundle-ManifestVersion: 2
-Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.Activator
+Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.internal.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.resources,org.eclipse.emf.common.comm
