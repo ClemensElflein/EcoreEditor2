@@ -155,6 +155,25 @@ public class MasterDetailRenderer extends Composite {
 				new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
 		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setInput(input);
+		
+		// Scan the input for the first EObject and select it
+		EObject initialSelection = findInitialSelection(adapterFactoryContentProvider, input);
+		if(initialSelection != null) {
+			treeViewer.setSelection(new StructuredSelection(initialSelection), true);
+		}
+	}
+	
+	private EObject findInitialSelection(AdapterFactoryContentProvider contentProvider, Object input) {
+		if(input instanceof EObject) {
+			return (EObject)input;
+		}
+		for(Object child : contentProvider.getChildren(input)) {
+			EObject childSelector = findInitialSelection(contentProvider, child);
+			if(childSelector != null) {
+				return childSelector;
+			}
+		}
+		return null;
 	}
 
 	protected void createHeader(Composite parent) {
