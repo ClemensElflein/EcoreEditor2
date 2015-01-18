@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
@@ -83,6 +84,7 @@ public class MasterDetailRenderer extends Composite {
 	private TreeViewer treeViewer = null;
 	private Sash verticalSash = null;
 	private Composite headerPanel = null;
+	private ScrolledComposite detailScrollableComposite = null;
 	private Composite detailPanel = null;
 	
 
@@ -108,7 +110,8 @@ public class MasterDetailRenderer extends Composite {
 		createHeader(this);
 		createSash(this);
 		createTree(this);
-		createDetailPanel(this);
+		createDetaiScrollableComposite(this);
+		
 
 		initializeTree();
 
@@ -254,7 +257,7 @@ public class MasterDetailRenderer extends Composite {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				createDetailPanel(parent);
+				createDetailPanel();
 				Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
 				if (selectedObject instanceof EObject) {
 					EditingDomain editingDomain = AdapterFactoryEditingDomain
@@ -265,7 +268,7 @@ public class MasterDetailRenderer extends Composite {
 						detailPanel.layout(true, true);
 					} catch (ECPRendererException e) {
 					}
-
+					detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					fillContextMenu(treeViewer, editingDomain);
 				}
 			}
@@ -283,15 +286,11 @@ public class MasterDetailRenderer extends Composite {
 
 		return treeViewer.getControl();
 	}
-
-	private Control createDetailPanel(Composite parent) {
-		if (detailPanel != null) {
-			detailPanel.dispose();
-		}
-
-		detailPanel = new Composite(parent, SWT.BORDER);
-		detailPanel.setLayout(new GridLayout());
-
+	
+	private void createDetaiScrollableComposite(Composite parent) {
+		detailScrollableComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER);
+		detailScrollableComposite.setExpandHorizontal(true);
+		detailScrollableComposite.setExpandVertical(true);
 		// Put the Details panel right to the tree and fix it to the right side
 		// of the form
 		FormData detailFormData = new FormData();
@@ -299,9 +298,20 @@ public class MasterDetailRenderer extends Composite {
 		detailFormData.top = new FormAttachment(headerPanel, 5);
 		detailFormData.bottom = new FormAttachment(100, -5);
 		detailFormData.right = new FormAttachment(100, -5);
-		detailPanel.setLayoutData(detailFormData);
+		detailScrollableComposite.setLayoutData(detailFormData);
 
-		parent.layout(true, true);
+	}
+
+	private Control createDetailPanel() {
+		if (detailPanel != null) {
+			detailPanel.dispose();
+		}
+
+		detailPanel = new Composite(detailScrollableComposite, SWT.BORDER);
+		detailPanel.setLayout(new GridLayout());
+		detailScrollableComposite.setContent(detailPanel);
+		
+		detailScrollableComposite.layout(true, true);
 		return detailPanel;
 	}
 
