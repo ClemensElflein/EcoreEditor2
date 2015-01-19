@@ -87,11 +87,13 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 		final Spinner lowerBound = new Spinner(main, SWT.BORDER);
 		lowerBound.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, true));
 		lowerBound.setSelection(domainObject.getLowerBound());
+		lowerBound.setMaximum(Integer.MAX_VALUE);
 		final Spinner upperBound = new Spinner(main, SWT.BORDER);
 		upperBound.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, true));
 		upperBound.setMinimum(-1);
 		upperBound.setSelection(domainObject.getUpperBound());
 		upperBound.setEnabled(domainObject.getUpperBound() != -1);
+		upperBound.setMaximum(Integer.MAX_VALUE);
 		
 		
 		final Button unbounded = new Button(main, SWT.CHECK);
