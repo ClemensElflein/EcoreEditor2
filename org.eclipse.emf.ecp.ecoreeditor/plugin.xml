@@ -8,6 +8,7 @@
             class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
             default="false"
             extensions="ecore"
+            icon="icons/EcoreModelFile.gif"
             id="EcoreEditor2.editor1"
             name="Ecore Editor">
       </editor>
