@@ -65,6 +65,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -159,6 +160,8 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		// Set the Label and Content providers, set the input and select the default
 		initializeTree();
 
+		updateDetailPanel();
+		
 		return this;
 	}
 
@@ -292,23 +295,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				// Create a new detail panel in the scrollable composite. Disposes any old panels.
-				createDetailPanel();
-				
-				// Get the selected object, if it is an EObject, render the details using EMF Forms
-				Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
-				if (selectedObject instanceof EObject) {
-					try {
-						ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
-						detailPanel.layout(true, true);
-					} catch (ECPRendererException e) {
-					}
-					// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
-					detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-					
-					// Set the context menu for creation of new elements
-					fillContextMenu(treeViewer, editingDomain);
-				}
+				updateDetailPanel();
 			}
 		});
 		
@@ -326,6 +313,44 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		return treeViewer.getControl();
 	}
 	
+	protected void updateDetailPanel() {
+		// Create a new detail panel in the scrollable composite. Disposes any old panels.
+		createDetailPanel();
+		
+		// Get the selected object, if it is an EObject, render the details using EMF Forms
+		Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer.getSelection()).getFirstElement() : null;
+		if (selectedObject instanceof EObject) {
+			try {
+				ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
+				detailPanel.layout(true, true);
+			} catch (ECPRendererException e) {
+			}
+			// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
+			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			
+			// Set the context menu for creation of new elements
+			fillContextMenu(treeViewer, editingDomain);
+		} else {
+			Label hint = new Label(detailPanel, SWT.CENTER);
+			FontDescriptor boldDescriptor = FontDescriptor.createFrom(hint.getFont()).setHeight(18).setStyle(SWT.BOLD);
+			Font boldFont = boldDescriptor.createFont(hint.getDisplay());
+			hint.setFont(boldFont);
+			hint.setForeground(new Color(hint.getDisplay(), 190,190,190));
+			hint.setText("Select a node to edit it");
+			GridData hintLayoutData = new GridData();
+			hintLayoutData.grabExcessVerticalSpace = true;
+			hintLayoutData.grabExcessHorizontalSpace = true;
+			hintLayoutData.horizontalAlignment = SWT.CENTER;
+			hintLayoutData.verticalAlignment = SWT.CENTER;
+			hint.setLayoutData(hintLayoutData);
+			
+			detailPanel.pack();
+			detailPanel.layout(true, true);
+			
+			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		}
+	}
+
 	/**
 	 * Creates the detail scrollable composite.
 	 *
