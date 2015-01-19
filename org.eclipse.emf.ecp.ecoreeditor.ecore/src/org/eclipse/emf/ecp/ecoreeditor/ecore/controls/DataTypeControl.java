@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -62,6 +64,7 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 
 		new AutoCompleteField(combo.getCombo(), new ComboContentAdapter(),
 				combo.getCombo().getItems());
+		
 		return combo;
 	}
 
@@ -115,6 +118,18 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 						return ((EClassifier)fromObject).getName();
 					}
 				}));
+		((ComboViewer)viewer).getCombo().addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				binding.updateModelToTarget();
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				
+			}
+		});
 		return new Binding[] { binding };
 	}
 	
