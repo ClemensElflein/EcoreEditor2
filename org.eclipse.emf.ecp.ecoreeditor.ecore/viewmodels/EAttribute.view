@@ -17,6 +17,8 @@
         <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/upperBound"/>
       </domainModelReference>
     </children>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.group.model:Group" name="Advanced" groupType="Collapsible" collapsed="true">
     <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control unsettable">
       <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
         <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature/unsettable"/>
@@ -32,8 +34,6 @@
         <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/unique"/>
       </domainModelReference>
     </children>
-  </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.group.model:Group" name="Advanced" groupType="Collapsible" collapsed="true">
     <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control changeable">
       <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
         <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature/changeable"/>
