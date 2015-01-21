@@ -125,10 +125,4 @@
 <file filePath="simple_viewmodels/EPackage.view"/>
 
 </extension>
-<extension
-      point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
-   <action
-         toolbarAction="org.eclipse.emf.ecp.ecoreeditor.ecore.toolbaractions.CreateGenmodelAction">
-   </action>
-</extension>
 </plugin>

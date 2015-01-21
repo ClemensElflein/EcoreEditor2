@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.ecp.ui.view.swt;bundle-version="[1.5.0,2.0.0)",
  org.eclipse.jface.databinding;bundle-version="1.6.200",
  org.eclipse.emf.ecp.ecoreeditor,
- org.eclipse.emf.codegen.ecore;bundle-version="2.11.0",
  org.eclipse.emf.ecore.xmi,
  org.eclipse.core.databinding.property;bundle-version="1.4.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

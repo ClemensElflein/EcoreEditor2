@@ -27,7 +27,7 @@
 			</activation>
 			<properties>
 				<eclipse-site>http://download.eclipse.org/releases/mars</eclipse-site>
-				<platform-version>[4.5.0)</platform-version>
+				<platform-version>[4.4.0)</platform-version>
 			</properties>
 		</profile>
 	</profiles>
@@ -36,11 +36,6 @@
 			<id>eclipse-platform</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/mars</url>
-		</repository>
-		<repository>
-			<id>ecp-mars</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/ecp/releases/releases_15/</url>
 		</repository>
 	</repositories>
 	<build>
