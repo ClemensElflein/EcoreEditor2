@@ -51,6 +51,13 @@
 
 
 <extension  point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
+<file filePath="viewmodels/EParameter.view">
+	<filter
+       key="detail"
+       value="true">
+	</filter>
+</file>
+
 
 
 <file filePath="viewmodels/TreeInput.view">
@@ -103,10 +110,7 @@
 </file>
 
 
-<file filePath="viewmodels/TreeInput.view"/>
-
-
-
+<file filePath="simple_viewmodels/EParameter.view"/>
 
 <file filePath="simple_viewmodels/EEnum.view"/>
 

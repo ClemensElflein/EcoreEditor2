@@ -21,6 +21,7 @@ import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
+import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
@@ -336,7 +337,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 			Font boldFont = boldDescriptor.createFont(hint.getDisplay());
 			hint.setFont(boldFont);
 			hint.setForeground(new Color(hint.getDisplay(), 190,190,190));
-			hint.setText("Select a node to edit it");
+			hint.setText("Select a node in the tree to edit it");
 			GridData hintLayoutData = new GridData();
 			hintLayoutData.grabExcessVerticalSpace = true;
 			hintLayoutData.grabExcessHorizontalSpace = true;
@@ -401,7 +402,19 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
 
 		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-				adapterFactory);
+				adapterFactory) {
+			
+			@Override
+			public boolean hasChildren(Object object) {
+				return getChildren(object).length > 0;
+			}
+			
+			@Override
+			public Object[] getChildren(Object object) {
+				// Filter all generic children
+				return EcoreHelpers.filterGenericElements(super.getChildren(object));
+			}
+		};
 
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
 		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory),
@@ -494,6 +507,10 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				continue;
 			}
 			if (cp.getEReference() == null) {
+				continue;
+			}
+			if(EcoreHelpers.isGenericFeature(cp.getFeature())) {
+				// This ensures, that we won't show any generic features anymore
 				continue;
 			}
 			if (!cp.getEReference().isMany() && eObject.eIsSet(cp.getEStructuralFeature())) {

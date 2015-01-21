@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
+import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -192,6 +193,10 @@ public class CreateNewChildDialog extends Dialog {
 				continue;
 			}
 			if (cp.getEReference() == null) {
+				continue;
+			}
+			if(EcoreHelpers.isGenericFeature(cp.getFeature())) {
+				// This ensures, that we won't show any generic features anymore
 				continue;
 			}
 			if (!cp.getEReference().isMany()
