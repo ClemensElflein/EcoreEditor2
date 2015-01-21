@@ -57,6 +57,13 @@ public class EcoreReferenceService implements ReferenceService {
 		return select(dataTypes, "Select Datatype", "Select the Datatype for "
 				+ ((ENamedElement) context.getDomainModel()).getName());
 	}
+	
+	private EObject getExistingEAnnotation_EReferencesFor(EReference eReference) {
+		List<ENamedElement> namedElements = ResourceSetHelpers
+				.findAllOfTypeInResourceSet(context.getDomainModel(),
+						ENamedElement.class, true);
+		return select(namedElements, "Select Reference", "Select Reference to add");
+	}
 
 	// Let the user select an item from a List using a dialog
 	private EObject select(List elements, String title, String message) {
@@ -93,6 +100,9 @@ public class EcoreReferenceService implements ReferenceService {
 		}
 		if (eReference.equals(EcorePackage.eINSTANCE.getEReference_EOpposite())) {
 			return getExistingOppositeFor(eReference);
+		}
+		if(eReference.equals(EcorePackage.eINSTANCE.getEAnnotation_References())) {
+			return getExistingEAnnotation_EReferencesFor(eReference);
 		}
 		return getExistingGenericType(eReference);
 	}
