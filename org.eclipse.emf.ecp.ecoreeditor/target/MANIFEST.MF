@@ -4,7 +4,7 @@ Export-Package: org.eclipse.emf.ecp.ecoreeditor,org.eclipse.emf.ecp.ec
  oreeditor.internal;x-internal:=true,org.eclipse.emf.ecp.ecoreeditor.i
  nternal.helpers;x-internal:=true
 Bundle-Name: EcoreEditor2
-Bundle-Version: 1.5.0.201501211939
+Bundle-Version: 1.5.0.201501222220
 Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecp.ui.view.s
  wt;bundle-version="1.4.0",org.eclipse.emf.edit.ui,org.eclipse.emf.ecp
  .view.template.model;bundle-version="1.4.0",org.eclipse.ui.ide;bundle

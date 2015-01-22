@@ -190,6 +190,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		final ToolBarManager toolBarManager = new ToolBarManager(toolBar);
 
 		/* Add actions to header */
+		addStaticActions(toolBarManager);
 		readToolbarActions(toolBarManager);
 
 		toolBarManager.update(true);
@@ -602,6 +603,54 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		treeViewer.setSelection(structuredSelection);
 	}
 
+	/**
+	 * Add actions that are always present (e.g. add model elements, delete model elements)
+	 * @param toolbar the toolbar to add the actions to
+	 */
+	private void addStaticActions(ToolBarManager toolbar) {
+		// Add Element Action
+		final Action addElementAction = new Action() {
+			@Override
+			public void run() {
+				super.run();
+				Object selection = getCurrentSelection();
+				
+				if(!(selection instanceof EObject))
+					return;
+				
+				final EObject eSelection = (EObject)selection;
+				
+				new CreateNewChildDialog(Display.getCurrent().getActiveShell(), "Create Child", eSelection, treeViewer).open();
+			}
+		};
+		addElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass()).getResource("icons/add.png")));
+		addElementAction.setText("Add Element");
+		toolbar.add(addElementAction);
+		
+		// Delete Element Action
+		final Action deleteElementAction = new Action() {
+			@Override
+			public void run() {
+				super.run();
+				
+				Object selection = getCurrentSelection();
+				
+				if(!(selection instanceof EObject))
+					return;
+				
+				final EObject eSelection = (EObject)selection;
+				
+				editingDomain.getCommandStack().execute(
+						RemoveCommand.create(editingDomain, eSelection));
+			}
+		};
+		deleteElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass()).getResource("icons/delete.png")));
+		deleteElementAction.setText("Delete Selected Element");
+		toolbar.add(deleteElementAction);
+		
+	}
+	
+	
 	/**
 	 * Read toolbar actions from all extensions
 	 *
