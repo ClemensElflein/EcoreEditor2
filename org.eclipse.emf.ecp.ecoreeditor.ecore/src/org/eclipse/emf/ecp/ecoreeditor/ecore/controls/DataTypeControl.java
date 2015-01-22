@@ -118,7 +118,8 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 						return ((EClassifier)fromObject).getName();
 					}
 				}));
-		((ComboViewer)viewer).getCombo().addFocusListener(new FocusListener() {
+		// TODO: this update creates a nasty usability bug!
+		/*((ComboViewer)viewer).getCombo().addFocusListener(new FocusListener() {
 			
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -129,7 +130,7 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 			public void focusGained(FocusEvent e) {
 				
 			}
-		});
+		});*/
 		return new Binding[] { binding };
 	}
 	
