@@ -107,6 +107,7 @@ public class CreateDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
+		getParentShell().forceFocus();
 		Diagnostic result = Diagnostician.INSTANCE.validate(newObject);
 		if(result.getSeverity() == Diagnostic.OK) {
 			super.okPressed();	
