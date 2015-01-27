@@ -15,7 +15,8 @@ public class TextRenderer extends TextControlSWTRenderer {
 	@Override
 	protected Binding bindValue(Control text, IObservableValue modelValue, DataBindingContext dataBindingContext,
 		UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
-		final IObservableValue value = SWTObservables.observeText(text, SWT.Modify);
+		
+		final IObservableValue value = SWTObservables.observeDelayedValue(600,  SWTObservables.observeText(text, SWT.Modify));
 		final Binding binding = dataBindingContext.bindValue(value, modelValue, targetToModel, modelToTarget);
 		return binding;
 	}
