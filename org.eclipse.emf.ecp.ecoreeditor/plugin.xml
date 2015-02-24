@@ -10,6 +10,7 @@
   </renderer>
  </extension>
    <extension-point id="org.eclipse.emf.ecp.ecoreeditor.toolbarActions" name="ToolbarActions" schema="schema/org.eclipse.emf.ecp.ecoreeditor.toolbarActions.exsd"/>
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -17,7 +18,7 @@
             default="true"
             extensions="ecore,genmodel"
             icon="icons/EcoreModelFile.gif"
-            id="EcoreEditor2.editor1"
+            id="EcoreEditor"
             name="Ecore Editor">
       </editor>
    </extension>

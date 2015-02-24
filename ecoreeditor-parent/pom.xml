@@ -37,6 +37,11 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/mars</url>
 		</repository>
+		<repository>
+			<id>ECP</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/ecp/releases/releases_15/</url>
+		</repository>
 	</repositories>
 	<build>
 		<outputDirectory>bin</outputDirectory>

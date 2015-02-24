@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
+import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
 import org.eclipse.emf.edit.command.AddCommand;

@@ -17,7 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecp.common.ChildrenDescriptorCollector;
+import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
