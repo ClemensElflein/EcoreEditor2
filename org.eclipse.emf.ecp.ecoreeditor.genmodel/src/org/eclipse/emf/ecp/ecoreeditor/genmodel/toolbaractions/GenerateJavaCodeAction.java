@@ -17,11 +17,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenBaseGeneratorAdapter;
+import org.eclipse.emf.codegen.ecore.genmodel.util.GenModelUtil;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -53,9 +53,10 @@ public class GenerateJavaCodeAction implements IToolbarAction {
 				final ResourceSet resourceSet = (ResourceSet) currentObject;
 				final GenModel genmodel = (GenModel) resourceSet.getResources().get(0).getContents().get(0);
 
-				final Generator generator = new Generator();
+				genmodel.reconcile();
 				genmodel.setCanGenerate(true);
-				generator.setInput(genmodel);
+
+				final Generator generator = GenModelUtil.createGenerator(genmodel);
 				generator.generate(genmodel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
 					new BasicMonitor.EclipseSubProgress(monitor, 1));
 				generator.generate(genmodel, GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE,
@@ -64,8 +65,6 @@ public class GenerateJavaCodeAction implements IToolbarAction {
 					new BasicMonitor.EclipseSubProgress(monitor, 1));
 				generator.generate(genmodel, GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE,
 					new BasicMonitor.EclipseSubProgress(monitor, 1));
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Code Generation Finished",
-					"The Code generation finished successfully.");
 			}
 		};
 
