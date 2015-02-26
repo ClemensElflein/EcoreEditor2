@@ -335,37 +335,37 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		// Get the selected object, if it is an EObject, render the details using EMF Forms
 		final Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer
 			.getSelection()).getFirstElement() : null;
-		if (selectedObject instanceof EObject) {
-			try {
-				ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
+			if (selectedObject instanceof EObject) {
+				try {
+					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
+					detailPanel.layout(true, true);
+				} catch (final ECPRendererException e) {
+				}
+				// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
+				detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+				// Set the context menu for creation of new elements
+				fillContextMenu(treeViewer, editingDomain);
+			} else {
+				final Label hint = new Label(detailPanel, SWT.CENTER);
+				final FontDescriptor boldDescriptor = FontDescriptor.createFrom(hint.getFont()).setHeight(18)
+					.setStyle(SWT.BOLD);
+				final Font boldFont = boldDescriptor.createFont(hint.getDisplay());
+				hint.setFont(boldFont);
+				hint.setForeground(new Color(hint.getDisplay(), 190, 190, 190));
+				hint.setText("Select a node in the tree to edit it");
+				final GridData hintLayoutData = new GridData();
+				hintLayoutData.grabExcessVerticalSpace = true;
+				hintLayoutData.grabExcessHorizontalSpace = true;
+				hintLayoutData.horizontalAlignment = SWT.CENTER;
+				hintLayoutData.verticalAlignment = SWT.CENTER;
+				hint.setLayoutData(hintLayoutData);
+
+				detailPanel.pack();
 				detailPanel.layout(true, true);
-			} catch (final ECPRendererException e) {
+
+				detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			}
-			// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
-			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-			// Set the context menu for creation of new elements
-			fillContextMenu(treeViewer, editingDomain);
-		} else {
-			final Label hint = new Label(detailPanel, SWT.CENTER);
-			final FontDescriptor boldDescriptor = FontDescriptor.createFrom(hint.getFont()).setHeight(18)
-				.setStyle(SWT.BOLD);
-			final Font boldFont = boldDescriptor.createFont(hint.getDisplay());
-			hint.setFont(boldFont);
-			hint.setForeground(new Color(hint.getDisplay(), 190, 190, 190));
-			hint.setText("Select a node in the tree to edit it");
-			final GridData hintLayoutData = new GridData();
-			hintLayoutData.grabExcessVerticalSpace = true;
-			hintLayoutData.grabExcessHorizontalSpace = true;
-			hintLayoutData.horizontalAlignment = SWT.CENTER;
-			hintLayoutData.verticalAlignment = SWT.CENTER;
-			hint.setLayoutData(hintLayoutData);
-
-			detailPanel.pack();
-			detailPanel.layout(true, true);
-
-			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		}
 	}
 
 	/**
@@ -486,7 +486,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				if (treeViewer.getSelection() instanceof IStructuredSelection) {
 					final IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
 
-					if (selection.size() == 1) {
+					if (selection.size() == 1 && selection.getFirstElement() instanceof EObject) {
 						final EObject eObject = (EObject) selection.getFirstElement();
 						final EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
 						if (domain == null) {
@@ -537,25 +537,21 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 			manager.add(new CreateChildAction(domain, new StructuredSelection(eObject), descriptor) {
 				@Override
 				public void run() {
-					super.run();
 
 					final EReference reference = ((CommandParameter) descriptor).getEReference();
-					// if (!reference.isContainment()) {
-					// domain.getCommandStack().execute(
-					// AddCommand.create(domain, eObject.eContainer(), null,
-					// cp.getEValue()));
-					// }
-					final EObject newElement = cp.getEValue();
 
-					final int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
+					final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), cp.getEValue()
+						.eClass());
+
+					final int result = diag.open();
 
 					if (result == Window.OK) {
-						domain.getCommandStack().execute(
-							AddCommand.create(domain, eObject, reference,
-								newElement));
+						final EObject newElement = diag.getCreatedInstance();
+						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newElement));
 
-						// Select the newly added element, if possible
-						setSelection(new StructuredSelection(newElement));
+						// Select the newly added element as soon as the AddCommand was executed
+						treeViewer.refresh();
+						treeViewer.setSelection(new StructuredSelection(newElement));
 					}
 				}
 			});
@@ -638,7 +634,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				final EObject eSelection = (EObject) selection;
 
 				new CreateNewChildDialog(Display.getCurrent().getActiveShell(), "Create Child", eSelection, treeViewer)
-					.open();
+				.open();
 			}
 		};
 		addElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
