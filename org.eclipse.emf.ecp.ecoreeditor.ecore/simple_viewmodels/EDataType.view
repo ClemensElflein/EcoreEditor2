@@ -13,7 +13,7 @@
   </children>
   <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control instanceTypeName">
     <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier/instanceTypeName"/>
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier/instanceClassName"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>
