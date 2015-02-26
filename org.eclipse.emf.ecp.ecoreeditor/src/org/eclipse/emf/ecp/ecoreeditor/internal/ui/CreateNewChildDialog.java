@@ -1,6 +1,14 @@
-/*
- * @author Clemens Elflein
- */
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
 package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
 import java.util.ArrayList;
@@ -45,14 +53,14 @@ import org.eclipse.swt.widgets.Shell;
 public class CreateNewChildDialog extends Dialog {
 
 	/** The title of the dialog. */
-	private String title;
-	
+	private final String title;
+
 	/** The selection provider. It is used to select the created elements afterwards. */
-	private ISelectionProvider selectionProvider;
-	
+	private final ISelectionProvider selectionProvider;
+
 	/** The parent. It is used to obtain which children can be created. */
-	private EObject parent;
-	
+	private final EObject parent;
+
 	/**
 	 * Instantiates a new creates the new child dialog.
 	 *
@@ -68,7 +76,8 @@ public class CreateNewChildDialog extends Dialog {
 		this.selectionProvider = selectionProvider;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.jface.window.Window#setShellStyle(int)
 	 */
 	@Override
@@ -76,25 +85,29 @@ public class CreateNewChildDialog extends Dialog {
 		super.setShellStyle(SWT.TITLE);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String,
+	 * boolean)
 	 */
 	@Override
 	protected Button createButton(Composite parent, int id,
-			String label, boolean defaultButton) {
+		String label, boolean defaultButton) {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		GridLayout layout = (GridLayout) parent.getLayout();
+		final GridLayout layout = (GridLayout) parent.getLayout();
 		layout.marginHeight = 0;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
 	 */
 	@Override
@@ -103,33 +116,33 @@ public class CreateNewChildDialog extends Dialog {
 		newShell.setText(title);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected Control createDialogArea(Composite parentComposite) {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
-		
-		
+
 		parentComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		final Dialog currentDialog = this;
 		final List<Action> actions = getNewChildActions(
-				childrenDescriptorCollector.getDescriptors(parent),
-				editingDomain, parent);
+			childrenDescriptorCollector.getDescriptors(parent),
+			editingDomain, parent);
 
-		TableViewer list = new TableViewer(parentComposite);
+		final TableViewer list = new TableViewer(parentComposite);
 		list.setContentProvider(new ArrayContentProvider());
 		list.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				Action action = (Action) element;
-				StringBuilder builder = new StringBuilder(action
-						.getText());
+				final Action action = (Action) element;
+				final StringBuilder builder = new StringBuilder(action
+					.getText());
 				if (action.getAccelerator() > 0) {
 					builder.append(" [");
 					builder.append(Character.toUpperCase((char) action
-							.getAccelerator()));
+						.getAccelerator()));
 					builder.append("]");
 				}
 				return builder.toString();
@@ -138,7 +151,7 @@ public class CreateNewChildDialog extends Dialog {
 			@Override
 			public Image getImage(Object element) {
 				return ((Action) element).getImageDescriptor()
-						.createImage();
+					.createImage();
 			}
 		});
 		list.setInput(actions.toArray());
@@ -146,8 +159,8 @@ public class CreateNewChildDialog extends Dialog {
 
 			@Override
 			public void open(OpenEvent event) {
-				Action action = (Action) ((StructuredSelection) event
-						.getSelection()).getFirstElement();
+				final Action action = (Action) ((StructuredSelection) event
+					.getSelection()).getFirstElement();
 				action.run();
 				currentDialog.close();
 			}
@@ -161,7 +174,7 @@ public class CreateNewChildDialog extends Dialog {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				for (Action a : actions) {
+				for (final Action a : actions) {
 					if (a.getAccelerator() == e.keyCode) {
 						a.run();
 						currentDialog.close();
@@ -172,7 +185,7 @@ public class CreateNewChildDialog extends Dialog {
 		});
 		return parentComposite;
 	}
-	
+
 	/**
 	 * Creates all new child actions.
 	 *
@@ -182,9 +195,9 @@ public class CreateNewChildDialog extends Dialog {
 	 * @return the list
 	 */
 	private List<Action> getNewChildActions(Collection<?> descriptors,
-			final EditingDomain domain, final EObject eObject) {
+		final EditingDomain domain, final EObject eObject) {
 
-		List<Action> result = new ArrayList<Action>();
+		final List<Action> result = new ArrayList<Action>();
 
 		for (final Object descriptor : descriptors) {
 
@@ -195,38 +208,35 @@ public class CreateNewChildDialog extends Dialog {
 			if (cp.getEReference() == null) {
 				continue;
 			}
-			if(EcoreHelpers.isGenericFeature(cp.getFeature())) {
+			if (EcoreHelpers.isGenericFeature(cp.getFeature())) {
 				// This ensures, that we won't show any generic features anymore
 				continue;
 			}
 			if (!cp.getEReference().isMany()
-					&& eObject.eIsSet(cp.getEStructuralFeature())) {
+				&& eObject.eIsSet(cp.getEStructuralFeature())) {
 				continue;
 			} else if (cp.getEReference().isMany()
-					&& cp.getEReference().getUpperBound() != -1
-					&& cp.getEReference().getUpperBound() <= ((List<?>) eObject
-							.eGet(cp.getEReference())).size()) {
+				&& cp.getEReference().getUpperBound() != -1
+				&& cp.getEReference().getUpperBound() <= ((List<?>) eObject
+					.eGet(cp.getEReference())).size()) {
 				continue;
 			}
 
 			result.add(new CreateChildActionWithAccelerator(domain,
-					new StructuredSelection(eObject), descriptor) {
+				new StructuredSelection(eObject), descriptor) {
 				@Override
 				public void run() {
-					super.run();
+					final EReference reference = ((CommandParameter) descriptor).getEReference();
 
-					final EReference reference = ((CommandParameter) descriptor)
-							.getEReference();
+					final EObject newElement = cp.getEValue();
 
-					EObject newElement = cp.getEValue();
+					final int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
 
-					int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
-					
-					if(result == Window.OK) {
+					if (result == Window.OK) {
 						domain.getCommandStack().execute(
-								AddCommand.create(domain, eObject, reference,
-										newElement));
-	
+							AddCommand.create(domain, eObject, reference,
+								newElement));
+
 						// Select the newly added element, if possible
 						selectionProvider.setSelection(new StructuredSelection(newElement));
 					}

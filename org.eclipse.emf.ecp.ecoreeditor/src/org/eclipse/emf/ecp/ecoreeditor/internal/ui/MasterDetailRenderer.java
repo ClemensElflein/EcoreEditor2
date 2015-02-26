@@ -1,6 +1,15 @@
-/*
- * @author Clemens Elflein
- */
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
+
 package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
 import java.util.Collection;
@@ -82,44 +91,47 @@ import org.osgi.framework.FrameworkUtil;
 /**
  * The Class MasterDetailRenderer.
  * It is the base renderer for the editor.
- * 
+ *
  * It takes any object as input and renders a tree on the left-hand side.
- * When selecting an item in the tree (that is an EObject) EMF-Forms is used to render the detail pane on the right-hand side
- * 
- * MasterDetailRenderer implements IEditingDomainProvider to allow Undo/Redo/Copy/Cut/Paste actions to be performed externally.
- * 
+ * When selecting an item in the tree (that is an EObject) EMF-Forms is used to render the detail pane on the right-hand
+ * side
+ *
+ * MasterDetailRenderer implements IEditingDomainProvider to allow Undo/Redo/Copy/Cut/Paste actions to be performed
+ * externally.
+ *
  * MasterDetailRenderer provides an ISelectionProvider to get the currently selected items in the tree
- * 
+ *
  */
 public class MasterDetailRenderer extends Composite implements IEditingDomainProvider {
 
 	/** The Toolbar action extensionpoint ID. */
-	private final static String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
+	private static final String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
 
 	/** The input. */
 	private final Object input;
-	
+
 	/** The editing domain. */
 	private final EditingDomain editingDomain;
 
 	/** The tree viewer. */
-	private TreeViewer treeViewer = null;
-	
-	/** The vertical sash. */
-	private Sash verticalSash = null;
-	
-	/** The header panel. */
-	private Composite headerPanel = null;
-	
-	/** The detail scrollable composite. */
-	private ScrolledComposite detailScrollableComposite = null;
-	
-	/** The detail panel. */
-	private Composite detailPanel = null;
-	
+	private TreeViewer treeViewer;
 
-	/** The context. It is used in the same way as in TreeMasterDetail.
-	 * It allows custom viewmodels for the detail panel */
+	/** The vertical sash. */
+	private Sash verticalSash;
+
+	/** The header panel. */
+	private Composite headerPanel;
+
+	/** The detail scrollable composite. */
+	private ScrolledComposite detailScrollableComposite;
+
+	/** The detail panel. */
+	private Composite detailPanel;
+
+	/**
+	 * The context. It is used in the same way as in TreeMasterDetail.
+	 * It allows custom viewmodels for the detail panel
+	 */
 	private static Map<String, Object> context = new LinkedHashMap<String, Object>();
 
 	static {
@@ -136,39 +148,38 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	public MasterDetailRenderer(Composite parent, int style, Object input) {
 		super(parent, style);
 		this.input = input;
-		this.editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
+		editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
 		renderControl();
 	}
 
 	/**
-	 * Render the control
+	 * Render the control.
 	 *
 	 * @return the control
 	 */
 	protected Control renderControl() {
 		// Create the Form with two panels and a header
-		FormLayout parentLayout = new FormLayout();
-		this.setLayout(parentLayout);
+		final FormLayout parentLayout = new FormLayout();
+		setLayout(parentLayout);
 
 		// First create the header with the toolbar, then the separator.
 		createHeader(this);
 		createSash(this);
-		
+
 		// Attach the tree and the detail container to the Sash
 		createTree(this);
 		createDetailScrollableComposite(this);
-		
+
 		// Set the Label and Content providers, set the input and select the default
 		initializeTree();
 
 		updateDetailPanel();
-		
+
 		return this;
 	}
 
-
 	/**
-	 * Creates the header with the toolbar and its containing actions
+	 * Creates the header with the toolbar and its containing actions.
 	 *
 	 * @param parent the parent
 	 */
@@ -196,18 +207,18 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		toolBarManager.update(true);
 		header.layout();
 
-		this.headerPanel = headerComposite;
+		headerPanel = headerComposite;
 		// Put the Header on the top and make it 30px high
-		FormData headerFormData = new FormData(SWT.DEFAULT, 30);
+		final FormData headerFormData = new FormData(SWT.DEFAULT, 30);
 		headerFormData.right = new FormAttachment(100, 0);
 		headerFormData.top = new FormAttachment(0, 0);
 		headerFormData.left = new FormAttachment(0, 0);
 
-		this.headerPanel.setLayoutData(headerFormData);
+		headerPanel.setLayoutData(headerFormData);
 	}
 
 	/**
-	 * Gets the page header. 
+	 * Gets the page header.
 	 * This is the part of the toolbar with the icon and title
 	 *
 	 * @param parent the parent
@@ -225,7 +236,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 		final Label titleImage = new Label(header, SWT.FILL);
 		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
-				.getResource("icons/view.png"));
+			.getResource("icons/view.png"));
 		titleImage.setImage(new Image(parent.getDisplay(), imageDescriptor.getImageData()));
 		final FormData titleImageData = new FormData();
 		final int imageOffset = -titleImage.computeSize(SWT.DEFAULT, SWT.DEFAULT).y / 2;
@@ -235,9 +246,10 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 		final Label title = new Label(header, SWT.WRAP);
 
-		FontDescriptor boldDescriptor = FontDescriptor.createFrom(title.getFont()).setHeight(12).setStyle(SWT.BOLD);
+		final FontDescriptor boldDescriptor = FontDescriptor.createFrom(title.getFont()).setHeight(12)
+			.setStyle(SWT.BOLD);
 
-		Font boldFont = boldDescriptor.createFont(title.getDisplay());
+		final Font boldFont = boldDescriptor.createFont(title.getDisplay());
 		title.setForeground(new Color(parent.getDisplay(), 25, 76, 127));
 		title.setFont(boldFont);
 
@@ -250,37 +262,38 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		return header;
 
 	}
-	
+
 	/**
-	 * Creates the sash for separation of the tree and the detail pane
+	 * Creates the sash for separation of the tree and the detail pane.
 	 *
 	 * @param parent the parent
 	 */
 	private void createSash(final Composite parent) {
 		final Sash sash = new Sash(parent, SWT.VERTICAL);
-		
+
 		// Make the left panel 300px wide and put it below the header
-		FormData sashFormData = new FormData();
+		final FormData sashFormData = new FormData();
 		sashFormData.bottom = new FormAttachment(100, -5);
 		sashFormData.left = new FormAttachment(0, 300);
 		sashFormData.top = new FormAttachment(headerPanel, 5);
 		sash.setLayoutData(sashFormData);
-		
+
 		// As soon as the sash is moved, layout the parent to reflect the changes
-		sash.addListener(SWT.Selection, new Listener () {
-		    public void handleEvent(Event e) {
-		        sash.setLocation(e.x, e.y);
-		 
-				FormData sashFormData = new FormData();
+		sash.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				sash.setLocation(e.x, e.y);
+
+				final FormData sashFormData = new FormData();
 				sashFormData.bottom = new FormAttachment(100, -5);
 				sashFormData.left = new FormAttachment(0, e.x);
 				sashFormData.top = new FormAttachment(headerPanel, 5);
 				sash.setLayoutData(sashFormData);
-		        parent.layout(true);;
-		    }
+				parent.layout(true);
+			}
 		});
-		
-		this.verticalSash = sash;
+
+		verticalSash = sash;
 	}
 
 	/**
@@ -300,12 +313,12 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				updateDetailPanel();
 			}
 		});
-		
+
 		// Allow DnD in the tree
 		addDragAndDropSupport(treeViewer, editingDomain);
 
 		// Put the TreeViewer on the left hand side of the form
-		FormData treeFormData = new FormData();
+		final FormData treeFormData = new FormData();
 		treeFormData.bottom = new FormAttachment(100, -5);
 		treeFormData.left = new FormAttachment(0, 5);
 		treeFormData.right = new FormAttachment(verticalSash, -2);
@@ -314,41 +327,43 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 		return treeViewer.getControl();
 	}
-	
-	protected void updateDetailPanel() {
+
+	private void updateDetailPanel() {
 		// Create a new detail panel in the scrollable composite. Disposes any old panels.
 		createDetailPanel();
-		
+
 		// Get the selected object, if it is an EObject, render the details using EMF Forms
-		Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer.getSelection()).getFirstElement() : null;
+		final Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer
+			.getSelection()).getFirstElement() : null;
 		if (selectedObject instanceof EObject) {
 			try {
 				ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
 				detailPanel.layout(true, true);
-			} catch (ECPRendererException e) {
+			} catch (final ECPRendererException e) {
 			}
 			// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
 			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-			
+
 			// Set the context menu for creation of new elements
 			fillContextMenu(treeViewer, editingDomain);
 		} else {
-			Label hint = new Label(detailPanel, SWT.CENTER);
-			FontDescriptor boldDescriptor = FontDescriptor.createFrom(hint.getFont()).setHeight(18).setStyle(SWT.BOLD);
-			Font boldFont = boldDescriptor.createFont(hint.getDisplay());
+			final Label hint = new Label(detailPanel, SWT.CENTER);
+			final FontDescriptor boldDescriptor = FontDescriptor.createFrom(hint.getFont()).setHeight(18)
+				.setStyle(SWT.BOLD);
+			final Font boldFont = boldDescriptor.createFont(hint.getDisplay());
 			hint.setFont(boldFont);
-			hint.setForeground(new Color(hint.getDisplay(), 190,190,190));
+			hint.setForeground(new Color(hint.getDisplay(), 190, 190, 190));
 			hint.setText("Select a node in the tree to edit it");
-			GridData hintLayoutData = new GridData();
+			final GridData hintLayoutData = new GridData();
 			hintLayoutData.grabExcessVerticalSpace = true;
 			hintLayoutData.grabExcessHorizontalSpace = true;
 			hintLayoutData.horizontalAlignment = SWT.CENTER;
 			hintLayoutData.verticalAlignment = SWT.CENTER;
 			hint.setLayoutData(hintLayoutData);
-			
+
 			detailPanel.pack();
 			detailPanel.layout(true, true);
-			
+
 			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		}
 	}
@@ -364,7 +379,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		detailScrollableComposite.setExpandVertical(true);
 		// Put the Details panel right to the tree and fix it to the right side
 		// of the form
-		FormData detailFormData = new FormData();
+		final FormData detailFormData = new FormData();
 		detailFormData.left = new FormAttachment(verticalSash, 2);
 		detailFormData.top = new FormAttachment(headerPanel, 5);
 		detailFormData.bottom = new FormAttachment(100, -5);
@@ -372,8 +387,6 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		detailScrollableComposite.setLayoutData(detailFormData);
 
 	}
-	
-	
 
 	/**
 	 * Creates the detail panel.
@@ -389,27 +402,27 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 		detailPanel = new Composite(detailScrollableComposite, SWT.BORDER);
 		detailPanel.setLayout(new GridLayout());
 		detailScrollableComposite.setContent(detailPanel);
-		
+
 		detailScrollableComposite.layout(true, true);
 		return detailPanel;
 	}
-	
+
 	/**
-	 * Initialize the treeViewer
+	 * Initialize the treeViewer.
 	 */
 	private void initializeTree() {
 		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(new AdapterFactory[] {
-				new CustomReflectiveItemProviderAdapterFactory(),
-				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
+			new CustomReflectiveItemProviderAdapterFactory(),
+			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE) });
 
 		final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-				adapterFactory) {
-			
+			adapterFactory) {
+
 			@Override
 			public boolean hasChildren(Object object) {
 				return getChildren(object).length > 0;
 			}
-			
+
 			@Override
 			public Object[] getChildren(Object object) {
 				// Filter all generic children
@@ -419,19 +432,19 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 		treeViewer.setContentProvider(adapterFactoryContentProvider);
 		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory),
-				new DiagnosticDecorator(editingDomain, treeViewer)));
+			new DiagnosticDecorator(editingDomain, treeViewer)));
 		new ColumnViewerInformationControlToolTipSupport(treeViewer,
-				new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
+			new DiagnosticDecorator.EditingDomainLocationListener(editingDomain, treeViewer));
 		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setInput(input);
-		
+
 		// Scan the input for the first EObject and select it
-		EObject initialSelection = findInitialSelection(adapterFactoryContentProvider, input);
-		if(initialSelection != null) {
+		final EObject initialSelection = findInitialSelection(adapterFactoryContentProvider, input);
+		if (initialSelection != null) {
 			treeViewer.setSelection(new StructuredSelection(initialSelection), true);
 		}
 	}
-	
+
 	/**
 	 * Find initial selection.
 	 * Recursively finds the first EObject in the input.
@@ -441,12 +454,12 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	 * @return the EObject to select by default
 	 */
 	private EObject findInitialSelection(AdapterFactoryContentProvider contentProvider, Object input) {
-		if(input instanceof EObject) {
-			return (EObject)input;
+		if (input instanceof EObject) {
+			return (EObject) input;
 		}
-		for(Object child : contentProvider.getChildren(input)) {
-			EObject childSelector = findInitialSelection(contentProvider, child);
-			if(childSelector != null) {
+		for (final Object child : contentProvider.getChildren(input)) {
+			final EObject childSelector = findInitialSelection(contentProvider, child);
+			if (childSelector != null) {
 				return childSelector;
 			}
 		}
@@ -494,13 +507,13 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	/**
 	 * Fill context menu.
 	 *
-	 * @param manager            The menu manager responsible for the context menu
-	 * @param descriptors            The menu items to be added
-	 * @param domain            The editing domain of the current EObject
-	 * @param eObject            The model element
+	 * @param manager The menu manager responsible for the context menu
+	 * @param descriptors The menu items to be added
+	 * @param domain The editing domain of the current EObject
+	 * @param eObject The model element
 	 */
 	private void fillContextMenu(IMenuManager manager, Collection<?> descriptors, final EditingDomain domain,
-			final EObject eObject) {
+		final EObject eObject) {
 		for (final Object descriptor : descriptors) {
 
 			final CommandParameter cp = (CommandParameter) descriptor;
@@ -510,14 +523,14 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 			if (cp.getEReference() == null) {
 				continue;
 			}
-			if(EcoreHelpers.isGenericFeature(cp.getFeature())) {
+			if (EcoreHelpers.isGenericFeature(cp.getFeature())) {
 				// This ensures, that we won't show any generic features anymore
 				continue;
 			}
 			if (!cp.getEReference().isMany() && eObject.eIsSet(cp.getEStructuralFeature())) {
 				continue;
 			} else if (cp.getEReference().isMany() && cp.getEReference().getUpperBound() != -1
-					&& cp.getEReference().getUpperBound() <= ((List<?>) eObject.eGet(cp.getEReference())).size()) {
+				&& cp.getEReference().getUpperBound() <= ((List<?>) eObject.eGet(cp.getEReference())).size()) {
 				continue;
 			}
 
@@ -532,15 +545,15 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 					// AddCommand.create(domain, eObject.eContainer(), null,
 					// cp.getEValue()));
 					// }
-					EObject newElement = cp.getEValue();
+					final EObject newElement = cp.getEValue();
 
-					int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
-					
-					if(result == Window.OK) {
+					final int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
+
+					if (result == Window.OK) {
 						domain.getCommandStack().execute(
-								AddCommand.create(domain, eObject, reference,
-										newElement));
-	
+							AddCommand.create(domain, eObject, reference,
+								newElement));
+
 						// Select the newly added element, if possible
 						setSelection(new StructuredSelection(newElement));
 					}
@@ -558,14 +571,15 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	 * @param selection the selection
 	 */
 	private void addDeleteActionToContextMenu(final EditingDomain editingDomain, final IMenuManager manager,
-			final IStructuredSelection selection) {
+		final IStructuredSelection selection) {
 
 		// Create the RemovEommand and check, if it can be executed.
 		// If it can't, don't create a menu item
 		final Command removeCommand = RemoveCommand.create(editingDomain, selection.toList());
 
-		if (!removeCommand.canExecute())
+		if (!removeCommand.canExecute()) {
 			return;
+		}
 
 		final Action deleteAction = new Action() {
 			@Override
@@ -578,7 +592,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 		final String deleteImagePath = "icons/delete.png";//$NON-NLS-1$
 		deleteAction.setImageDescriptor(ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
-				.getResource(deleteImagePath)));
+			.getResource(deleteImagePath)));
 		deleteAction.setText("Delete"); //$NON-NLS-1$
 		manager.add(deleteAction);
 	}
@@ -589,8 +603,9 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	 * @return the current selection
 	 */
 	public Object getCurrentSelection() {
-		if (!(treeViewer.getSelection() instanceof StructuredSelection))
+		if (!(treeViewer.getSelection() instanceof StructuredSelection)) {
 			return null;
+		}
 		return ((StructuredSelection) treeViewer.getSelection()).getFirstElement();
 	}
 
@@ -605,6 +620,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 
 	/**
 	 * Add actions that are always present (e.g. add model elements, delete model elements)
+	 *
 	 * @param toolbar the toolbar to add the actions to
 	 */
 	private void addStaticActions(ToolBarManager toolbar) {
@@ -613,46 +629,50 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 			@Override
 			public void run() {
 				super.run();
-				Object selection = getCurrentSelection();
-				
-				if(!(selection instanceof EObject))
+				final Object selection = getCurrentSelection();
+
+				if (!(selection instanceof EObject)) {
 					return;
-				
-				final EObject eSelection = (EObject)selection;
-				
-				new CreateNewChildDialog(Display.getCurrent().getActiveShell(), "Create Child", eSelection, treeViewer).open();
+				}
+
+				final EObject eSelection = (EObject) selection;
+
+				new CreateNewChildDialog(Display.getCurrent().getActiveShell(), "Create Child", eSelection, treeViewer)
+					.open();
 			}
 		};
-		addElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass()).getResource("icons/add.png")));
+		addElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
+			.getResource("icons/add.png")));
 		addElementAction.setText("Add Element");
 		toolbar.add(addElementAction);
-		
+
 		// Delete Element Action
 		final Action deleteElementAction = new Action() {
 			@Override
 			public void run() {
 				super.run();
-				
-				Object selection = getCurrentSelection();
-				
-				if(!(selection instanceof EObject))
+
+				final Object selection = getCurrentSelection();
+
+				if (!(selection instanceof EObject)) {
 					return;
-				
-				final EObject eSelection = (EObject)selection;
-				
+				}
+
+				final EObject eSelection = (EObject) selection;
+
 				editingDomain.getCommandStack().execute(
-						RemoveCommand.create(editingDomain, eSelection));
+					RemoveCommand.create(editingDomain, eSelection));
 			}
 		};
-		deleteElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass()).getResource("icons/delete.png")));
+		deleteElementAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
+			.getResource("icons/delete.png")));
 		deleteElementAction.setText("Delete Selected Element");
 		toolbar.add(deleteElementAction);
-		
+
 	}
-	
-	
+
 	/**
-	 * Read toolbar actions from all extensions
+	 * Read toolbar actions from all extensions.
 	 *
 	 * @param toolbar the toolbar to add the actions to
 	 */
@@ -662,9 +682,9 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 			return;
 		}
 
-		IConfigurationElement[] config = registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
+		final IConfigurationElement[] config = registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
 		try {
-			for (IConfigurationElement e : config) {
+			for (final IConfigurationElement e : config) {
 				final Object o = e.createExecutableExtension("toolbarAction");
 				if (o instanceof IToolbarAction) {
 					final IToolbarAction action = (IToolbarAction) o;
@@ -681,30 +701,30 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 					};
 
 					newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
-							action.getClass()).getResource(action.getImagePath())));
+						action.getClass()).getResource(action.getImagePath())));
 					newAction.setText(action.getLabel());
 					toolbar.add(newAction);
 				}
 			}
-		} catch (CoreException ex) {
+		} catch (final CoreException ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	/**
-	 * Adds the drag and drop support to the treeViewer
+	 * Adds the drag and drop support to the treeViewer.
 	 *
 	 * @param treeViewer the tree viewer
 	 * @param editingDomain the editing domain
 	 */
 	private void addDragAndDropSupport(final TreeViewer treeViewer,
-			EditingDomain editingDomain) {
+		EditingDomain editingDomain) {
 
 		final int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		final Transfer[] transfers = new Transfer[] { LocalTransfer.getInstance() };
 		treeViewer.addDragSupport(dndOperations, transfers, new ViewerDragAdapter(treeViewer));
 		final EditingDomainViewerDropAdapter editingDomainViewerDropAdapter = new EditingDomainViewerDropAdapter(
-				editingDomain, treeViewer);
+			editingDomain, treeViewer);
 		treeViewer.addDropSupport(dndOperations, transfers, editingDomainViewerDropAdapter);
 	}
 
@@ -722,6 +742,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 	 *
 	 * @return the editing domain
 	 */
+	@Override
 	public EditingDomain getEditingDomain() {
 		return editingDomain;
 	}

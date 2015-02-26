@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <units size='1'>
-  <unit id='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201501271455'>
-    <update id='org.eclipse.emf.ecp.ecoreeditor' range='[0.0.0,1.5.0.201501271455)' severity='0'/>
+  <unit id='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201502261121'>
+    <update id='org.eclipse.emf.ecp.ecoreeditor' range='[0.0.0,1.5.0.201502261121)' severity='0'/>
     <properties size='4'>
       <property name='org.eclipse.equinox.p2.name' value='EcoreEditor2'/>
       <property name='maven-groupId' value='org.eclipse.emf.ecp.ecoreeditor'/>
@@ -9,50 +9,33 @@
       <property name='maven-version' value='1.5.0-SNAPSHOT'/>
     </properties>
     <provides size='6'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201501271455'/>
-      <provided namespace='osgi.bundle' name='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201501271455'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201502261121'/>
+      <provided namespace='osgi.bundle' name='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201502261121'/>
       <provided namespace='java.package' name='org.eclipse.emf.ecp.ecoreeditor' version='0.0.0'/>
       <provided namespace='java.package' name='org.eclipse.emf.ecp.ecoreeditor.internal' version='0.0.0'/>
       <provided namespace='java.package' name='org.eclipse.emf.ecp.ecoreeditor.internal.helpers' version='0.0.0'/>
       <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
     </provides>
-    <requires size='27'>
-      <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+    <requires size='10'>
+      <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='3.1.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.ui.view.swt' range='1.4.0'/>
-      <required namespace='osgi.bundle' name='org.eclipse.emf.edit.ui' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.edit.ui' range='2.10.1'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.view.template.model' range='1.4.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='3.10.1'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.ecore.edit' range='2.9.0'/>
-      <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.view.core.swt' range='0.0.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.emf.databinding' range='1.3.0'/>
       <required namespace='osgi.bundle' name='org.eclipse.jface.databinding' range='0.0.0'/>
-      <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.common' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.core.resources' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.common.command' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.common.notify' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.common.util' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecore' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecore.resource' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecore.util' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecore.xmi' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecp.ui.view' range='1.4.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecp.ui.view.swt' range='1.4.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.ecp.view.model.common.edit.provider' range='1.4.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.edit.command' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.edit.domain' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.edit.provider' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.emf.edit.ui.action.ecp' range='1.4.0'/>
-      <required namespace='java.package' name='org.eclipse.ui.dialogs' range='0.0.0'/>
-      <required namespace='java.package' name='org.eclipse.ui.part' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.ecore.xmi' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.ecp.view.core.swt' range='0.0.0'/>
     </requires>
     <artifacts size='1'>
-      <artifact classifier='osgi.bundle' id='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201501271455'/>
+      <artifact classifier='osgi.bundle' id='org.eclipse.emf.ecp.ecoreeditor' version='1.5.0.201502261121'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>
       <instructions size='1'>
         <instruction key='manifest'>
-          Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true&#xA;Bundle-Version: 1.5.0.201501271455&#xA;
+          Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true&#xA;Bundle-Version: 1.5.0.201502261121&#xA;
         </instruction>
       </instructions>
     </touchpointData>

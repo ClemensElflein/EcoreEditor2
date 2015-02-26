@@ -5,7 +5,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  * IBM - Initial API and implementation
  */
@@ -33,7 +33,7 @@ public class CreateChildAction extends StaticSelectionCommandAction
 	/**
 	 * This constructs an instance of an action that uses the given editing domain to create a child
 	 * specified by <code>descriptor</code> for the single object in the <code>selection</code>.
-	 * 
+	 *
 	 * @since 2.4.0
 	 */
 	public CreateChildAction(EditingDomain editingDomain, ISelection selection, Object descriptor)

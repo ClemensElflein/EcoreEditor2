@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
 package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
 
 import org.eclipse.core.databinding.Binding;
@@ -8,6 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+/**
+ * The Renderer for EENumLiterals.
+ */
 public class EEnumLiteralRenderer extends SimpleControlSWTControlSWTRenderer {
 
 	@Override
@@ -17,8 +31,8 @@ public class EEnumLiteralRenderer extends SimpleControlSWTControlSWTRenderer {
 
 	@Override
 	protected Control createSWTControl(Composite parent, Setting setting) {
-		Label label = new Label(parent, SWT.None);
-		Object value = setting.get(true);
+		final Label label = new Label(parent, SWT.None);
+		final Object value = setting.get(true);
 		label.setText(value != null ? value.toString() : "(null)");
 		return label;
 	}

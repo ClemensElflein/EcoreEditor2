@@ -1,13 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
 package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
 
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.view.spi.core.swt.AbstractControlSWTRenderer;
-import org.eclipse.emf.ecp.view.spi.core.swt.SimpleControlSWTControlSWTRenderer;
-import org.eclipse.emf.ecp.view.spi.core.swt.SimpleControlSWTRenderer;
 import org.eclipse.emf.ecp.view.spi.model.LabelAlignment;
 import org.eclipse.emf.ecp.view.spi.model.VControl;
 import org.eclipse.emf.ecp.view.spi.renderer.NoPropertyDescriptorFoundExeption;
@@ -23,10 +29,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -34,6 +38,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
+/**
+ *
+ * The Renderer allowing the user to test the bounds with two Combos.
+ *
+ */
 public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VControl> {
 	private SWTGridDescription rendererGridDescription;
 
@@ -45,7 +54,7 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 		}
 		return rendererGridDescription;
 	}
-	
+
 	@Override
 	protected final Control renderControl(SWTGridCell gridCell, Composite parent)
 		throws NoRendererFoundException, NoPropertyDescriptorFoundExeption {
@@ -67,23 +76,23 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 						"The provided SWTGridCell (%1$s) cannot be used by this (%2$s) renderer.", gridCell.toString(), toString())); //$NON-NLS-1$
 		}
 	}
-	
-	public final Control createBoundsLabel(Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
+
+	private Control createBoundsLabel(Composite parent) {
+		final Label label = new Label(parent, SWT.NONE);
 		label.setData(CUSTOM_VARIANT, "org_eclipse_emf_ecp_control_label"); //$NON-NLS-1$
 		label.setText("Bounds");
 		return label;
 	}
-	
-	protected Control createControl(Composite parent) {
+
+	private Control createControl(Composite parent) {
 		final ETypedElement domainObject = (ETypedElement) getViewModelContext().getDomainModel();
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(domainObject);
-		
+
 		final Composite main = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(main);
-        GridDataFactory.fillDefaults().grab(true, false)
-                .align(SWT.FILL, SWT.BEGINNING).applyTo(main);
-		
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(main);
+		GridDataFactory.fillDefaults().grab(true, false)
+		.align(SWT.FILL, SWT.BEGINNING).applyTo(main);
+
 		final Spinner lowerBound = new Spinner(main, SWT.BORDER);
 		lowerBound.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, true));
 		lowerBound.setSelection(domainObject.getLowerBound());
@@ -94,49 +103,58 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 		upperBound.setSelection(domainObject.getUpperBound());
 		upperBound.setEnabled(domainObject.getUpperBound() != -1);
 		upperBound.setMaximum(Integer.MAX_VALUE);
-		
-		
+
 		final Button unbounded = new Button(main, SWT.CHECK);
 		unbounded.setText("unbounded");
 		unbounded.setSelection(false);
 		unbounded.setSelection(domainObject.getUpperBound() == -1);
-		
+
 		lowerBound.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int i = ((Spinner)e.getSource()).getSelection();
-				editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__LOWER_BOUND, i));
-				if(upperBound.getSelection() < i && upperBound.getSelection() >= 0) {
+				final int i = ((Spinner) e.getSource()).getSelection();
+				editingDomain.getCommandStack().execute(
+					new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__LOWER_BOUND, i));
+				if (upperBound.getSelection() < i && upperBound.getSelection() >= 0) {
 					upperBound.setSelection(i);
-					editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND, i));
+					editingDomain.getCommandStack().execute(
+						new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND,
+							i));
 				}
 				applyValidation();
 			}
 		});
-		
+
 		upperBound.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int i = ((Spinner)e.getSource()).getSelection();
-				editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND, i));
-				if(lowerBound.getSelection() > i && i >= 0) {
+				final int i = ((Spinner) e.getSource()).getSelection();
+				editingDomain.getCommandStack().execute(
+					new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND, i));
+				if (lowerBound.getSelection() > i && i >= 0) {
 					lowerBound.setSelection(i);
-					editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__LOWER_BOUND, i));
+					editingDomain.getCommandStack().execute(
+						new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__LOWER_BOUND,
+							i));
 				}
 				unbounded.setSelection(i == -1);
 				applyValidation();
 			}
 		});
-		
+
 		unbounded.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(unbounded.getSelection()) {
+				if (unbounded.getSelection()) {
 					upperBound.setSelection(-1);
-					editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND, -1));
+					editingDomain.getCommandStack().execute(
+						new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND,
+							-1));
 				} else {
 					upperBound.setSelection(lowerBound.getSelection());
-					editingDomain.getCommandStack().execute(new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND, lowerBound.getSelection()));
+					editingDomain.getCommandStack().execute(
+						new SetCommand(editingDomain, domainObject, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND,
+							lowerBound.getSelection()));
 				}
 				upperBound.setEnabled(!unbounded.getSelection());
 				applyValidation();
@@ -146,7 +164,7 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 		return main;
 	}
 
-	protected void setValidationColor(Control control, Color validationColor) {
+	private void setValidationColor(Control control, Color validationColor) {
 		control.setBackground(validationColor);
 	}
 
@@ -154,6 +172,7 @@ public class TypedElementBoundsRenderer extends AbstractControlSWTRenderer<VCont
 	protected final void applyValidation() {
 		Display.getDefault().asyncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				applyInnerValidation();
 			}

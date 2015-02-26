@@ -1,11 +1,17 @@
-/*
- * @author Clemens Elflein
- */
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
+
 package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 import org.eclipse.emf.ecore.EAnnotation;
@@ -19,27 +25,29 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.edit.ui.action.ecp.CreateChildAction;
 import org.eclipse.jface.viewers.ISelection;
 
 /**
  * The Class CreateChildActionWithAccelerator.
  * It extends the CreateChildAction to allow to run with a keyboard shortcut.
  */
+
 public class CreateChildActionWithAccelerator extends CreateChildAction {
 
-	private static final LinkedHashMap<Class<?>, Character> accelerators = new LinkedHashMap<Class<?>, Character>(){{
-		put(EClass.class, 'c');
-		put(EPackage.class, 'p');
-		put(EEnum.class, 'e');
-		put(EDataType.class, 'd');
-		put(EAttribute.class, 'a');
-		put(EReference.class, 'r');
-		put(EAnnotation.class, 'n');
-		put(EOperation.class, 'o');
-		put(EEnumLiteral.class, 'l');
-	}};
-	
+	private static final LinkedHashMap<Class<?>, Character> ACCELERATORS = new LinkedHashMap<Class<?>, Character>();
+
+	static {
+		ACCELERATORS.put(EClass.class, 'c');
+		ACCELERATORS.put(EPackage.class, 'p');
+		ACCELERATORS.put(EEnum.class, 'e');
+		ACCELERATORS.put(EDataType.class, 'd');
+		ACCELERATORS.put(EAttribute.class, 'a');
+		ACCELERATORS.put(EReference.class, 'r');
+		ACCELERATORS.put(EAnnotation.class, 'n');
+		ACCELERATORS.put(EOperation.class, 'o');
+		ACCELERATORS.put(EEnumLiteral.class, 'l');
+	}
+
 	/**
 	 * Instantiates a new creates the child action with accelerator.
 	 *
@@ -48,13 +56,13 @@ public class CreateChildActionWithAccelerator extends CreateChildAction {
 	 * @param descriptor the descriptor
 	 */
 	public CreateChildActionWithAccelerator(EditingDomain editingDomain,
-			ISelection selection, Object descriptor) {
+		ISelection selection, Object descriptor) {
 		super(editingDomain, selection, descriptor);
-		Object value = ((CommandParameter) descriptor).getValue();
-		
-		for(Class<?> c : accelerators.keySet()) {
-			if(c.isInstance(value)) {
-				setAccelerator(accelerators.get(c));
+		final Object value = ((CommandParameter) descriptor).getValue();
+
+		for (final Class<?> c : ACCELERATORS.keySet()) {
+			if (c.isInstance(value)) {
+				setAccelerator(ACCELERATORS.get(c));
 				break;
 			}
 		}

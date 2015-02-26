@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
 package org.eclipse.emf.ecp.ecoreeditor.genmodel.toolbaractions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +26,11 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ *
+ * The ToolbarAction allowing the User to generate Java code for the currently visible Genmodel.
+ *
+ */
 public class GenerateJavaCodeAction implements IToolbarAction {
 
 	@Override
@@ -29,31 +45,35 @@ public class GenerateJavaCodeAction implements IToolbarAction {
 
 	@Override
 	public void execute(final Object currentObject) {
-		IRunnableWithProgress generateCodeRunnable = new IRunnableWithProgress() {
-			
+		final IRunnableWithProgress generateCodeRunnable = new IRunnableWithProgress() {
+
 			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				monitor.beginTask("Generating Code", IProgressMonitor.UNKNOWN);
-			    ResourceSet resourceSet = (ResourceSet) currentObject;
-			    GenModel genmodel = (GenModel) resourceSet.getResources().get(0).getContents().get(0);
-				
-			    
-				Generator generator = new Generator();
-		        genmodel.setCanGenerate(true);
+				final ResourceSet resourceSet = (ResourceSet) currentObject;
+				final GenModel genmodel = (GenModel) resourceSet.getResources().get(0).getContents().get(0);
+
+				final Generator generator = new Generator();
+				genmodel.setCanGenerate(true);
 				generator.setInput(genmodel);
-		    	generator.generate(genmodel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE, new BasicMonitor.EclipseSubProgress(monitor, 1));
-			    generator.generate(genmodel, GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE, new BasicMonitor.EclipseSubProgress(monitor, 1));
-			    generator.generate(genmodel, GenBaseGeneratorAdapter.EDITOR_PROJECT_TYPE, new BasicMonitor.EclipseSubProgress(monitor, 1));
-			    generator.generate(genmodel, GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE, new BasicMonitor.EclipseSubProgress(monitor, 1));
-			    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Code Generation Finished", "The Code generation finished successfully.");
+				generator.generate(genmodel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
+					new BasicMonitor.EclipseSubProgress(monitor, 1));
+				generator.generate(genmodel, GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE,
+					new BasicMonitor.EclipseSubProgress(monitor, 1));
+				generator.generate(genmodel, GenBaseGeneratorAdapter.EDITOR_PROJECT_TYPE,
+					new BasicMonitor.EclipseSubProgress(monitor, 1));
+				generator.generate(genmodel, GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE,
+					new BasicMonitor.EclipseSubProgress(monitor, 1));
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Code Generation Finished",
+					"The Code generation finished successfully.");
 			}
 		};
-		
+
 		try {
 			new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, false, generateCodeRunnable);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -61,12 +81,13 @@ public class GenerateJavaCodeAction implements IToolbarAction {
 	@Override
 	public boolean canExecute(Object object) {
 		// We can't execute our Action on Objects other than ResourceSet
-		if(!(object instanceof ResourceSet))
+		if (!(object instanceof ResourceSet)) {
 			return false;
+		}
 		// Check, if the ResourceSet contains a Genmodel. If so, we also can't execute our Action
-		ResourceSet resourceSet = (ResourceSet) object;
-		for(Resource r : resourceSet.getResources()) {
-			if(r.getContents().size() > 0 && r.getContents().get(0) instanceof GenModel) {
+		final ResourceSet resourceSet = (ResourceSet) object;
+		for (final Resource r : resourceSet.getResources()) {
+			if (r.getContents().size() > 0 && r.getContents().get(0) instanceof GenModel) {
 				return true;
 			}
 		}

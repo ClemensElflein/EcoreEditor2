@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
 package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
 
 import java.util.List;
@@ -21,11 +32,12 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
+/**
+ * A control to select the DataType for ETypedElements.
+ */
+@SuppressWarnings("restriction")
 public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 	@Override
 	protected String getUnsetText() {
@@ -47,15 +59,16 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 			includeEcorePackage = false;
 		}
 
-		List<?> classifiers = ResourceSetHelpers.findAllOfTypeInResourceSet(
-				getViewModelContext().getDomainModel(), type,
-				includeEcorePackage);
+		final List<?> classifiers = ResourceSetHelpers.findAllOfTypeInResourceSet(
+			getViewModelContext().getDomainModel(), type,
+			includeEcorePackage);
 
 		combo.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof EClassifier)
+				if (element instanceof EClassifier) {
 					return ((EClassifier) element).getName();
+				}
 				return super.getText(element);
 			}
 		});
@@ -63,47 +76,40 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 		combo.setInput(classifiers.toArray());
 
 		new AutoCompleteField(combo.getCombo(), new ComboContentAdapter(),
-				combo.getCombo().getItems());
-		
+			combo.getCombo().getItems());
+
 		return combo;
 	}
 
 	@Override
 	protected Binding[] createBindings(final Viewer viewer, final Setting setting) {
 		final Binding binding = getDataBindingContext().bindValue(
-				WidgetProperties.text().observe(
-						((ComboViewer) viewer).getCombo()),
+			WidgetProperties.text().observe(
+				((ComboViewer) viewer).getCombo()),
 				getModelValue(setting),
 				new EMFUpdateValueStrategy().setConverter(new Converter(
-						String.class, EClassifier.class) {
+					String.class, EClassifier.class) {
 					@Override
 					public Object convert(Object fromObject) {
-						// We want the result for such a request to be null, not
-						// a DataType with null name (can occur)
-						if (fromObject == null)
+						// We want the result for such a request to be null, not a DataType with null name (can occur)
+						if (fromObject == null) {
 							return null;
+						}
 
-						Object[] classifiers = (Object[]) ((ComboViewer) viewer)
-								.getInput();
+						final Object[] classifiers = (Object[]) ((ComboViewer) viewer).getInput();
 						for (int i = 0; i < classifiers.length; i++) {
 							if (fromObject
-									.equals(((EClassifier) classifiers[i])
-											.getName())) {
+								.equals(((EClassifier) classifiers[i])
+									.getName())) {
 								return classifiers[i];
 							}
 						}
 
-						// If we haven't found the DataType yet, Try adding an E
-						// to the Input and search again
-						// So we find EString even if String was searched. If
-						// there is a DataType named String, we have no problem
-						// As it would have been matched in the previous
-						// for-loop.
-						String fromStringWithE = "E" + fromObject.toString();
+						// If we haven't found the DataType yet, Try adding an E to the Input and search again.
+						// So we find EString even if String was searched.
+						final String fromStringWithE = "E" + fromObject.toString();
 						for (int i = 0; i < classifiers.length; i++) {
-							if (fromStringWithE
-									.equals(((EClassifier) classifiers[i])
-											.getName())) {
+							if (fromStringWithE.equals(((EClassifier) classifiers[i]).getName())) {
 								return classifiers[i];
 							}
 						}
@@ -113,27 +119,27 @@ public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 				}), new EMFUpdateValueStrategy().setConverter(new Converter(EClassifier.class, String.class) {
 					@Override
 					public Object convert(Object fromObject) {
-						if(fromObject == null)
+						if (fromObject == null) {
 							return "";
-						return ((EClassifier)fromObject).getName();
+						}
+						return ((EClassifier) fromObject).getName();
 					}
 				}));
 		// TODO: this update creates a nasty usability bug!
-		/*((ComboViewer)viewer).getCombo().addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				binding.updateModelToTarget();
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e) {
-				
-			}
-		});*/
+		/*
+		 * ((ComboViewer)viewer).getCombo().addFocusListener(new FocusListener() {
+		 * @Override
+		 * public void focusLost(FocusEvent e) {
+		 * binding.updateModelToTarget();
+		 * }
+		 * @Override
+		 * public void focusGained(FocusEvent e) {
+		 * }
+		 * });
+		 */
 		return new Binding[] { binding };
 	}
-	
+
 	@Override
 	protected boolean isUnsettable() {
 		// We unset the property via databinding as soon as the input is invalid

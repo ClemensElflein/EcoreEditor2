@@ -1,6 +1,15 @@
-/*
- * @author Clemens Elflein
- */
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial API and implementation
+ ******************************************************************************/
+
 package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import java.net.MalformedURLException;
@@ -14,7 +23,6 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecp.ecoreeditor.Log;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ecoreeditor.internal.ui.CreateNewChildDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.ui.MasterDetailRenderer;
@@ -37,22 +45,22 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-
 /**
- * The Class EcoreEditor it is the generic part for editing any EObject
+ * The Class EcoreEditor it is the generic part for editing any EObject.
  */
 public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 
-	/** The Resource loaded from the provided EditorInput */
+	/** The Resource loaded from the provided EditorInput. */
 	private ResourceSet resourceSet;
 
 	/** The command stack. It is used to mark the editor as dirty as well as undo/redo operations */
-	private BasicCommandStack commandStack = new BasicCommandStack();
+	private final BasicCommandStack commandStack = new BasicCommandStack();
 
 	/** The root view. It is the main Editor panel. */
 	private MasterDetailRenderer rootView;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -65,28 +73,30 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
 	 */
 	@Override
 	public void doSaveAs() {
-		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
-		int result = saveAsDialog.open();
+		final SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
+		final int result = saveAsDialog.open();
 		if (result == Window.OK) {
-			IPath path = saveAsDialog.getResult();
+			final IPath path = saveAsDialog.getResult();
 			setPartName(path.lastSegment());
 			resourceSet.getResources().get(0)
-					.setURI(URI.createFileURI(path.toOSString()));
+				.setURI(URI.createFileURI(path.toOSString()));
 			doSave(null);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
 	 */
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
+		throws PartInitException {
 		setSite(site);
 		setInput(input);
 
@@ -105,10 +115,11 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-				.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
+			.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#isDirty()
 	 */
 	@Override
@@ -116,7 +127,8 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		return commandStack.isSaveNeeded();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
 	 */
 	@Override
@@ -124,7 +136,8 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -133,16 +146,16 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		loadResource();
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
-		
-		this.rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
-		
+
+		rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
+
 		// We need to set the selectionProvider for the editor, so that the EditingDomainActionBarContributor
 		// knows the currently selected object to copy/paste
 		getEditorSite().setSelectionProvider(rootView.getSelectionProvider());
-		
+
 		// The EditingDomainActionBarContributor hooks undo/redo/copy/cut/paste actions to the
 		// editor's actionbar and enables all these actions.
-		EditingDomainActionBarContributor actionBarProvider = new EditingDomainActionBarContributor();
+		final EditingDomainActionBarContributor actionBarProvider = new EditingDomainActionBarContributor();
 		actionBarProvider.init(getEditorSite().getActionBars());
 		actionBarProvider.setActiveEditor(this);
 		actionBarProvider.activate();
@@ -157,14 +170,15 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		try {
 
 			resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(
-					URI.createURI(fei.getURI().toURL().toExternalForm()),
-					commandStack);
-		} catch (MalformedURLException e) {
-			Log.e(e);
+				URI.createURI(fei.getURI().toURL().toExternalForm()),
+				commandStack);
+		} catch (final MalformedURLException e) {
+
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
 	@Override
@@ -175,37 +189,37 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	/**
 	 * Receives ExecutionEvents from ShortcutHandler and different actions
 	 * accordingly.
-	 * 
+	 *
 	 * @param event the event
 	 */
 	public void processEvent(ExecutionEvent event) {
-		Object selection = rootView.getCurrentSelection();
+		final Object selection = rootView.getCurrentSelection();
 
 		// We only create or delete elements for EObjects
-		if(!(selection instanceof EObject)) {
+		if (!(selection instanceof EObject)) {
 			return;
 		}
-		
-		String commandName = event.getCommand().getId();
-		EObject currentSelection = (EObject) selection;
 
-		EditingDomain editingDomain = AdapterFactoryEditingDomain
-				.getEditingDomainFor(currentSelection);
+		final String commandName = event.getCommand().getId();
+		final EObject currentSelection = (EObject) selection;
 
-		if("org.eclipse.emf.ecp.ecoreeditor.delete".equals(commandName)) {
+		final EditingDomain editingDomain = AdapterFactoryEditingDomain
+			.getEditingDomainFor(currentSelection);
+
+		if ("org.eclipse.emf.ecp.ecoreeditor.delete".equals(commandName)) {
 			editingDomain.getCommandStack().execute(
-					RemoveCommand.create(editingDomain, currentSelection));
-		} else if("org.eclipse.emf.ecp.ecoreeditor.new".equals(commandName)) {
+				RemoveCommand.create(editingDomain, currentSelection));
+		} else if ("org.eclipse.emf.ecp.ecoreeditor.new".equals(commandName)) {
 			createNewElementDialog(editingDomain, currentSelection,
-					"Create Child").open();
-		} else if("org.eclipse.emf.ecp.ecoreeditor.new.sibling".equals(commandName)) {
+				"Create Child").open();
+		} else if ("org.eclipse.emf.ecp.ecoreeditor.new.sibling".equals(commandName)) {
 			// Get Parent of current Selection and show the dialog for it
-			EObject parent = currentSelection.eContainer();
-			EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
+			final EObject parent = currentSelection.eContainer();
+			final EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
 			createNewElementDialog(parentEditingDomain, parent, "Create Sibling").open();
 		}
 	}
-	
+
 	/**
 	 * Creates the new element dialog.
 	 *
@@ -215,17 +229,17 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	 * @return the dialog
 	 */
 	private Dialog createNewElementDialog(final EditingDomain editingDomain,
-			final EObject selection, final String title) {
-		return new CreateNewChildDialog(Display.getCurrent().getActiveShell(), title, selection, rootView.getSelectionProvider());
+		final EObject selection, final String title) {
+		return new CreateNewChildDialog(Display.getCurrent().getActiveShell(), title, selection,
+			rootView.getSelectionProvider());
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.emf.edit.domain.IEditingDomainProvider#getEditingDomain()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public EditingDomain getEditingDomain() {
-		if(rootView == null) {
+		if (rootView == null) {
 			return null;
 		}
 		return rootView.getEditingDomain();

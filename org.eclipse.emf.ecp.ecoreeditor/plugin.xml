@@ -88,14 +88,7 @@
             name="Ecore Editor">
       </context>
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.PopupFactory"
-            locationURI="org.eclipse.emf.ecp.ecoreeditor.menuContribution1">
-      </menuContribution>
-   </extension>
+   
    <extension
          point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
       <action
