@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model" xmlns:org.eclipse.emf.ecp.view.table.model="http://org/eclipse/emf/ecp/view/table/model" ecorePath="/org.eclipse.emf.ecore/model/Ecore.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:model="http://org/eclipse/emf/ecp/view/table/model" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model" xmlns:org.eclipse.emf.ecp.view.table.model="http://org/eclipse/emf/ecp/view/table/model/150" ecorePath="/org.eclipse.emf.ecore/model/Ecore.ecore">
   <rootEClass href="http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
   <children xsi:type="org.eclipse.emf.ecp.view.model:Control" name="Control name">
     <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.table.model:TableControl" name="Literals">
+  <children xsi:type="org.eclipse.emf.ecp.view.table.model:TableControl">
     <domainModelReference xsi:type="org.eclipse.emf.ecp.view.table.model:TableDomainModelReference">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/Ecore#//EEnum/eLiterals"/>
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral/value"/>
+      </columnDomainModelReferences>
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name"/>
+      </columnDomainModelReferences>
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral/literal"/>
+      </columnDomainModelReferences>
+      <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
+        <domainModelEFeature xsi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/Ecore#//EEnum/eLiterals"/>
+      </domainModelReference>
+    </domainModelReference>
+  </children>
+  <children xsi:type="model:TableControl" name="Literals">
+    <domainModelReference xsi:type="model:TableDomainModelReference">
+      <domainModelEFeature href="http://www.eclipse.org/emf/2002/Ecore#//EEnum/eLiterals"/>
       <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference">
         <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name"/>
       </columnDomainModelReferences>
