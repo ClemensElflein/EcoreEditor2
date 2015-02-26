@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -228,16 +229,19 @@ public class CreateNewChildDialog extends Dialog {
 				public void run() {
 					final EReference reference = ((CommandParameter) descriptor).getEReference();
 
-					final EObject newElement = cp.getEValue();
+					final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), cp.getEValue()
+						.eClass());
 
-					final int result = new CreateDialog(Display.getCurrent().getActiveShell(), newElement).open();
+					final int result = diag.open();
 
 					if (result == Window.OK) {
-						domain.getCommandStack().execute(
-							AddCommand.create(domain, eObject, reference,
-								newElement));
+						final EObject newElement = diag.getCreatedInstance();
+						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newElement));
 
-						// Select the newly added element, if possible
+						// Select the newly added element as soon as the AddCommand was executed
+						if (selectionProvider instanceof Viewer) {
+							((Viewer) selectionProvider).refresh();
+						}
 						selectionProvider.setSelection(new StructuredSelection(newElement));
 					}
 				}
