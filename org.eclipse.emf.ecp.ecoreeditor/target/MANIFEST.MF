@@ -1,16 +1,15 @@
 Manifest-Version: 1.0
 Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true
-Export-Package: org.eclipse.emf.ecp.ecoreeditor;version="1.5.0.qualifi
- er",org.eclipse.emf.ecp.ecoreeditor.internal;version="1.5.0.qualifier
- ";x-internal:=true,org.eclipse.emf.ecp.ecoreeditor.internal.handlers;
- version="1.5.0.qualifier";;x-internal:=true,org.eclipse.emf.ecp.ecore
- editor.internal.helpers;version="1.5.0.qualifier";;x-friends:="org.ec
- lipse.emf.ecp.ecoreeditor.ecore,org.eclipse.emf.ecp.ecoreeditor.genmo
- del",org.eclipse.emf.ecp.ecoreeditor.internal.toolbaractions;version=
- "1.5.0.qualifier";;x-internal:=true,org.eclipse.emf.ecp.ecoreeditor.i
- nternal.ui;version="1.5.0.qualifier";;x-internal:=true
+Export-Package: org.eclipse.emf.ecp.ecoreeditor;version="1.5.0",org.ec
+ lipse.emf.ecp.ecoreeditor.internal;version="1.5.0";x-internal:=true,o
+ rg.eclipse.emf.ecp.ecoreeditor.internal.handlers;version="1.5.0";;x-i
+ nternal:=true,org.eclipse.emf.ecp.ecoreeditor.internal.helpers;versio
+ n="1.5.0";;x-friends:="org.eclipse.emf.ecp.ecoreeditor.ecore,org.ecli
+ pse.emf.ecp.ecoreeditor.genmodel",org.eclipse.emf.ecp.ecoreeditor.int
+ ernal.toolbaractions;version="1.5.0";;x-internal:=true,org.eclipse.em
+ f.ecp.ecoreeditor.internal.ui;version="1.5.0";x-internal:=true
 Bundle-Name: EcoreEditor2
-Bundle-Version: 1.5.0.201502261226
+Bundle-Version: 1.5.0.201502261401
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.1.0",org.ec
  lipse.emf.ecp.ui.view.swt;bundle-version="1.4.0",org.eclipse.emf.edit
  .ui;bundle-version="2.10.1",org.eclipse.emf.ecp.view.template.model;b
