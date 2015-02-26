@@ -37,7 +37,6 @@ import org.eclipse.ui.dialogs.ListDialog;
 /**
  * The ReferenceService provides all widgets with Ecore specific references.
  */
-@SuppressWarnings("restriction")
 public class EcoreReferenceService implements ReferenceService {
 
 	private ViewModelContext context;
@@ -203,7 +202,7 @@ public class EcoreReferenceService implements ReferenceService {
 			@SuppressWarnings("unchecked")
 			final// This cast is OK as we know, that the eReference is many-valued.
 			List<Object> objects = (List<Object>) context.getDomainModel()
-				.eGet(eReference);
+			.eGet(eReference);
 			final List<Object> newValues = new ArrayList<Object>(objects);
 			newValues.add(eObject);
 			context.getDomainModel().eSet(eReference, newValues);

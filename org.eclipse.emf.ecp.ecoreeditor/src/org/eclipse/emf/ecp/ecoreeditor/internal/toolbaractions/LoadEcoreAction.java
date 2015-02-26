@@ -121,6 +121,127 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 	 */
 	private static class ExtendedLoadResourceDialog extends LoadResourceDialog
 	{
+		/**
+		 * @author cleme_000
+		 *
+		 */
+		private final class RegisteredPackageSelectionAdapter extends SelectionAdapter {
+			@Override
+			public void widgetSelected(SelectionEvent event)
+			{
+				final RegisteredPackageDialog registeredPackageDialog = new RegisteredPackageDialog(getShell());
+				registeredPackageDialog.open();
+				final Object[] result = registeredPackageDialog.getResult();
+				if (result != null)
+				{
+					final List<?> nsURIs = Arrays.asList(result);
+					if (registeredPackageDialog.isDevelopmentTimeVersion())
+					{
+						final ResourceSet resourceSet = new ResourceSetImpl();
+						resourceSet.getURIConverter().getURIMap()
+							.putAll(EcorePlugin.computePlatformURIMap(false));
+
+						// To support Xcore resources, we need a resource with a URI that helps determine the
+						// containing project
+						//
+						final Resource dummyResource = domain == null ? null : resourceSet
+							.createResource(domain.getResourceSet().getResources().get(0).getURI());
+
+						final StringBuffer uris = new StringBuffer();
+						final Map<String, URI> ePackageNsURItoGenModelLocationMap = EcorePlugin
+							.getEPackageNsURIToGenModelLocationMap(false);
+						for (int i = 0, length = result.length; i < length; i++)
+						{
+							final URI location = ePackageNsURItoGenModelLocationMap.get(result[i]);
+							final Resource resource = resourceSet.getResource(location, true);
+							EcoreUtil.resolveAll(resource);
+						}
+
+						final EList<Resource> resources = resourceSet.getResources();
+						resources.remove(dummyResource);
+
+						for (final Resource resource : resources)
+						{
+							for (final EPackage ePackage : getAllPackages(resource))
+							{
+								if (nsURIs.contains(ePackage.getNsURI()))
+								{
+									uris.append(resource.getURI());
+									uris.append("  ");
+									break;
+								}
+							}
+						}
+						uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+					}
+					else
+					{
+						final StringBuffer uris = new StringBuffer();
+						for (int i = 0, length = result.length; i < length; i++)
+						{
+							uris.append(result[i]);
+							uris.append("  ");
+						}
+						uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+					}
+				}
+			}
+		}
+
+		/**
+		 * @author cleme_000
+		 *
+		 */
+		private final class TargetPlatformSelectionAdapter extends SelectionAdapter {
+			@Override
+			public void widgetSelected(SelectionEvent event)
+			{
+				final TargetPlatformPackageDialog classpathPackageDialog = new TargetPlatformPackageDialog(
+					getShell());
+				classpathPackageDialog.open();
+				final Object[] result = classpathPackageDialog.getResult();
+				if (result != null)
+				{
+					final List<?> nsURIs = Arrays.asList(result);
+					final ResourceSet resourceSet = new ResourceSetImpl();
+					resourceSet.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap(true));
+
+					// To support Xcore resources, we need a resource with a URI that helps determine the
+					// containing project
+					//
+					final Resource dummyResource = domain == null ? null : resourceSet.createResource(domain
+						.getResourceSet().getResources().get(0).getURI());
+
+					final StringBuffer uris = new StringBuffer();
+					final Map<String, URI> ePackageNsURItoGenModelLocationMap = EcorePlugin
+						.getEPackageNsURIToGenModelLocationMap(true);
+					for (int i = 0, length = result.length; i < length; i++)
+					{
+						final URI location = ePackageNsURItoGenModelLocationMap.get(result[i]);
+						final Resource resource = resourceSet.getResource(location, true);
+						EcoreUtil.resolveAll(resource);
+					}
+
+					final EList<Resource> resources = resourceSet.getResources();
+					resources.remove(dummyResource);
+
+					for (final Resource resource : resources)
+					{
+						for (final EPackage ePackage : getAllPackages(resource))
+						{
+							if (nsURIs.contains(ePackage.getNsURI()))
+							{
+								uris.append(resource.getURI());
+								uris.append("  ");
+								break;
+							}
+						}
+					}
+					uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+				}
+			}
+		}
+
 		private final Set<EPackage> registeredPackages = new LinkedHashSet<EPackage>();
 
 		public ExtendedLoadResourceDialog(Shell parent, EditingDomain domain)
@@ -206,125 +327,12 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		 */
 		protected void prepareBrowseTargetPlatformPackagesButton(Button browseTargetPlatformPackagesButton)
 		{
-			browseTargetPlatformPackagesButton.addSelectionListener
-				(new SelectionAdapter()
-				{
-					@Override
-					public void widgetSelected(SelectionEvent event)
-					{
-						final TargetPlatformPackageDialog classpathPackageDialog = new TargetPlatformPackageDialog(
-							getShell());
-						classpathPackageDialog.open();
-						final Object[] result = classpathPackageDialog.getResult();
-						if (result != null)
-						{
-							final List<?> nsURIs = Arrays.asList(result);
-							final ResourceSet resourceSet = new ResourceSetImpl();
-							resourceSet.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap(true));
-
-							// To support Xcore resources, we need a resource with a URI that helps determine the
-							// containing project
-							//
-							final Resource dummyResource = domain == null ? null : resourceSet.createResource(domain
-								.getResourceSet().getResources().get(0).getURI());
-
-							final StringBuffer uris = new StringBuffer();
-							final Map<String, URI> ePackageNsURItoGenModelLocationMap = EcorePlugin
-								.getEPackageNsURIToGenModelLocationMap(true);
-							for (int i = 0, length = result.length; i < length; i++)
-							{
-								final URI location = ePackageNsURItoGenModelLocationMap.get(result[i]);
-								final Resource resource = resourceSet.getResource(location, true);
-								EcoreUtil.resolveAll(resource);
-							}
-
-							final EList<Resource> resources = resourceSet.getResources();
-							resources.remove(dummyResource);
-
-							for (final Resource resource : resources)
-							{
-								for (final EPackage ePackage : getAllPackages(resource))
-								{
-									if (nsURIs.contains(ePackage.getNsURI()))
-									{
-										uris.append(resource.getURI());
-										uris.append("  ");
-										break;
-									}
-								}
-							}
-							uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
-						}
-					}
-				});
+			browseTargetPlatformPackagesButton.addSelectionListener(new TargetPlatformSelectionAdapter());
 		}
 
 		protected void prepareBrowseRegisteredPackagesButton(Button browseRegisteredPackagesButton)
 		{
-			browseRegisteredPackagesButton.addSelectionListener
-				(new SelectionAdapter()
-				{
-					@Override
-					public void widgetSelected(SelectionEvent event)
-					{
-						final RegisteredPackageDialog registeredPackageDialog = new RegisteredPackageDialog(getShell());
-						registeredPackageDialog.open();
-						final Object[] result = registeredPackageDialog.getResult();
-						if (result != null)
-						{
-							final List<?> nsURIs = Arrays.asList(result);
-							if (registeredPackageDialog.isDevelopmentTimeVersion())
-							{
-								final ResourceSet resourceSet = new ResourceSetImpl();
-								resourceSet.getURIConverter().getURIMap()
-									.putAll(EcorePlugin.computePlatformURIMap(false));
-
-								// To support Xcore resources, we need a resource with a URI that helps determine the
-								// containing project
-								//
-								final Resource dummyResource = domain == null ? null : resourceSet
-									.createResource(domain.getResourceSet().getResources().get(0).getURI());
-
-								final StringBuffer uris = new StringBuffer();
-								final Map<String, URI> ePackageNsURItoGenModelLocationMap = EcorePlugin
-									.getEPackageNsURIToGenModelLocationMap(false);
-								for (int i = 0, length = result.length; i < length; i++)
-								{
-									final URI location = ePackageNsURItoGenModelLocationMap.get(result[i]);
-									final Resource resource = resourceSet.getResource(location, true);
-									EcoreUtil.resolveAll(resource);
-								}
-
-								final EList<Resource> resources = resourceSet.getResources();
-								resources.remove(dummyResource);
-
-								for (final Resource resource : resources)
-								{
-									for (final EPackage ePackage : getAllPackages(resource))
-									{
-										if (nsURIs.contains(ePackage.getNsURI()))
-										{
-											uris.append(resource.getURI());
-											uris.append("  ");
-											break;
-										}
-									}
-								}
-								uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
-							}
-							else
-							{
-								final StringBuffer uris = new StringBuffer();
-								for (int i = 0, length = result.length; i < length; i++)
-								{
-									uris.append(result[i]);
-									uris.append("  ");
-								}
-								uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
-							}
-						}
-					}
-				});
+			browseRegisteredPackagesButton.addSelectionListener(new RegisteredPackageSelectionAdapter());
 		}
 	}
 

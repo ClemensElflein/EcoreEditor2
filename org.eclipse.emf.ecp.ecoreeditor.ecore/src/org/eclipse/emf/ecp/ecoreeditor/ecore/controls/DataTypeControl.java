@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * A control to select the DataType for ETypedElements.
  */
-@SuppressWarnings("restriction")
 public class DataTypeControl extends SimpleControlJFaceViewerSWTRenderer {
 	@Override
 	protected String getUnsetText() {
