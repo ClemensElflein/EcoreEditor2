@@ -120,13 +120,13 @@ public class CreateNewChildDialog extends Dialog {
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
 
-		parentComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		final Dialog currentDialog = this;
 		final List<Action> actions = getNewChildActions(
 			childrenDescriptorCollector.getDescriptors(parent),
 			editingDomain, parent);
 
 		final TableViewer list = new TableViewer(parentComposite);
+		list.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		list.setContentProvider(new ArrayContentProvider());
 		list.setLabelProvider(new LabelProvider() {
 			@Override
