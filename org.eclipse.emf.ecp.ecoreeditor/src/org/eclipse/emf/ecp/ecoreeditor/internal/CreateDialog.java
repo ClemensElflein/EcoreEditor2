@@ -13,9 +13,7 @@
 package org.eclipse.emf.ecp.ecoreeditor.internal;
 
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -39,16 +37,6 @@ public class CreateDialog extends Dialog {
 
 	/** The new object. */
 	private final EObject newObject;
-
-	/**
-	 * Instantiates a new dialog.
-	 *
-	 * @param parent the parent
-	 * @param toCreate the EClass which should be created
-	 */
-	public CreateDialog(Shell parent, EClass toCreate) {
-		this(parent, EcoreFactory.eINSTANCE.create(toCreate));
-	}
 
 	/**
 	 * Instantiates a new dialog.

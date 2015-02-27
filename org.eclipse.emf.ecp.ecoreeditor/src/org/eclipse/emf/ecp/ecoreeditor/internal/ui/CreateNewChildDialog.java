@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
+import org.eclipse.emf.ecp.view.spi.model.VView;
+import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -229,20 +231,25 @@ public class CreateNewChildDialog extends Dialog {
 				public void run() {
 					final EReference reference = ((CommandParameter) descriptor).getEReference();
 
-					final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), cp.getEValue()
-						.eClass());
+					final EObject newObject = cp.getEValue();
+					final VView view = ViewProviderHelper.getView(newObject, null);
+					final boolean isViewEmpty = view.getChildren().isEmpty();
 
-					final int result = diag.open();
+					int result = Window.OK;
+
+					if (!isViewEmpty) {
+						final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), newObject);
+						result = diag.open();
+					}
 
 					if (result == Window.OK) {
-						final EObject newElement = diag.getCreatedInstance();
-						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newElement));
+						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newObject));
 
 						// Select the newly added element as soon as the AddCommand was executed
 						if (selectionProvider instanceof Viewer) {
 							((Viewer) selectionProvider).refresh();
 						}
-						selectionProvider.setSelection(new StructuredSelection(newElement));
+						selectionProvider.setSelection(new StructuredSelection(newObject));
 					}
 				}
 			});

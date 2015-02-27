@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -109,7 +110,7 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		}
 		// We cannot execute the action, when the first Resource's root is not a EPackage
 		final Resource firstResource = ((ResourceSet) object).getResources().get(0);
-		if (firstResource.getContents().size() == 0 || !(firstResource.getContents().get(0) instanceof EPackage)) {
+		if (firstResource.getContents().size() == 0 || firstResource.getContents().get(0) instanceof GenModel) {
 			return false;
 		}
 		return true;
