@@ -25,18 +25,13 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
-import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.ecp.view.spi.model.VView;
-import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -66,7 +61,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DND;
@@ -536,31 +530,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 				continue;
 			}
 
-			manager.add(new CreateChildAction(domain, new StructuredSelection(eObject), descriptor) {
-				@Override
-				public void run() {
-					final EReference reference = ((CommandParameter) descriptor).getEReference();
-
-					final EObject newObject = cp.getEValue();
-					final VView view = ViewProviderHelper.getView(newObject, null);
-					final boolean isViewEmpty = view.getChildren().isEmpty();
-
-					int result = Window.OK;
-
-					if (!isViewEmpty) {
-						final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), newObject);
-						result = diag.open();
-					}
-
-					if (result == Window.OK) {
-						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newObject));
-
-						// Select the newly added element as soon as the AddCommand was executed
-						treeViewer.refresh();
-						setSelection(new StructuredSelection(newObject));
-					}
-				}
-			});
+			manager.add(new CreateChildAction(eObject, domain, getSelectionProvider(), cp));
 		}
 
 	}

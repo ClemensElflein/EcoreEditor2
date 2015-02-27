@@ -15,15 +15,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
-import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
-import org.eclipse.emf.ecp.view.spi.model.VView;
-import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -36,8 +30,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -47,7 +39,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -226,40 +217,7 @@ public class CreateNewChildDialog extends Dialog {
 				continue;
 			}
 
-			result.add(new CreateChildActionWithAccelerator(domain,
-				new StructuredSelection(eObject), descriptor) {
-				@Override
-				public void run() {
-					final EReference reference = ((CommandParameter) descriptor).getEReference();
-
-					final EObject newObject = cp.getEValue();
-
-					// Add the element, so that it is contained in the ResourceSet.
-					final Command addCommand = AddCommand.create(domain, eObject, reference, newObject);
-					domain.getCommandStack().execute(addCommand);
-
-					final VView view = ViewProviderHelper.getView(newObject, null);
-					final boolean isViewEmpty = view.getChildren().isEmpty();
-
-					int result = Window.OK;
-
-					if (!isViewEmpty) {
-						final CreateDialog diag = new CreateDialog(Display.getCurrent().getActiveShell(), newObject);
-						result = diag.open();
-					}
-
-					if (result == Window.OK) {
-						// Select the newly added element. It is already added
-						if (selectionProvider instanceof Viewer) {
-							((Viewer) selectionProvider).refresh();
-						}
-						selectionProvider.setSelection(new StructuredSelection(newObject));
-					} else {
-						// Remove the newly added element by undoing the AddCommand
-						addCommand.undo();
-					}
-				}
-			});
+			result.add(new CreateChildActionWithAccelerator(eObject, domain, selectionProvider, cp));
 		}
 		return result;
 	}

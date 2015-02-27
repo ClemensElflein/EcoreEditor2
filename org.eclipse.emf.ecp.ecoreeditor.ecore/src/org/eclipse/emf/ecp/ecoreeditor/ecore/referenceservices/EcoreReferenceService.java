@@ -28,8 +28,9 @@ import org.eclipse.emf.ecp.view.spi.context.ViewModelContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ListDialog;
@@ -86,14 +87,16 @@ public class EcoreReferenceService implements ReferenceService {
 
 		dialog.setContentProvider(new ArrayContentProvider());
 
-		dialog.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ((ENamedElement) element).getName();
-			}
-		});
+		final ComposedAdapterFactory composedAdapterFactory =
+			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+		final AdapterFactoryLabelProvider labelProvider =
+			new AdapterFactoryLabelProvider(composedAdapterFactory);
+
+		dialog.setLabelProvider(labelProvider);
+
 		final int result = dialog.open();
-		if (result == Window.OK) {
+		if (result == Window.OK && dialog.getResult().length > 0) {
 			return (EObject) dialog.getResult()[0];
 		}
 		return null;
@@ -200,9 +203,9 @@ public class EcoreReferenceService implements ReferenceService {
 			context.getDomainModel().eSet(eReference, eObject);
 		} else {
 			@SuppressWarnings("unchecked")
-			final// This cast is OK as we know, that the eReference is many-valued.
-			List<Object> objects = (List<Object>) context.getDomainModel()
-			.eGet(eReference);
+			// This cast is OK as we know, that the eReference is many-valued.
+			final List<Object> objects = (List<Object>) context.getDomainModel()
+				.eGet(eReference);
 			final List<Object> newValues = new ArrayList<Object>(objects);
 			newValues.add(eObject);
 			context.getDomainModel().eSet(eReference, newValues);
@@ -221,6 +224,9 @@ public class EcoreReferenceService implements ReferenceService {
 
 	@Override
 	public void addExistingModelElements(EObject eObject, EReference eReference) {
-		addModelElement(getExistingElementFor(eReference), eReference);
+		final EObject selectedElement = getExistingElementFor(eReference);
+		if (selectedElement != null) {
+			addModelElement(selectedElement, eReference);
+		}
 	}
 }

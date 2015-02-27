@@ -20,19 +20,20 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 
 /**
  * The Class CreateChildActionWithAccelerator.
  * It extends the CreateChildAction to allow to run with a keyboard shortcut.
  */
 
-public class CreateChildActionWithAccelerator extends CreateChildAction {
+public final class CreateChildActionWithAccelerator extends CreateChildAction {
 
 	private static final LinkedHashMap<Class<?>, Character> ACCELERATORS = new LinkedHashMap<Class<?>, Character>();
 
@@ -52,13 +53,13 @@ public class CreateChildActionWithAccelerator extends CreateChildAction {
 	 * Instantiates a new creates the child action with accelerator.
 	 *
 	 * @param editingDomain the editing domain
-	 * @param selection the selection
+	 * @param selectionProvider the selectionProvider
 	 * @param descriptor the descriptor
 	 */
-	public CreateChildActionWithAccelerator(EditingDomain editingDomain,
-		ISelection selection, Object descriptor) {
-		super(editingDomain, selection, descriptor);
-		final Object value = ((CommandParameter) descriptor).getValue();
+	public CreateChildActionWithAccelerator(EObject parent, EditingDomain editingDomain,
+		ISelectionProvider selectionProvider, CommandParameter descriptor) {
+		super(parent, editingDomain, selectionProvider, descriptor);
+		final Object value = descriptor.getValue();
 
 		for (final Class<?> c : ACCELERATORS.keySet()) {
 			if (c.isInstance(value)) {
