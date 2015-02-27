@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
@@ -232,6 +233,11 @@ public class CreateNewChildDialog extends Dialog {
 					final EReference reference = ((CommandParameter) descriptor).getEReference();
 
 					final EObject newObject = cp.getEValue();
+
+					// Add the element, so that it is contained in the ResourceSet.
+					final Command addCommand = AddCommand.create(domain, eObject, reference, newObject);
+					domain.getCommandStack().execute(addCommand);
+
 					final VView view = ViewProviderHelper.getView(newObject, null);
 					final boolean isViewEmpty = view.getChildren().isEmpty();
 
@@ -243,13 +249,14 @@ public class CreateNewChildDialog extends Dialog {
 					}
 
 					if (result == Window.OK) {
-						domain.getCommandStack().execute(AddCommand.create(domain, eObject, reference, newObject));
-
-						// Select the newly added element as soon as the AddCommand was executed
+						// Select the newly added element. It is already added
 						if (selectionProvider instanceof Viewer) {
 							((Viewer) selectionProvider).refresh();
 						}
 						selectionProvider.setSelection(new StructuredSelection(newObject));
+					} else {
+						// Remove the newly added element by undoing the AddCommand
+						addCommand.undo();
 					}
 				}
 			});
