@@ -12,33 +12,20 @@
 
 package org.eclipse.emf.ecp.ecoreeditor;
 
+import org.eclipse.jface.action.Action;
+
 /**
  * The Interface IToolbarAction allows the creation of ToolBar actions for the Ecore Editor.
  */
 public interface IToolbarAction {
 
 	/**
-	 * Gets the label of the action.
-	 * It will be used as mouseover text
-	 *
-	 * @return the label
-	 */
-	String getLabel();
-
-	/**
-	 * Gets the image path of the action.
-	 * It will be used as icon in the toolbar
-	 *
-	 * @return the image path
-	 */
-	String getImagePath();
-
-	/**
-	 * Execute the action.
+	 * Returns the action to add to the toolbar.
 	 *
 	 * @param currentObject the currently edited object of the editor
+	 * @return the action
 	 */
-	void execute(Object currentObject);
+	Action getAction(Object currentObject);
 
 	/**
 	 * @param object the currently edited object of the editor

@@ -22,9 +22,17 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  *
@@ -33,48 +41,14 @@ import org.eclipse.swt.widgets.Display;
  */
 public class GenerateJavaCodeAction implements IToolbarAction {
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getAction(java.lang.Object)
+	 */
 	@Override
-	public String getLabel() {
-		return "Create Java Code";
-	}
-
-	@Override
-	public String getImagePath() {
-		return "icons/page_white_cup.png";
-	}
-
-	@Override
-	public void execute(final Object currentObject) {
-		final IRunnableWithProgress generateCodeRunnable = new IRunnableWithProgress() {
-
-			@Override
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				monitor.beginTask("Generating Code", IProgressMonitor.UNKNOWN);
-				final ResourceSet resourceSet = (ResourceSet) currentObject;
-				final GenModel genmodel = (GenModel) resourceSet.getResources().get(0).getContents().get(0);
-
-				genmodel.reconcile();
-				genmodel.setCanGenerate(true);
-
-				final Generator generator = GenModelUtil.createGenerator(genmodel);
-				generator.generate(genmodel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
-					new BasicMonitor.EclipseSubProgress(monitor, 1));
-				generator.generate(genmodel, GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE,
-					new BasicMonitor.EclipseSubProgress(monitor, 1));
-				generator.generate(genmodel, GenBaseGeneratorAdapter.EDITOR_PROJECT_TYPE,
-					new BasicMonitor.EclipseSubProgress(monitor, 1));
-				generator.generate(genmodel, GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE,
-					new BasicMonitor.EclipseSubProgress(monitor, 1));
-			}
-		};
-
-		try {
-			new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, false, generateCodeRunnable);
-		} catch (final InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
+	public Action getAction(Object currentObject) {
+		return new CreateJavaCodeAction(currentObject);
 	}
 
 	@Override
@@ -93,4 +67,135 @@ public class GenerateJavaCodeAction implements IToolbarAction {
 		return false;
 	}
 
+	/**
+	 * ToolbarAction to generate Java Code. It also provides the DropDown menu to create
+	 * each type separately (Model, Edit, Editor, Tests).
+	 */
+	private static class CreateJavaCodeAction extends Action {
+		private final Object[] types;
+		private final Object currentObject;
+
+		public CreateJavaCodeAction(String text, Object[] types, Object currentObject) {
+			super(text);
+			this.types = types;
+			this.currentObject = currentObject;
+		}
+
+		public CreateJavaCodeAction(Object currentObject) {
+			super("Generate All", SWT.DROP_DOWN);
+
+			this.currentObject = currentObject;
+
+			types = new Object[] {
+				GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
+				GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE,
+				GenBaseGeneratorAdapter.EDITOR_PROJECT_TYPE,
+				GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE
+			};
+
+			setMenuCreator(new GenmodelDropdownCreator());
+
+			setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
+				this.getClass()).getResource("icons/page_white_cup.png")));
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @see org.eclipse.jface.action.Action#run()
+		 */
+		@Override
+		public void run() {
+			final IRunnableWithProgress generateCodeRunnable = new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Generating Code", IProgressMonitor.UNKNOWN);
+					final ResourceSet resourceSet = (ResourceSet) currentObject;
+					final GenModel genmodel = (GenModel) resourceSet.getResources().get(0).getContents().get(0);
+
+					genmodel.reconcile();
+					genmodel.setCanGenerate(true);
+
+					final Generator generator = GenModelUtil.createGenerator(genmodel);
+
+					for (final Object type : types) {
+						generator.generate(genmodel, type,
+							new BasicMonitor.EclipseSubProgress(monitor, 1));
+					}
+				}
+			};
+
+			try {
+				new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, false, generateCodeRunnable);
+			} catch (final InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		/**
+		 * IMenuCreator to create each type separately.
+		 */
+		private class GenmodelDropdownCreator implements IMenuCreator {
+			private Menu dropDown;
+
+			/**
+			 * {@inheritDoc}
+			 *
+			 * @see org.eclipse.jface.action.IMenuCreator#dispose()
+			 */
+			@Override
+			public void dispose() {
+				if (dropDown != null) {
+					dropDown.dispose();
+				}
+			}
+
+			/**
+			 * {@inheritDoc}
+			 *
+			 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
+			 */
+			@Override
+			public Menu getMenu(Control parent) {
+				dispose();
+
+				dropDown = new Menu(parent);
+				final Action generateModel = new CreateJavaCodeAction("Generate Model + Edit",
+					new Object[] {
+						GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
+						GenBaseGeneratorAdapter.EDIT_PROJECT_TYPE
+					}, currentObject);
+
+				final Action generateEditor = new CreateJavaCodeAction("Generate Editor",
+					new Object[] {
+						GenBaseGeneratorAdapter.EDITOR_PROJECT_TYPE
+					}, currentObject);
+
+				final Action generateTests = new CreateJavaCodeAction("Generate Tests",
+					new Object[] {
+						GenBaseGeneratorAdapter.TESTS_PROJECT_TYPE
+					}, currentObject);
+
+				new ActionContributionItem(generateModel).fill(dropDown, 0);
+				new ActionContributionItem(generateEditor).fill(dropDown, 1);
+				new ActionContributionItem(generateTests).fill(dropDown, 2);
+
+				return dropDown;
+			}
+
+			/**
+			 * {@inheritDoc}
+			 *
+			 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Menu)
+			 */
+			@Override
+			public Menu getMenu(Menu parent) {
+				return null;
+			}
+
+		}
+	}
 }

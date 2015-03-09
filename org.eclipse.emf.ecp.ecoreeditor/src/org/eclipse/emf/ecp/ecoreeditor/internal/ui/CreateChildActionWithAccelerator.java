@@ -55,6 +55,7 @@ public final class CreateChildActionWithAccelerator extends CreateChildAction {
 	 * @param editingDomain the editing domain
 	 * @param selectionProvider the selectionProvider
 	 * @param descriptor the descriptor
+	 * @param parent the Parent EObject
 	 */
 	public CreateChildActionWithAccelerator(EObject parent, EditingDomain editingDomain,
 		ISelectionProvider selectionProvider, CommandParameter descriptor) {
