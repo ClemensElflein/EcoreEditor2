@@ -12,16 +12,26 @@
 
 package org.eclipse.emf.ecp.ecoreeditor.internal;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ecoreeditor.internal.ui.CreateNewChildDialog;
@@ -32,6 +42,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -39,6 +50,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -50,6 +63,53 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 
+	/**
+	 * The EcoreResourceChangeListener listens for changes in currently opened Ecore files and reports
+	 * them to the EcoreEditor.
+	 */
+	private final class EcoreResourceChangeListener implements IResourceChangeListener {
+		@Override
+		public void resourceChanged(IResourceChangeEvent event) {
+			final Collection<Resource> changedResources = new ArrayList<Resource>();
+			final Collection<Resource> removedResources = new ArrayList<Resource>();
+			final IResourceDelta delta = event.getDelta();
+
+			try {
+				delta.accept(new IResourceDeltaVisitor() {
+
+					@Override
+					public boolean visit(final IResourceDelta delta)
+					{
+						if (delta.getResource().getType() == IResource.FILE
+							&& (delta.getKind() == IResourceDelta.REMOVED ||
+							delta.getKind() == IResourceDelta.CHANGED))
+						{
+							final Resource resource = resourceSet.getResource(
+								URI.createPlatformResourceURI(delta.getFullPath().toString(), true), false);
+							if (resource != null)
+							{
+								if (delta.getKind() == IResourceDelta.REMOVED)
+								{
+									removedResources.add(resource);
+								}
+								else
+								{
+									changedResources.add(resource);
+								}
+							}
+							return false;
+						}
+
+						return true;
+					}
+				});
+			} catch (final CoreException ex) {
+			}
+
+			handleResourceChange(changedResources, removedResources);
+		}
+	}
+
 	/** The Resource loaded from the provided EditorInput. */
 	private ResourceSet resourceSet;
 
@@ -59,18 +119,92 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	/** The root view. It is the main Editor panel. */
 	private MasterDetailRenderer rootView;
 
+	/**
+	 * True, if there were changes in the filesystem while the editor was in the background and the changes could not be
+	 * applied to current view.
+	 */
+	private boolean filesChangedWithConflict;
+
+	private final IPartListener partListener = new IPartListener() {
+		@Override
+		public void partOpened(IWorkbenchPart part) {
+		}
+
+		@Override
+		public void partDeactivated(IWorkbenchPart part) {
+		}
+
+		@Override
+		public void partClosed(IWorkbenchPart part) {
+		}
+
+		@Override
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		@Override
+		public void partActivated(IWorkbenchPart part) {
+			if (part == EcoreEditor.this && isDirty() && filesChangedWithConflict && discardChanges()) {
+				for (final Resource r : resourceSet.getResources()) {
+					r.unload();
+					try {
+						r.load(null);
+					} catch (final IOException e) {
+					}
+				}
+			}
+		}
+	};
+
+	private final IResourceChangeListener resourceChangeListener = new EcoreResourceChangeListener();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		// Remove the Listener, so that we won't get a changed notification for our own save operation
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 		if (ResourceSetHelpers.save(resourceSet)) {
 			// Tell the CommandStack, that we have saved the file successfully
 			// and inform the Workspace, that the Dirty property has changed.
 			commandStack.saveIsDone();
 			firePropertyChange(PROP_DIRTY);
+			filesChangedWithConflict = false;
 		}
+		// Add the listener again, so that we get notifications for future changes
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
+	}
+
+	/**
+	 * Handles filesystem changes.
+	 *
+	 * @param changedResources A List of changed Resources
+	 * @param removedResources A List of removed Resources
+	 */
+	protected void handleResourceChange(Collection<Resource> changedResources, Collection<Resource> removedResources) {
+		if (!isDirty()) {
+			resourceSet.getResources().removeAll(removedResources);
+
+			for (final Resource changed : changedResources) {
+				changed.unload();
+				try {
+					changed.load(null);
+				} catch (final IOException ex) {
+				}
+			}
+		} else {
+			filesChangedWithConflict = true;
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean discardChanges() {
+		return MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), "File Changed",
+			"The currently opened files were changed. Do you want to discard the changes and reload the file?");
 	}
 
 	/*
@@ -85,7 +219,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 			final IPath path = saveAsDialog.getResult();
 			setPartName(path.lastSegment());
 			resourceSet.getResources().get(0)
-				.setURI(URI.createFileURI(path.toOSString()));
+			.setURI(URI.createFileURI(path.toOSString()));
 			doSave(null);
 		}
 	}
@@ -115,7 +249,11 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-			.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
+		.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
+
+		site.getPage().addPartListener(partListener);
+
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 	}
 
 	/*
@@ -167,14 +305,11 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	 */
 	private void loadResource() {
 		final FileEditorInput fei = (FileEditorInput) getEditorInput();
-		try {
 
-			resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(
-				URI.createURI(fei.getURI().toURL().toExternalForm()),
-				commandStack);
-		} catch (final MalformedURLException e) {
+		resourceSet = ResourceSetHelpers.loadResourceSetWithProxies(
+			URI.createPlatformResourceURI(fei.getFile().getFullPath().toOSString(), false),
+			commandStack);
 
-		}
 	}
 
 	/*
