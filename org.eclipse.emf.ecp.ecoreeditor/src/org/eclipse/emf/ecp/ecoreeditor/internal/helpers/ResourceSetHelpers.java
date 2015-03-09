@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -72,6 +73,12 @@ public final class ResourceSetHelpers {
 		// Create a ResourceSet and add the requested Resource
 		final ResourceSet resourceSet = createResourceSet(commandStack);
 		if (addResourceToSet(resourceSet, resourceURI)) {
+
+			// If the Root is a GenModel, refresh it
+			if (resourceSet.getResources().get(0) instanceof GenModel) {
+				((GenModel) resourceSet.getResources().get(0)).reconcile();
+			}
+
 			return resourceSet;
 		}
 		return null;
@@ -90,7 +97,7 @@ public final class ResourceSetHelpers {
 					new CustomReflectiveItemProviderAdapterFactory(),
 					new ComposedAdapterFactory(
 						ComposedAdapterFactory.Descriptor.Registry.INSTANCE) }),
-			commandStack);
+						commandStack);
 		final ResourceSet resourceSet = domain.getResourceSet();
 		resourceSet.eAdapters().add(
 			new AdapterFactoryEditingDomain.EditingDomainProvider(domain));
