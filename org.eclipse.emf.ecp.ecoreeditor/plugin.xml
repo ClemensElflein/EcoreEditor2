@@ -16,12 +16,22 @@
       <editor
             class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
             default="true"
-            extensions="ecore,genmodel"
+            extensions="ecore"
             icon="icons/EcoreModelFile.gif"
             id="EcoreEditor"
             name="Ecore Editor">
       </editor>
+      <editor
+            class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
+            default="true"
+            extensions="genmodel"
+            icon="icons/GenModelModelFile.gif"
+            id="GenmodelEditor"
+            name="Genmodel Editor">
+      </editor>
+      
    </extension>
+   
    <extension
          point="org.eclipse.ui.commands">
       <category
