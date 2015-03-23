@@ -664,18 +664,7 @@ public class MasterDetailRenderer extends Composite implements IEditingDomainPro
 						continue;
 					}
 
-					final Action newAction = new Action() {
-						@Override
-						public void run() {
-							super.run();
-							action.execute(input);
-						}
-					};
-
-					newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
-						action.getClass()).getResource(action.getImagePath())));
-					newAction.setText(action.getLabel());
-					toolbar.add(newAction);
+					toolbar.add(action.getAction(input));
 				}
 			}
 		} catch (final CoreException ex) {

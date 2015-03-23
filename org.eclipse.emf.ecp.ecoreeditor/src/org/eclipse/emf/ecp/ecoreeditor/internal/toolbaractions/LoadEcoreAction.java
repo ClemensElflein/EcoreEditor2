@@ -40,6 +40,8 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.LoadResourceAction.LoadResourceDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,6 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * The Class LoadEcoreAction.
@@ -62,37 +65,30 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 public class LoadEcoreAction extends Object implements IToolbarAction {
 
 	/**
-	 *
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getLabel()
+	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getAction(Object currentObject)
 	 */
 	@Override
-	public String getLabel() {
-		return "Load Ecore";
-	}
+	public Action getAction(final Object currentObject) {
 
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getImagePath()
-	 */
-	@Override
-	public String getImagePath() {
-		return "icons/chart_organisation_add.png";
-	}
+		final Action loadEcoreAction = new Action("Load Ecore") {
+			/**
+			 * {@inheritDoc}
+			 *
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run() {
+				new ExtendedLoadResourceDialog(Display.getDefault().getActiveShell(),
+					AdapterFactoryEditingDomain.getEditingDomainFor(currentObject)).open();
+			}
+		};
 
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#execute(java.lang.Object)
-	 */
-	@Override
-	public void execute(Object currentObject) {
-		new ExtendedLoadResourceDialog(Display.getDefault().getActiveShell(),
-			AdapterFactoryEditingDomain.getEditingDomainFor(currentObject)).open();
+		loadEcoreAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
+			.getResource("icons/chart_organisation_add.png")));
+
+		return loadEcoreAction;
 	}
 
 	/**
@@ -140,7 +136,7 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 					{
 						final ResourceSet resourceSet = new ResourceSetImpl();
 						resourceSet.getURIConverter().getURIMap()
-							.putAll(EcorePlugin.computePlatformURIMap(false));
+						.putAll(EcorePlugin.computePlatformURIMap(false));
 
 						// To support Xcore resources, we need a resource with a URI that helps determine the
 						// containing project
@@ -274,16 +270,16 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 			for (final TreeIterator<?> j =
 				new EcoreUtil.ContentTreeIterator<Object>(resource.getContents())
 				{
-					private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-					@Override
-					protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
-					{
-						return
+				@Override
+				protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
+				{
+					return
 						eObject instanceof EPackage ?
 							((EPackage) eObject).getESubpackages().iterator() :
-							Collections.<EObject> emptyList().iterator();
-					}
+								Collections.<EObject> emptyList().iterator();
+				}
 				}; j.hasNext();)
 			{
 				final Object content = j.next();
@@ -346,14 +342,14 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		{
 			super(parent,
 				new LabelProvider()
+			{
+				@Override
+				public Image getImage(Object element)
 				{
-					@Override
-					public Image getImage(Object element)
-					{
-						return ExtendedImageRegistry.getInstance().getImage(
-							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-					}
-				});
+					return ExtendedImageRegistry.getInstance().getImage(
+						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+				}
+			});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -394,14 +390,14 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		{
 			super(parent,
 				new LabelProvider()
+			{
+				@Override
+				public Image getImage(Object element)
 				{
-					@Override
-					public Image getImage(Object element)
-					{
-						return ExtendedImageRegistry.getInstance().getImage(
-							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-					}
-				});
+					return ExtendedImageRegistry.getInstance().getImage(
+						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+				}
+			});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -444,15 +440,15 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 			buttonGroup.setLayout(layout);
 			final Button developmentTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			developmentTimeVersionButton.addSelectionListener
-				(new SelectionAdapter()
+			(new SelectionAdapter()
+			{
+				@Override
+				public void widgetSelected(SelectionEvent event)
 				{
-					@Override
-					public void widgetSelected(SelectionEvent event)
-					{
-						isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
-						updateElements();
-					}
-				});
+					isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
+					updateElements();
+				}
+			});
 			developmentTimeVersionButton.setText("Development Time Version");
 			final Button runtimeTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			runtimeTimeVersionButton.setText("Runtime Version");
@@ -463,5 +459,4 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 			return result;
 		}
 	}
-
 }
