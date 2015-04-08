@@ -1,0 +1,69 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _S7E8AN3QEeSUV_iuHcoeEQ,_Z6wD4N3QEeSUV_iuHcoeEQ
+Element-Name: TestCreateEDataTypeShortcut
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _rDZ8AN3SEeSUV_iuHcoeEQ
+Runtime-Version: 1.5.5.201503020312
+Save-Time: 4/8/15 11:38 AM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-editor "testProject.ecore" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject" | key-type "M1+n"
+with [get-window "Create Child"] {
+    get-table | type-text d
+    with [get-window "Create new EDataType"] {
+        get-editbox -after [get-label Name] | set-text MyDatatype
+        get-button OK | click
+    }
+    get-window Error | get-button OK | click
+    with [get-window "Create new EDataType"] {
+        get-button Set | click
+        get-editbox -after [get-label "Instance Class Name"] | set-text String
+        get-button OK | click
+    }
+}
+with [get-editor "testProject.ecore"] {
+    get-editbox -after [get-label Name] | get-property "getText()" | equals MyDatatype | verify-true
+    get-editbox -after [get-label "Instance Class Name"] | get-property text | equals String | verify-true
+    get-button -after [get-label Serializable] | get-property selected | equals true | verify-true
+    with [get-tree] {
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getClassName()" | equals "org.eclipse.emf.ecore.impl.EDataTypeImpl" | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getDefaultValue()" | equals null | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().isSerializable()" | equals true | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getConversionDelegate()" | equals null | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getInstanceClassGen()" | equals null | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getInstanceClassNameGen()" | equals String | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().isSetInstanceClassName()" | equals true | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().isSetInstanceTypeName()" | equals false | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getInstanceTypeName()" | equals String | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getClassifierID()" | equals 0 | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getInstanceClass()" | equals null | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getInstanceClassName()" | equals String | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getExtendedMetaData()" | equals null | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getName()" | equals MyDatatype | verify-true
+        get-item "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyDatatype \\[String\\]" 
+            | get-property "getData().getNameGen()" | equals MyDatatype | verify-true
+    }
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

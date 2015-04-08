@@ -1,0 +1,50 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _mDw8wN3TEeSUV_iuHcoeEQ,_oIi38N3TEeSUV_iuHcoeEQ
+Element-Name: TestCreateElementSync
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _uHqhwN3TEeSUV_iuHcoeEQ
+Runtime-Version: 1.5.5.201503020312
+Save-Time: 4/8/15 12:35 PM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-editor "testProject.genmodel" | get-tree 
+    | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 0 | verify-true
+get-editor "testProject.ecore" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject" | get-menu EClass | click
+with [get-window "Create new EClass"] {
+    get-editbox -after [get-label Name] | set-text MyClass
+    get-button OK | click
+}
+get-editor "testProject.genmodel" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject"
+get-editor "testProject.genmodel" | get-tree 
+    | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 0 | verify-true
+get-editor "testProject.ecore" | get-tree 
+get-eclipse-window | key-type "M1+s"
+get-editor "testProject.genmodel" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyClass"
+get-editor "testProject.genmodel" | get-expand-bar | get-item Standard | get-editbox -after [get-label Name] 
+    | get-property text | equals MyClass | verify-true
+with [get-editor "testProject.genmodel" | get-expand-bar] {
+    get-item Standard | get-editbox -after [get-label Name] | set-text MyChangeClass
+    get-item Standard | get-editbox -after [get-label Name] | set-text MyChangedClass
+}
+get-editor "testProject.ecore" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyClass"
+get-editor "testProject.ecore" | get-expand-bar | get-item Standard | get-editbox -after [get-label Name] 
+    | get-property text | equals MyClass | verify-true
+get-editor "testProject.genmodel" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyChangedClass" 
+    | key-type "M1+s"
+get-editor "testProject.ecore" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject/MyChangedClass"
+get-editor "testProject.ecore" | get-expand-bar | get-item Standard | get-editbox -after [get-label Name] 
+    | get-property text | equals MyChangedClass | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

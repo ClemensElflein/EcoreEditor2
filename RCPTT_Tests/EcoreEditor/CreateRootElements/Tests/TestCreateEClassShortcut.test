@@ -1,0 +1,72 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _S7E8AN3QEeSUV_iuHcoeEQ,_Z6wD4N3QEeSUV_iuHcoeEQ
+Element-Name: TestCreateEClassShortcut
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _iSlRgN3QEeSUV_iuHcoeEQ
+Runtime-Version: 1.5.5.201503020312
+Save-Time: 4/8/15 11:25 AM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-editor "testProject.ecore" | get-tree 
+    | select "platform:\\/resource\\/TestProject\\/model\\/testProject.ecore/testProject" | key-type "M1+n"
+with [get-window "Create Child"] {
+    get-table | type-text c
+    with [get-window "Create new EClass"] {
+        get-editbox -after [get-label Name] | set-text TestClass
+        get-button OK | click
+    }
+}
+with [get-editor "testProject.ecore" | get-tree] {
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals TestClass 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getClassName()" 
+        | equals "org.eclipse.emf.ecore.impl.EClassImpl" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isInterface()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isAbstract()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isFrozen()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isSetEGenericSuperTypes()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getFeatureCount()" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getEIDAttribute()" 
+        | equals null | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isSetESuperTypes()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getOperationCount()" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getDefaultValue()" 
+        | equals null | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getInstanceClassGen()" 
+        | equals null | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getInstanceClassNameGen()" 
+        | equals "" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isSetInstanceClassName()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().isSetInstanceTypeName()" 
+        | equals false | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getInstanceTypeName()" 
+        | equals "" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getClassifierID()" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getInstanceClass()" 
+        | equals null | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getInstanceClassName()" 
+        | equals "" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getExtendedMetaData()" 
+        | equals null | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getName()" 
+        | equals TestClass | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getData().getNameGen()" 
+        | equals TestClass | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
