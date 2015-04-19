@@ -10,7 +10,7 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor.internal;
+package org.eclipse.emfforms.spi.editor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,14 +33,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.ResourceSetHelpers;
-import org.eclipse.emf.ecp.ecoreeditor.internal.ui.CreateNewChildDialog;
-import org.eclipse.emf.ecp.ecoreeditor.internal.ui.MasterDetailRenderer;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
+import org.eclipse.emfforms.internal.editor.helpers.ResourceSetHelpers;
+import org.eclipse.emfforms.internal.editor.ui.CreateNewChildDialog;
+import org.eclipse.emfforms.internal.editor.ui.MasterDetailRenderer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -249,7 +249,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-		.activateContext("org.eclipse.emf.ecp.ecoreeditor.context");
+		.activateContext("org.eclipse.emfforms.spi.editor.context");
 
 		site.getPage().addPartListener(partListener);
 
@@ -341,13 +341,13 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain
 			.getEditingDomainFor(currentSelection);
 
-		if ("org.eclipse.emf.ecp.ecoreeditor.delete".equals(commandName)) {
+		if ("org.eclipse.emfforms.spi.editor.delete".equals(commandName)) {
 			editingDomain.getCommandStack().execute(
 				RemoveCommand.create(editingDomain, currentSelection));
-		} else if ("org.eclipse.emf.ecp.ecoreeditor.new".equals(commandName)) {
+		} else if ("org.eclipse.emfforms.spi.editor.new".equals(commandName)) {
 			createNewElementDialog(editingDomain, currentSelection,
 				"Create Child").open();
-		} else if ("org.eclipse.emf.ecp.ecoreeditor.new.sibling".equals(commandName)) {
+		} else if ("org.eclipse.emfforms.spi.editor.new.sibling".equals(commandName)) {
 			// Get Parent of current Selection and show the dialog for it
 			final EObject parent = currentSelection.eContainer();
 			final EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);

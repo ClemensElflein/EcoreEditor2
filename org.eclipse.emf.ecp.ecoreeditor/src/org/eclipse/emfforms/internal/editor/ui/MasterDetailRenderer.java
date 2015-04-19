@@ -10,7 +10,7 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
+package org.eclipse.emfforms.internal.editor.ui;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -26,9 +26,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
-import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
-import org.eclipse.emf.ecp.ecoreeditor.internal.Activator;
-import org.eclipse.emf.ecp.ecoreeditor.internal.helpers.EcoreHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
@@ -44,6 +41,9 @@ import org.eclipse.emf.edit.ui.dnd.ViewerDragAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
+import org.eclipse.emfforms.internal.editor.Activator;
+import org.eclipse.emfforms.internal.editor.helpers.EcoreHelpers;
+import org.eclipse.emfforms.spi.editor.IToolbarAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -101,7 +101,7 @@ import org.osgi.framework.FrameworkUtil;
 public class MasterDetailRenderer extends Composite implements IEditingDomainProvider {
 
 	/** The Toolbar action extensionpoint ID. */
-	private static final String ITOOLBAR_ACTIONS_ID = "org.eclipse.emf.ecp.ecoreeditor.toolbarActions";
+	private static final String ITOOLBAR_ACTIONS_ID = "org.eclipse.emfforms.spi.editor.toolbarActions";
 
 	/** The input. */
 	private final Object input;

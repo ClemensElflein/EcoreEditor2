@@ -10,7 +10,7 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emfforms.spi.editor;
 
 import org.eclipse.jface.action.Action;
 

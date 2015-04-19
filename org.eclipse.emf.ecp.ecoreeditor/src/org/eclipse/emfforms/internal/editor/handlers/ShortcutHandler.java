@@ -10,12 +10,12 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor.internal.handlers;
+package org.eclipse.emfforms.internal.editor.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor;
+import org.eclipse.emfforms.spi.editor.EcoreEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 

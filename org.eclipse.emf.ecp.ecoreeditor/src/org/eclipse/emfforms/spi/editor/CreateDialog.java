@@ -10,7 +10,7 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor.internal;
+package org.eclipse.emfforms.spi.editor;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;

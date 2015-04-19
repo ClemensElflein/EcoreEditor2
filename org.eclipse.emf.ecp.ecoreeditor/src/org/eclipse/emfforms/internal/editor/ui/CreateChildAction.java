@@ -9,7 +9,7 @@
  * Contributors:
  * IBM - Initial API and implementation
  */
-package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
+package org.eclipse.emfforms.internal.editor.ui;
 
 import java.util.Collection;
 
@@ -17,7 +17,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecp.ecoreeditor.internal.CreateDialog;
 import org.eclipse.emf.ecp.view.spi.model.VView;
 import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -25,6 +24,7 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.CreateChildCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.StaticSelectionCommandAction;
+import org.eclipse.emfforms.spi.editor.CreateDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;

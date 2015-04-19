@@ -9,7 +9,7 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.internal.ui;
+package org.eclipse.emfforms.internal.editor.ui;
 
 import org.eclipse.emf.ecp.view.model.common.SimpleControlRendererTester;
 

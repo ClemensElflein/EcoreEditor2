@@ -10,7 +10,7 @@
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.emf.ecp.ecoreeditor.internal.toolbaractions;
+package org.eclipse.emfforms.internal.editor.toolbaractions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,11 +35,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecp.ecoreeditor.IToolbarAction;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.LoadResourceAction.LoadResourceDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+import org.eclipse.emfforms.spi.editor.IToolbarAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -67,7 +67,7 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#getAction(Object currentObject)
+	 * @see org.eclipse.emfforms.spi.editor.IToolbarAction#getAction(Object currentObject)
 	 */
 	@Override
 	public Action getAction(final Object currentObject) {
@@ -95,7 +95,7 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.ecp.ecoreeditor.IToolbarAction#canExecute(java.lang.Object)
+	 * @see org.eclipse.emfforms.spi.editor.IToolbarAction#canExecute(java.lang.Object)
 	 */
 	@Override
 	public boolean canExecute(Object object) {

@@ -3,9 +3,9 @@
 <plugin>
 <extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
-  <renderer renderer="org.eclipse.emf.ecp.ecoreeditor.internal.ui.TextRenderer">
+  <renderer renderer="org.eclipse.emfforms.internal.editor.ui.TextRenderer">
      <dynamicTest
-           testClass="org.eclipse.emf.ecp.ecoreeditor.internal.ui.TextRendererTester">
+           testClass="org.eclipse.emfforms.internal.editor.ui.TextRendererTester">
      </dynamicTest>
   </renderer>
  </extension>
@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
+            class="org.eclipse.emfforms.spi.editor.EcoreEditor"
             default="true"
             extensions="ecore"
             icon="icons/EcoreModelFile.gif"
@@ -22,7 +22,7 @@
             name="Ecore Editor">
       </editor>
       <editor
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.EcoreEditor"
+            class="org.eclipse.emfforms.spi.editor.EcoreEditor"
             default="true"
             extensions="genmodel"
             icon="icons/GenModelModelFile.gif"
@@ -57,15 +57,15 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
+            class="org.eclipse.emfforms.internal.editor.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.delete">
       </handler>
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
+            class="org.eclipse.emfforms.internal.editor.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.new">
       </handler>
       <handler
-            class="org.eclipse.emf.ecp.ecoreeditor.internal.handlers.ShortcutHandler"
+            class="org.eclipse.emfforms.internal.editor.handlers.ShortcutHandler"
             commandId="org.eclipse.emf.ecp.ecoreeditor.new.sibling">
       </handler>      
    </extension>
