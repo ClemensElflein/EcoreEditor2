@@ -22,7 +22,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emfforms.internal.editor;version="1.5.0";x-internal:=true,
  org.eclipse.emfforms.internal.editor.handlers;version="1.5.0";;x-internal:=true,
- org.eclipse.emfforms.internal.editor.helpers;version="1.5.0";;x-friends:="org.eclipse.emf.ecp.ecoreeditor.ecore,org.eclipse.emf.ecp.ecoreeditor.genmodel",
  org.eclipse.emfforms.internal.editor.toolbaractions;version="1.5.0";;x-internal:=true,
  org.eclipse.emfforms.internal.editor.ui;version="1.5.0";x-internal:=true,
- org.eclipse.emfforms.spi.editor;version="1.5.0"
+ org.eclipse.emfforms.spi.editor;version="1.5.0",
+ org.eclipse.emfforms.spi.editor.helpers;version="1.5.0";;x-friends:="org.eclipse.emf.ecp.ecoreeditor.ecore,org.eclipse.emf.ecp.ecoreeditor.genmodel"

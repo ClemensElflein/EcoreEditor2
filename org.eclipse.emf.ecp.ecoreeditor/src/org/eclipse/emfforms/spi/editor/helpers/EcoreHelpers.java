@@ -9,7 +9,7 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emfforms.internal.editor.helpers;
+package org.eclipse.emfforms.spi.editor.helpers;
 
 import java.util.LinkedList;
 import java.util.List;
