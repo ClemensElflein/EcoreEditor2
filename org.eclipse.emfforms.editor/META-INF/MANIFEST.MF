@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.1.0,4.0.0)",
  org.eclipse.emf.codegen.ecore;bundle-version="[2.10.0,3.0.0)",
  org.eclipse.jface;bundle-version="[3.10.0,4.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.10.0,3.0.0)",
- org.eclipse.core.resources;bundle-version="[3.9.0,4.0.0)"
+ org.eclipse.core.resources;bundle-version="[3.9.0,4.0.0)",
+ org.eclipse.emfforms.treemasterdetail.swt;bundle-version="[1.0.0,1.1.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emfforms.internal.editor;version="1.5.0";x-internal:=true,

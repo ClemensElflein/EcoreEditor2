@@ -39,7 +39,7 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.LoadResourceAction.LoadResourceDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.emfforms.spi.editor.IToolbarAction;
+import org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -65,9 +65,10 @@ import org.osgi.framework.FrameworkUtil;
 public class LoadEcoreAction extends Object implements IToolbarAction {
 
 	/**
+	 *
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emfforms.spi.editor.IToolbarAction#getAction(Object currentObject)
+	 * @see org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction#getAction(java.lang.Object)
 	 */
 	@Override
 	public Action getAction(final Object currentObject) {
@@ -94,8 +95,8 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 	/**
 	 *
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emfforms.spi.editor.IToolbarAction#canExecute(java.lang.Object)
+	 * 
+	 * @see org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction#canExecute(java.lang.Object)
 	 */
 	@Override
 	public boolean canExecute(Object object) {
@@ -136,7 +137,7 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 					{
 						final ResourceSet resourceSet = new ResourceSetImpl();
 						resourceSet.getURIConverter().getURIMap()
-						.putAll(EcorePlugin.computePlatformURIMap(false));
+							.putAll(EcorePlugin.computePlatformURIMap(false));
 
 						// To support Xcore resources, we need a resource with a URI that helps determine the
 						// containing project
@@ -270,16 +271,16 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 			for (final TreeIterator<?> j =
 				new EcoreUtil.ContentTreeIterator<Object>(resource.getContents())
 				{
-				private static final long serialVersionUID = 1L;
+					private static final long serialVersionUID = 1L;
 
-				@Override
-				protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
-				{
-					return
+					@Override
+					protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
+					{
+						return
 						eObject instanceof EPackage ?
 							((EPackage) eObject).getESubpackages().iterator() :
-								Collections.<EObject> emptyList().iterator();
-				}
+							Collections.<EObject> emptyList().iterator();
+					}
 				}; j.hasNext();)
 			{
 				final Object content = j.next();
@@ -342,14 +343,14 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		{
 			super(parent,
 				new LabelProvider()
-			{
-				@Override
-				public Image getImage(Object element)
 				{
-					return ExtendedImageRegistry.getInstance().getImage(
-						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-				}
-			});
+					@Override
+					public Image getImage(Object element)
+					{
+						return ExtendedImageRegistry.getInstance().getImage(
+							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+					}
+				});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -390,14 +391,14 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 		{
 			super(parent,
 				new LabelProvider()
-			{
-				@Override
-				public Image getImage(Object element)
 				{
-					return ExtendedImageRegistry.getInstance().getImage(
-						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-				}
-			});
+					@Override
+					public Image getImage(Object element)
+					{
+						return ExtendedImageRegistry.getInstance().getImage(
+							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+					}
+				});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -440,15 +441,15 @@ public class LoadEcoreAction extends Object implements IToolbarAction {
 			buttonGroup.setLayout(layout);
 			final Button developmentTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			developmentTimeVersionButton.addSelectionListener
-			(new SelectionAdapter()
-			{
-				@Override
-				public void widgetSelected(SelectionEvent event)
+				(new SelectionAdapter()
 				{
-					isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
-					updateElements();
-				}
-			});
+					@Override
+					public void widgetSelected(SelectionEvent event)
+					{
+						isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
+						updateElements();
+					}
+				});
 			developmentTimeVersionButton.setText("Development Time Version");
 			final Button runtimeTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			runtimeTimeVersionButton.setText("Runtime Version");

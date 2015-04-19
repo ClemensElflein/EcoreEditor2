@@ -38,9 +38,9 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
-import org.eclipse.emfforms.internal.editor.ui.CreateNewChildDialog;
-import org.eclipse.emfforms.internal.editor.ui.MasterDetailRenderer;
 import org.eclipse.emfforms.spi.editor.helpers.ResourceSetHelpers;
+import org.eclipse.emfforms.spi.treemasterdetail.swt.CreateNewChildDialog;
+import org.eclipse.emfforms.spi.treemasterdetail.swt.TreeMasterDetailSWTRenderer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -117,7 +117,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	private final BasicCommandStack commandStack = new BasicCommandStack();
 
 	/** The root view. It is the main Editor panel. */
-	private MasterDetailRenderer rootView;
+	private TreeMasterDetailSWTRenderer rootView;
 
 	/**
 	 * True, if there were changes in the filesystem while the editor was in the background and the changes could not be
@@ -285,7 +285,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		rootView = new MasterDetailRenderer(parent, SWT.NONE, resourceSet);
+		rootView = new TreeMasterDetailSWTRenderer(parent, SWT.NONE, resourceSet);
 
 		// We need to set the selectionProvider for the editor, so that the EditingDomainActionBarContributor
 		// knows the currently selected object to copy/paste

@@ -3,33 +3,33 @@
 <plugin>
    <extension
          point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
-<file filePath="viewmodels/GenTypeParameter.view"/>
-
-<file filePath="viewmodels/GenAnnotation.view"/>
-
-<file filePath="viewmodels/GenParameter.view"/>
-
-<file filePath="viewmodels/GenOperation.view"/>
-
-<file filePath="viewmodels/GenDataType.view"/>
-
-<file filePath="viewmodels/GenEnumLiteral.view"/>
-
-<file filePath="viewmodels/GenEnum.view"/>
-
-<file filePath="viewmodels/GenFeature.view"/>
-
-<file filePath="viewmodels/GenClass.view"/>
-
-<file filePath="viewmodels/GenPackage.view"/>
-
-<file filePath="viewmodels/GenModel.view"/>
+		<file filePath="viewmodels/GenTypeParameter.view"/>
+		
+		<file filePath="viewmodels/GenAnnotation.view"/>
+		
+		<file filePath="viewmodels/GenParameter.view"/>
+		
+		<file filePath="viewmodels/GenOperation.view"/>
+		
+		<file filePath="viewmodels/GenDataType.view"/>
+		
+		<file filePath="viewmodels/GenEnumLiteral.view"/>
+		
+		<file filePath="viewmodels/GenEnum.view"/>
+		
+		<file filePath="viewmodels/GenFeature.view"/>
+		
+		<file filePath="viewmodels/GenClass.view"/>
+		
+		<file filePath="viewmodels/GenPackage.view"/>
+		
+		<file filePath="viewmodels/GenModel.view"/>
 
    </extension>
    <extension
-         point="org.eclipse.emfforms.editor.toolbarActions">
+         point="org.eclipse.emfforms.treemasterdetail.swt.toolbarActions">
       <action
-            toolbarAction="org.eclipse.emfforms.editor.genmodel.toolbaractions.GenerateJavaCodeAction">
+            toolbarAction="org.eclipse.emfforms.internal.editor.genmodel.toolbaractions.GenerateJavaCodeAction">
       </action>
    </extension>
 

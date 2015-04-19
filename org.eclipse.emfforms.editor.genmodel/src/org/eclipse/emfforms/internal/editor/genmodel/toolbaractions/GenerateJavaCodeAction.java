@@ -21,7 +21,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.util.GenModelUtil;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emfforms.spi.editor.IToolbarAction;
+import org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -42,9 +42,10 @@ import org.osgi.framework.FrameworkUtil;
 public class GenerateJavaCodeAction implements IToolbarAction {
 
 	/**
-	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emfforms.spi.editor.IToolbarAction#getAction(java.lang.Object)
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction#getAction(java.lang.Object)
 	 */
 	@Override
 	public Action getAction(Object currentObject) {
