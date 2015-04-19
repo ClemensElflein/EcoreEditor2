@@ -44,7 +44,7 @@ get-editor "testProject class diagram" | get-diagram -index 1 | get-edit-part -n
 get-view "Package Explorer" | get-tree | select "TestProject/model/testProject.ecore" | double-click
 with [get-editor "testProject.ecore"] {
     get-control Any -index 2 | get-property className 
-        | equals "org.eclipse.emf.ecp.ecoreeditor.internal.ui.MasterDetailRenderer" | verify-true
+        | equals "org.eclipse.emfforms.editor.internal.ui.MasterDetailRenderer" | verify-true
     get-editbox -after [get-label Name] | get-property "getText()" | equals testProject | verify-true
     get-editbox -after [get-label "Ns URI"] | get-property "getText()" | equals "http://www.example.org/testProject" 
         | verify-true

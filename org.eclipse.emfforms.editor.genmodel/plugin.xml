@@ -27,9 +27,9 @@
 
    </extension>
    <extension
-         point="org.eclipse.emf.ecp.ecoreeditor.toolbarActions">
+         point="org.eclipse.emfforms.editor.toolbarActions">
       <action
-            toolbarAction="org.eclipse.emf.ecp.ecoreeditor.genmodel.toolbaractions.GenerateJavaCodeAction">
+            toolbarAction="org.eclipse.emfforms.editor.genmodel.toolbaractions.GenerateJavaCodeAction">
       </action>
    </extension>
 

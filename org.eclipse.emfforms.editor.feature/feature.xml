@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.emf.ecp.ecoreeditor.feature"
+      id="org.eclipse.emfforms.editor.feature"
       label="EcoreEditor"
       version="1.5.0.qualifier">
 
@@ -17,21 +17,24 @@
    </license>
 
    <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor"
+         id="org.eclipse.emfforms.editor"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor.ecore"
+         id="org.eclipse.emfforms.editor.ecore"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.ecp.ecoreeditor.genmodel"
+         id="org.eclipse.emfforms.editor.genmodel"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

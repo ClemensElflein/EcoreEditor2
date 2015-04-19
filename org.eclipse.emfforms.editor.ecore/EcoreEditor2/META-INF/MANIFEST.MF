@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EcoreEditor2
-Bundle-SymbolicName: org.eclipse.emf.ecp.ecoreeditor;singleton:=true
+Bundle-SymbolicName: org.eclipse.emfforms.editor;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.Activator
+Bundle-Activator: org.eclipse.emfforms.editor.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecp.ui.view.swt;bundle-version="1.4.0",
@@ -39,5 +39,5 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.ui.dialogs,
  org.eclipse.ui.part,
  treeInput
-Export-Package: org.eclipse.emf.ecp.ecoreeditor;x-internal:=true,
- org.eclipse.emf.ecp.ecoreeditor.helpers;x-friends:="org.eclipse.emf.ecp.ecoreeditor.ecore"
+Export-Package: org.eclipse.emfforms.editor;x-internal:=true,
+ org.eclipse.emfforms.editor.helpers;x-friends:="org.eclipse.emfforms.editor.ecore"

@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emfforms.editor;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

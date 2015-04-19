@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.emf.ecp.ecoreeditor" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.emfforms.editor" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.emf.ecp.ecoreeditor" id="org.eclipse.emf.ecp.ecoreeditor.toolbarActions" name="ToolbarActions"/>
+         <meta.schema plugin="org.eclipse.emfforms.editor" id="org.eclipse.emfforms.editor.toolbarActions" name="ToolbarActions"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecp.ecoreeditor.ui.IToolbarAction"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emfforms.editor.ui.IToolbarAction"/>
                </appinfo>
             </annotation>
          </attribute>

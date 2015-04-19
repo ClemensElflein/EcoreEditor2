@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor.helpers;
+package org.eclipse.emfforms.editor.helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecp.ecoreeditor.Log;
+import org.eclipse.emfforms.editor.Log;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;

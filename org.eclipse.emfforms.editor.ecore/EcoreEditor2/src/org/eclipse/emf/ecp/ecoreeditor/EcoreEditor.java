@@ -1,4 +1,4 @@
-package org.eclipse.emf.ecp.ecoreeditor;
+package org.eclipse.emfforms.editor;
 
 import java.net.MalformedURLException;
 import java.util.EventObject;
@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecp.ecoreeditor.helpers.ResourceSetHelpers;
+import org.eclipse.emfforms.editor.helpers.ResourceSetHelpers;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.jface.window.Window;
