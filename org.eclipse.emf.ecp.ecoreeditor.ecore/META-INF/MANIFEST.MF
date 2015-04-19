@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Ecore
 Bundle-SymbolicName: org.eclipse.emfforms.editor.ecore;singleton:=true
 Bundle-Version: 1.5.0.qualifier
-Bundle-Activator: org.eclipse.emf.ecp.ecoreeditor.ecore.Activator
+Bundle-Activator: org.eclipse.emfforms.internal.editor.ecore.Activator
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.1.0,4.0.0)",
  org.eclipse.emf.ecp.edit.swt;bundle-version="[1.4.0,2.0.0)",
  org.eclipse.emf.ecp.view.template.model;bundle-version="[1.4.0,2.0.0)",
@@ -20,6 +20,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.1.0,4.0.0)",
  org.eclipse.emf.edit;bundle-version="[2.10.0,3.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.emf.ecp.ecoreeditor.ecore;version="1.5.0";x-internal:=true,
- org.eclipse.emf.ecp.ecoreeditor.ecore.controls;version="1.5.0";x-internal:=true,
- org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices;version="1.5.0";x-internal:=true
+Export-Package: org.eclipse.emfforms.internal.editor.ecore;version="1.5.0";x-internal:=true,
+ org.eclipse.emfforms.internal.editor.ecore.controls;version="1.5.0";x-internal:=true,
+ org.eclipse.emfforms.internal.editor.ecore.referenceservices;version="1.5.0";x-internal:=true

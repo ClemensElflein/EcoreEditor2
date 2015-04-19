@@ -9,7 +9,7 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
+package org.eclipse.emfforms.internal.editor.ecore.controls;
 
 import java.util.List;
 

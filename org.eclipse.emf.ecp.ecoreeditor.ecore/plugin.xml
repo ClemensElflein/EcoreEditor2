@@ -5,16 +5,16 @@
    <extension
         point="org.eclipse.emf.ecp.view.context.viewServices">
      <viewService
-           class="org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices.EcoreReferenceService">
+           class="org.eclipse.emfforms.internal.editor.ecore.referenceservices.EcoreReferenceService">
      </viewService>
    </extension>
    
  	<extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.DataTypeControl">
+            renderer="org.eclipse.emfforms.internal.editor.ecore.controls.DataTypeControl">
          <dynamicTest
-               testClass="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.DatatypeRendererTest">
+               testClass="org.eclipse.emfforms.internal.editor.ecore.controls.DatatypeRendererTest">
          </dynamicTest>
       </renderer>
    </extension>
@@ -22,9 +22,9 @@
     	<extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.TypedElementBoundsRenderer">
+            renderer="org.eclipse.emfforms.internal.editor.ecore.controls.TypedElementBoundsRenderer">
          <dynamicTest
-               testClass="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.TypedElementBoundsRendererTester">
+               testClass="org.eclipse.emfforms.internal.editor.ecore.controls.TypedElementBoundsRendererTester">
          </dynamicTest>
       </renderer>
    </extension>
@@ -32,9 +32,9 @@
    <extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.EEnumLiteralRenderer">
+            renderer="org.eclipse.emfforms.internal.editor.ecore.controls.EEnumLiteralRenderer">
 			<dynamicTest
-               testClass="org.eclipse.emf.ecp.ecoreeditor.ecore.controls.EEnumLiteralRendererTest">
+               testClass="org.eclipse.emfforms.internal.editor.ecore.controls.EEnumLiteralRendererTest">
          </dynamicTest>
       </renderer>
    </extension>

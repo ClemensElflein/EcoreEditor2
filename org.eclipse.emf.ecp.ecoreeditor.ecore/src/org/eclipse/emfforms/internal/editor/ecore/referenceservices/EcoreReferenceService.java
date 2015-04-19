@@ -9,7 +9,7 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.ecore.referenceservices;
+package org.eclipse.emfforms.internal.editor.ecore.referenceservices;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -9,8 +9,9 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
+package org.eclipse.emfforms.internal.editor.ecore.controls;
 
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecp.view.model.common.ECPRendererTester;
@@ -19,32 +20,25 @@ import org.eclipse.emf.ecp.view.spi.model.VControl;
 import org.eclipse.emf.ecp.view.spi.model.VElement;
 
 /**
- * The Tester for the DatatypeRenderer. It returns a priority of 10, if the feature is ETypedElement_EType. Else
- * NOT_APPLICABLE.
+ *
+ * The Tester for the EEnumLiteralRenderer.
+ * It is only used for the EClassifier_DefaultValue feature.
+ *
  */
-public class DatatypeRendererTest implements ECPRendererTester {
-
-	/**
-	 * @param feature The feature to test
-	 * @param vElement the element containing the feature
-	 * @param context the current ViewModelContext
-	 * @return the priority
-	 */
-	public int isApplicableForFeature(EStructuralFeature feature, VElement vElement, ViewModelContext context) {
-		if (feature.equals(EcorePackage.eINSTANCE.getETypedElement_EType())) {
-			return 10;
-		}
-		return NOT_APPLICABLE;
-	}
+public class EEnumLiteralRendererTest implements ECPRendererTester {
 
 	@Override
 	public int isApplicable(VElement vElement, ViewModelContext viewModelContext) {
 		if (!VControl.class.isInstance(vElement)) {
 			return NOT_APPLICABLE;
 		}
-		final EStructuralFeature feature = VControl.class.cast(vElement).getDomainModelReference()
-			.getEStructuralFeatureIterator().next();
-		return isApplicableForFeature(feature, vElement, viewModelContext);
+		final EStructuralFeature feature = VControl.class.cast(vElement)
+			.getDomainModelReference().getEStructuralFeatureIterator()
+			.next();
+
+		return viewModelContext.getDomainModel() instanceof EEnum
+			&& feature.equals(EcorePackage.eINSTANCE
+				.getEClassifier_DefaultValue()) ? 10 : NOT_APPLICABLE;
 	}
 
 }

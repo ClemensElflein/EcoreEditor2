@@ -9,7 +9,7 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.genmodel.toolbaractions;
+package org.eclipse.emfforms.internal.editor.genmodel.toolbaractions;
 
 import java.lang.reflect.InvocationTargetException;
 

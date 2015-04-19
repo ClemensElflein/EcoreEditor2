@@ -9,10 +9,10 @@
  * Contributors:
  * Clemens Elflein - initial API and implementation
  ******************************************************************************/
-package org.eclipse.emf.ecp.ecoreeditor.ecore.controls;
+package org.eclipse.emfforms.internal.editor.ecore.controls;
 
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecp.view.model.common.ECPRendererTester;
 import org.eclipse.emf.ecp.view.spi.context.ViewModelContext;
@@ -20,12 +20,10 @@ import org.eclipse.emf.ecp.view.spi.model.VControl;
 import org.eclipse.emf.ecp.view.spi.model.VElement;
 
 /**
- *
- * The Tester for the EEnumLiteralRenderer.
- * It is only used for the EClassifier_DefaultValue feature.
- *
+ * Tester for the TypedElementBoundsRenderer.
+ * It returns a priority of 10, if the current feature equals ETypedElement_UpperBound.
  */
-public class EEnumLiteralRendererTest implements ECPRendererTester {
+public class TypedElementBoundsRendererTester implements ECPRendererTester {
 
 	@Override
 	public int isApplicable(VElement vElement, ViewModelContext viewModelContext) {
@@ -36,9 +34,9 @@ public class EEnumLiteralRendererTest implements ECPRendererTester {
 			.getDomainModelReference().getEStructuralFeatureIterator()
 			.next();
 
-		return viewModelContext.getDomainModel() instanceof EEnum
+		return viewModelContext.getDomainModel() instanceof ETypedElement
 			&& feature.equals(EcorePackage.eINSTANCE
-				.getEClassifier_DefaultValue()) ? 10 : NOT_APPLICABLE;
+				.getETypedElement_UpperBound()) ? 10 : NOT_APPLICABLE;
 	}
 
 }
