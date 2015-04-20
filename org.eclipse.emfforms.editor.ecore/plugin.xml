@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   
+      
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.emfforms.spi.editor.GenericEditor"
+            default="true"
+            extensions="ecore"
+            icon="icons/EcoreModelFile.gif"
+            id="EcoreEditor"
+            name="Ecore Editor">
+      </editor>
+   </extension>
    <extension
         point="org.eclipse.emf.ecp.view.context.viewServices">
      <viewService

@@ -9,27 +9,7 @@
      </dynamicTest>
   </renderer>
  </extension>
-   
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.eclipse.emfforms.spi.editor.EcoreEditor"
-            default="true"
-            extensions="ecore"
-            icon="icons/EcoreModelFile.gif"
-            id="EcoreEditor"
-            name="Ecore Editor">
-      </editor>
-      <editor
-            class="org.eclipse.emfforms.spi.editor.EcoreEditor"
-            default="true"
-            extensions="genmodel"
-            icon="icons/GenModelModelFile.gif"
-            id="GenmodelEditor"
-            name="Genmodel Editor">
-      </editor>
-      
-   </extension>
+
    
    <extension
          point="org.eclipse.ui.commands">

@@ -61,7 +61,7 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * The Class EcoreEditor it is the generic part for editing any EObject.
  */
-public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
+public class GenericEditor extends EditorPart implements IEditingDomainProvider {
 
 	/**
 	 * The EcoreResourceChangeListener listens for changes in currently opened Ecore files and reports
@@ -144,7 +144,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 
 		@Override
 		public void partActivated(IWorkbenchPart part) {
-			if (part == EcoreEditor.this && isDirty() && filesChangedWithConflict && discardChanges()) {
+			if (part == GenericEditor.this && isDirty() && filesChangedWithConflict && discardChanges()) {
 				for (final Resource r : resourceSet.getResources()) {
 					r.unload();
 					try {
@@ -219,7 +219,7 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 			final IPath path = saveAsDialog.getResult();
 			setPartName(path.lastSegment());
 			resourceSet.getResources().get(0)
-			.setURI(URI.createFileURI(path.toOSString()));
+				.setURI(URI.createFileURI(path.toOSString()));
 			doSave(null);
 		}
 	}
@@ -242,14 +242,14 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		commandStack.addCommandStackListener(new CommandStackListener() {
 			@Override
 			public void commandStackChanged(EventObject event) {
-				EcoreEditor.this.firePropertyChange(PROP_DIRTY);
+				GenericEditor.this.firePropertyChange(PROP_DIRTY);
 			}
 		});
 
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-		.activateContext("org.eclipse.emfforms.spi.editor.context");
+			.activateContext("org.eclipse.emfforms.editor.context");
 
 		site.getPage().addPartListener(partListener);
 
@@ -328,6 +328,11 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 	 * @param event the event
 	 */
 	public void processEvent(ExecutionEvent event) {
+
+		if (!hasShortcuts()) {
+			return;
+		}
+
 		final Object selection = rootView.getCurrentSelection();
 
 		// We only create or delete elements for EObjects
@@ -341,18 +346,27 @@ public class EcoreEditor extends EditorPart implements IEditingDomainProvider {
 		final EditingDomain editingDomain = AdapterFactoryEditingDomain
 			.getEditingDomainFor(currentSelection);
 
-		if ("org.eclipse.emfforms.spi.editor.delete".equals(commandName)) {
+		if ("org.eclipse.emfforms.editor.delete".equals(commandName)) {
 			editingDomain.getCommandStack().execute(
 				RemoveCommand.create(editingDomain, currentSelection));
-		} else if ("org.eclipse.emfforms.spi.editor.new".equals(commandName)) {
+		} else if ("org.eclipse.emfforms.editor.new".equals(commandName)) {
 			createNewElementDialog(editingDomain, currentSelection,
 				"Create Child").open();
-		} else if ("org.eclipse.emfforms.spi.editor.new.sibling".equals(commandName)) {
+		} else if ("org.eclipse.emfforms.editor.new.sibling".equals(commandName)) {
 			// Get Parent of current Selection and show the dialog for it
 			final EObject parent = currentSelection.eContainer();
 			final EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
 			createNewElementDialog(parentEditingDomain, parent, "Create Sibling").open();
 		}
+	}
+
+	/**
+	 * Returns true, if the editor should have shortcuts.
+	 *
+	 * @return true, if the editor has shortcuts
+	 */
+	protected boolean hasShortcuts() {
+		return true;
 	}
 
 	/**

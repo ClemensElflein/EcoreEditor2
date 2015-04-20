@@ -15,7 +15,7 @@ package org.eclipse.emfforms.internal.editor.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.emfforms.spi.editor.EcoreEditor;
+import org.eclipse.emfforms.spi.editor.GenericEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -35,8 +35,8 @@ public class ShortcutHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		final IEditorPart editor = HandlerUtil.getActiveEditor(event);
-		if (editor instanceof EcoreEditor) {
-			final EcoreEditor eEditor = (EcoreEditor) editor;
+		if (editor instanceof GenericEditor) {
+			final GenericEditor eEditor = (GenericEditor) editor;
 			eEditor.processEvent(event);
 		}
 

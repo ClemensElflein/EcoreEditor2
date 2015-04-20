@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+  <editor
+        class="org.eclipse.emfforms.spi.editor.GenericEditor"
+        default="true"
+        extensions="genmodel"
+        icon="icons/GenModelModelFile.gif"
+        id="GenmodelEditor"
+        name="Genmodel Editor">
+  </editor>
+   </extension>
    <extension
          point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
 		<file filePath="viewmodels/GenTypeParameter.view"/>
