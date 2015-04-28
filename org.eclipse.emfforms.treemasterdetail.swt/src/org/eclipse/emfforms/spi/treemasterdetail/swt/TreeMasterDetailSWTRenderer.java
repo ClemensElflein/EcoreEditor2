@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.plaf.ViewportUI;
+
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
@@ -25,6 +27,11 @@ import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.ecp.view.spi.context.ViewModelService;
+import org.eclipse.emf.ecp.view.spi.model.VView;
+import org.eclipse.emf.ecp.view.spi.model.util.ViewModelUtil;
+import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
+import org.eclipse.emf.ecp.view.treemasterdetail.model.VTreeMasterDetail;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -57,7 +64,9 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -65,6 +74,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -233,10 +243,24 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 		final Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer
 			.getSelection()).getFirstElement() : null;
 		if (selectedObject instanceof EObject) {
-			try {
-				ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
-				detailPanel.layout(true, true);
-			} catch (final ECPRendererException e) {
+			// Check, if the selected object would be rendered using a TreeMasterDetail. If so, render the provided detail view.
+			final VView view = ViewProviderHelper.getView((EObject) selectedObject, context);
+			if (view.getChildren().size() > 0 && view.getChildren().get(0) instanceof VTreeMasterDetail) {
+				// Yes, we need to render this node differently
+				VTreeMasterDetail vTreeMasterDetail = (VTreeMasterDetail) view.getChildren().get(0);
+				try {
+					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject)selectedObject, vTreeMasterDetail.getDetailView());
+					detailPanel.layout(true, true);
+				} catch (final ECPRendererException e) {
+				}
+				
+			} else {
+				// No, everything is fine
+				try {
+					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
+					detailPanel.layout(true, true);
+				} catch (final ECPRendererException e) {
+				}
 			}
 			// After rendering the Forms, compute the size of the form. So the scroll container knows when to scroll
 			detailScrollableComposite.setMinSize(detailPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -298,6 +322,7 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 
 		detailPanel = new Composite(detailScrollableComposite, SWT.BORDER);
 		detailPanel.setLayout(new GridLayout());
+		detailPanel.setBackground(new Color(Display.getDefault(), new RGB(255, 255, 255)));
 		detailScrollableComposite.setContent(detailPanel);
 
 		detailScrollableComposite.layout(true, true);
