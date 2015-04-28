@@ -23,6 +23,7 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
@@ -46,6 +47,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
 import org.eclipse.emfforms.internal.treemasterdetail.helpers.EcoreHelpers;
 import org.eclipse.emfforms.internal.treemasterdetail.swt.Activator;
+import org.eclipse.emfforms.internal.treemasterdetail.swt.MasterDetailAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -80,6 +82,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Sash;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * The Class MasterDetailRenderer.
@@ -118,6 +121,9 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 	/** The CreateElementCallback to allow modifications to the newly created element */
 	private CreateElementCallback createElementCallback = null;
 
+	/** The Actions to show in the right click menu */
+	private List<MasterDetailAction> rightClickActions = null;
+
 	/**
 	 * The context. It is used in the same way as in TreeMasterDetail.
 	 * It allows custom viewmodels for the detail panel
@@ -136,11 +142,30 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 	 * @param input the input
 	 */
 	public TreeMasterDetailSWTRenderer(Composite parent, int style, Object input) {
+		this(parent, style, input, null);
+	}
+	
+	/**
+	 * Instantiates a new master detail renderer.
+	 *
+	 * @param parent the parent
+	 * @param style the style
+	 * @param input the input
+	 * @param rightClickActions the actions to show in the right click menu
+	 */
+	public TreeMasterDetailSWTRenderer(Composite parent, int style, Object input, List<MasterDetailAction> rightClickActions) {
 		super(parent, style);
 		this.input = input;
-		editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
+		this.rightClickActions = rightClickActions;
+		if(input instanceof Resource) {
+			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(((Resource) input).getContents().get(0));
+		} else {
+			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
+		}
 		renderControl();
 	}
+	
+	
 
 	/**
 	 * Render the control.
@@ -231,7 +256,7 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 		treeFormData.right = new FormAttachment(verticalSash, -2);
 		treeFormData.top = new FormAttachment(0, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
-
+		
 		return treeViewer.getControl();
 	}
 
@@ -418,6 +443,30 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 					}
 					manager.add(new Separator());
 					addDeleteActionToContextMenu(editingDomain, menuMgr, selection);
+					
+					if(selection.getFirstElement() instanceof EObject) {
+						final EObject eSelectedObject = (EObject) selection.getFirstElement();
+						if(rightClickActions != null) {
+							for (final MasterDetailAction menuAction : rightClickActions) {
+								if (menuAction.shouldShow(eSelectedObject)) {
+									final Action newAction = new Action() {
+										@Override
+										public void run() {
+											super.run();
+											menuAction.execute(eSelectedObject);
+										}
+									};
+		
+									newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
+										menuAction.getClass())
+										.getResource(menuAction.getImagePath())));
+									newAction.setText(menuAction.getLabel());
+		
+									manager.add(newAction);
+								}
+							}
+						}
+					}
 				}
 			}
 		});

@@ -78,11 +78,4 @@
             name="Ecore Editor">
       </context>
    </extension>
-   <extension
-         point="org.eclipse.emfforms.treemasterdetail.swt.toolbarActions">
-      <action
-            toolbarAction="org.eclipse.emfforms.internal.editor.toolbaractions.LoadEcoreAction">
-      </action>
-   </extension>
-   
 </plugin>

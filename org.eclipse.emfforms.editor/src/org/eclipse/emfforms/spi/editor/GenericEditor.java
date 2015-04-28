@@ -176,7 +176,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 			final IPath path = saveAsDialog.getResult();
 			setPartName(path.lastSegment());
 			resourceSet.getResources().get(0)
-			.setURI(URI.createFileURI(path.toOSString()));
+				.setURI(URI.createFileURI(path.toOSString()));
 			doSave(null);
 		}
 	}
@@ -206,7 +206,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-		.activateContext("org.eclipse.emfforms.editor.context");
+			.activateContext("org.eclipse.emfforms.editor.context");
 
 		site.getPage().addPartListener(partListener);
 
@@ -412,4 +412,12 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		}
 	}
 
+	/**
+	 * Returns the ResouceSet of this Editor.
+	 * 
+	 * @return The resource set
+	 */
+	public ResourceSet getResourceSet() {
+		return resourceSet;
+	}
 }

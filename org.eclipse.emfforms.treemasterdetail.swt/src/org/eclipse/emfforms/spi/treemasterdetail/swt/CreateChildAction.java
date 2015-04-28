@@ -12,6 +12,7 @@
 package org.eclipse.emfforms.spi.treemasterdetail.swt;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.UnexecutableCommand;
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.CreateChildCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.StaticSelectionCommandAction;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -86,8 +88,14 @@ public class CreateChildAction extends StaticSelectionCommandAction
 
 		System.out.println(reference.eContainer().toString());
 
-		final Command addCommand = AddCommand.create(editingDomain, parent, reference,
-			newObject);
+
+		final Command addCommand;
+		if(reference.getUpperBound() == 1) {
+			addCommand = SetCommand.create(editingDomain, parent, reference, newObject);
+		} else {
+			addCommand = AddCommand.create(editingDomain, parent, reference,
+					newObject);
+		}
 		editingDomain.getCommandStack().execute(addCommand);
 
 		boolean callbackResult = true;

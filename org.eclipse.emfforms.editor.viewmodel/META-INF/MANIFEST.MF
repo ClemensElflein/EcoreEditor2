@@ -25,4 +25,4 @@ Import-Package: org.eclipse.core.commands;version="0.0.0",org.eclipse.
  sion="0.0.0",org.eclipse.ui;ui.workbench=split;version="0.0.0",org.ec
  lipse.ui.part;ui.workbench=split;version="0.0.0",org.eclipse.ui.plugi
  n;version="0.0.0"
-Export-Package: org.eclipse.emfforms.internal.editor.viewmodel.toolbaractions;version="1.5.0";x-internal:=true
+Export-Package: org.eclipse.emfforms.internal.editor.viewmodel;x-friends:="org.eclipse.emf.ecp.view.model.preview.e3"

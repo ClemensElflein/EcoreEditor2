@@ -11,6 +11,7 @@
  ******************************************************************************/
 package org.eclipse.emfforms.internal.editor.viewmodel;
 
+import org.eclipse.emf.ecp.view.spi.model.VView;
 import org.eclipse.emfforms.spi.editor.GenericEditor;
 
 /**
@@ -21,11 +22,30 @@ public class ViewModelEditor extends GenericEditor {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see org.eclipse.emfforms.spi.editor.GenericEditor#hasShortcuts()
 	 */
 	@Override
 	protected boolean hasShortcuts() {
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emfforms.spi.editor.GenericEditor#getEditorTitle()
+	 */
+	@Override
+	protected String getEditorTitle() {
+		return "View Model Editor";
+	}
+
+	/**
+	 * Returns the currently edited View.
+	 *
+	 * @return The currently edited view
+	 */
+	public VView getView() {
+		return (VView) getResourceSet().getResources().get(0).getAllContents().next();
 	}
 }

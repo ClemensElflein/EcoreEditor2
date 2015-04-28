@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.eclipse.emfforms.treemasterdetail.swt.masterDetailActions" name="masterDetailActions" schema="schema/org.eclipse.emfforms.treemasterdetail.swt.exsd"/>
    <extension
          point="org.eclipse.emf.ecp.ui.view.swt.renderers">
       <renderer
-            renderer="org.eclipse.emfforms.internal.treemasterdetail.swt.TreeMasterDetailRenderer">
+            renderer="org.eclipse.emfforms.spi.treemasterdetail.swt.TreeMasterDetailRenderer">
          <staticTest
                element="org.eclipse.emf.ecp.view.treemasterdetail.model.VTreeMasterDetail"
                priority="10">
