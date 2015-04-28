@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.editors">
   <editor
-        class="org.eclipse.emfforms.spi.editor.GenericEditor"
+        class="org.eclipse.emfforms.internal.editor.genmodel.GenModelEditor"
         default="true"
         extensions="genmodel"
         icon="icons/GenModelModelFile.gif"
@@ -39,7 +39,7 @@
 
    </extension>
    <extension
-         point="org.eclipse.emfforms.treemasterdetail.swt.toolbarActions">
+         point="org.eclipse.emfforms.editor.toolbarActions">
       <action
             toolbarAction="org.eclipse.emfforms.internal.editor.genmodel.toolbaractions.GenerateJavaCodeAction">
       </action>

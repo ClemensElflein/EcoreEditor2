@@ -16,8 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -25,23 +26,24 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
+import org.eclipse.emfforms.internal.editor.toolbaractions.LoadEcoreAction;
+import org.eclipse.emfforms.internal.editor.ui.EditorView;
 import org.eclipse.emfforms.spi.editor.helpers.ResourceSetHelpers;
-import org.eclipse.emfforms.spi.treemasterdetail.swt.CreateNewChildDialog;
-import org.eclipse.emfforms.spi.treemasterdetail.swt.TreeMasterDetailSWTRenderer;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.emfforms.spi.treemasterdetail.swt.CreateElementCallback;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -63,52 +65,7 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class GenericEditor extends EditorPart implements IEditingDomainProvider {
 
-	/**
-	 * The EcoreResourceChangeListener listens for changes in currently opened Ecore files and reports
-	 * them to the EcoreEditor.
-	 */
-	private final class EcoreResourceChangeListener implements IResourceChangeListener {
-		@Override
-		public void resourceChanged(IResourceChangeEvent event) {
-			final Collection<Resource> changedResources = new ArrayList<Resource>();
-			final Collection<Resource> removedResources = new ArrayList<Resource>();
-			final IResourceDelta delta = event.getDelta();
-
-			try {
-				delta.accept(new IResourceDeltaVisitor() {
-
-					@Override
-					public boolean visit(final IResourceDelta delta)
-					{
-						if (delta.getResource().getType() == IResource.FILE
-							&& (delta.getKind() == IResourceDelta.REMOVED ||
-							delta.getKind() == IResourceDelta.CHANGED))
-						{
-							final Resource resource = resourceSet.getResource(
-								URI.createPlatformResourceURI(delta.getFullPath().toString(), true), false);
-							if (resource != null)
-							{
-								if (delta.getKind() == IResourceDelta.REMOVED)
-								{
-									removedResources.add(resource);
-								}
-								else
-								{
-									changedResources.add(resource);
-								}
-							}
-							return false;
-						}
-
-						return true;
-					}
-				});
-			} catch (final CoreException ex) {
-			}
-
-			handleResourceChange(changedResources, removedResources);
-		}
-	}
+	private static final String ITOOLBAR_ACTIONS_ID = "org.eclipse.emfforms.editor.toolbarActions";
 
 	/** The Resource loaded from the provided EditorInput. */
 	private ResourceSet resourceSet;
@@ -117,7 +74,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 	private final BasicCommandStack commandStack = new BasicCommandStack();
 
 	/** The root view. It is the main Editor panel. */
-	private TreeMasterDetailSWTRenderer rootView;
+	private EditorView rootView;
 
 	/**
 	 * True, if there were changes in the filesystem while the editor was in the background and the changes could not be
@@ -219,7 +176,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 			final IPath path = saveAsDialog.getResult();
 			setPartName(path.lastSegment());
 			resourceSet.getResources().get(0)
-				.setURI(URI.createFileURI(path.toOSString()));
+			.setURI(URI.createFileURI(path.toOSString()));
 			doSave(null);
 		}
 	}
@@ -249,7 +206,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		// Activate our context, so that our key-bindings are more important than
 		// the default ones!
 		((IContextService) site.getService(IContextService.class))
-			.activateContext("org.eclipse.emfforms.editor.context");
+		.activateContext("org.eclipse.emfforms.editor.context");
 
 		site.getPage().addPartListener(partListener);
 
@@ -285,7 +242,9 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		rootView = new TreeMasterDetailSWTRenderer(parent, SWT.NONE, resourceSet);
+		rootView = new EditorView(parent, getEditorTitle(), resourceSet, getToolbarActions());
+
+		rootView.setCreateElementCallback(getCreateElementCallback());
 
 		// We need to set the selectionProvider for the editor, so that the EditingDomainActionBarContributor
 		// knows the currently selected object to copy/paste
@@ -322,45 +281,6 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 	}
 
 	/**
-	 * Receives ExecutionEvents from ShortcutHandler and different actions
-	 * accordingly.
-	 *
-	 * @param event the event
-	 */
-	public void processEvent(ExecutionEvent event) {
-
-		if (!hasShortcuts()) {
-			return;
-		}
-
-		final Object selection = rootView.getCurrentSelection();
-
-		// We only create or delete elements for EObjects
-		if (!(selection instanceof EObject)) {
-			return;
-		}
-
-		final String commandName = event.getCommand().getId();
-		final EObject currentSelection = (EObject) selection;
-
-		final EditingDomain editingDomain = AdapterFactoryEditingDomain
-			.getEditingDomainFor(currentSelection);
-
-		if ("org.eclipse.emfforms.editor.delete".equals(commandName)) {
-			editingDomain.getCommandStack().execute(
-				RemoveCommand.create(editingDomain, currentSelection));
-		} else if ("org.eclipse.emfforms.editor.new".equals(commandName)) {
-			createNewElementDialog(editingDomain, currentSelection,
-				"Create Child").open();
-		} else if ("org.eclipse.emfforms.editor.new.sibling".equals(commandName)) {
-			// Get Parent of current Selection and show the dialog for it
-			final EObject parent = currentSelection.eContainer();
-			final EditingDomain parentEditingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(parent);
-			createNewElementDialog(parentEditingDomain, parent, "Create Sibling").open();
-		}
-	}
-
-	/**
 	 * Returns true, if the editor should have shortcuts.
 	 *
 	 * @return true, if the editor has shortcuts
@@ -370,17 +290,22 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 	}
 
 	/**
-	 * Creates the new element dialog.
+	 * Returns the title for the currently displayed editor.
+	 * Subclasses should override this function to change the Editor's title
 	 *
-	 * @param editingDomain the editing domain
-	 * @param selection the selection
-	 * @param title the title
-	 * @return the dialog
+	 * @return the title
 	 */
-	private Dialog createNewElementDialog(final EditingDomain editingDomain,
-		final EObject selection, final String title) {
-		return new CreateNewChildDialog(Display.getCurrent().getActiveShell(), title, selection,
-			rootView.getSelectionProvider());
+	protected String getEditorTitle() {
+		return "Ecore Editor";
+	}
+
+	/**
+	 * Returns the createElementCallback for this editor. By default, there is none.
+	 *
+	 * @return the callback
+	 */
+	protected CreateElementCallback getCreateElementCallback() {
+		return null;
 	}
 
 	/**
@@ -393,4 +318,98 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		}
 		return rootView.getEditingDomain();
 	}
+
+	/**
+	 * Returns the toolbar actions for this editor.
+	 *
+	 * @return A list of actions to show in the Editor's Toolbar
+	 */
+	private List<Action> getToolbarActions() {
+		final List<Action> result = new LinkedList<Action>();
+
+		result.add(new LoadEcoreAction(resourceSet));
+
+		result.addAll(readToolbarActions());
+		return result;
+	}
+
+	/**
+	 * Read toolbar actions from all extensions.
+	 *
+	 * @return the Actions registered via extension point
+	 */
+	private List<Action> readToolbarActions() {
+		final List<Action> result = new LinkedList<Action>();
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+		if (registry == null) {
+			return result;
+		}
+
+		final IConfigurationElement[] config = registry.getConfigurationElementsFor(ITOOLBAR_ACTIONS_ID);
+		try {
+			for (final IConfigurationElement e : config) {
+				final Object o = e.createExecutableExtension("toolbarAction");
+				if (o instanceof IToolbarAction) {
+					final IToolbarAction action = (IToolbarAction) o;
+					if (!action.canExecute(resourceSet)) {
+						continue;
+					}
+
+					result.add(action.getAction(resourceSet));
+				}
+			}
+		} catch (final CoreException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * The EcoreResourceChangeListener listens for changes in currently opened Ecore files and reports
+	 * them to the EcoreEditor.
+	 */
+	private final class EcoreResourceChangeListener implements IResourceChangeListener {
+		@Override
+		public void resourceChanged(IResourceChangeEvent event) {
+			final Collection<Resource> changedResources = new ArrayList<Resource>();
+			final Collection<Resource> removedResources = new ArrayList<Resource>();
+			final IResourceDelta delta = event.getDelta();
+
+			try {
+				delta.accept(new IResourceDeltaVisitor() {
+
+					@Override
+					public boolean visit(final IResourceDelta delta)
+					{
+						if (delta.getResource().getType() == IResource.FILE
+							&& (delta.getKind() == IResourceDelta.REMOVED ||
+							delta.getKind() == IResourceDelta.CHANGED))
+						{
+							final Resource resource = resourceSet.getResource(
+								URI.createPlatformResourceURI(delta.getFullPath().toString(), true), false);
+							if (resource != null)
+							{
+								if (delta.getKind() == IResourceDelta.REMOVED)
+								{
+									removedResources.add(resource);
+								}
+								else
+								{
+									changedResources.add(resource);
+								}
+							}
+							return false;
+						}
+
+						return true;
+					}
+				});
+			} catch (final CoreException ex) {
+			}
+
+			handleResourceChange(changedResources, removedResources);
+		}
+	}
+
 }

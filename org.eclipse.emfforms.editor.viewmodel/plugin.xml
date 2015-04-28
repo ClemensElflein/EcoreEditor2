@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="EMF Forms"
+            id="org.eclipse.emfforms.editor.viewmodel">
+      </category>
+      <view
+            name="EMF Forms Preview"
+            icon="icons/preview.png"
+            category="org.eclipse.emfforms.editor.viewmodel"
+            class="org.eclipse.emfforms.internal.editor.viewmodel.views.PreviewView"
+            id="org.eclipse.emfforms.internal.editor.viewmodel.views.PreviewView">
+      </view>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.editors">
+  <editor
+        class="org.eclipse.emfforms.internal.editor.viewmodel.ViewModelEditor"
+        default="true"
+        extensions="view"
+        icon="icons/GenModelModelFile.gif"
+        id="Viewmodel Editor"
+        name="Viewmodel Editor">
+  </editor>
+   </extension>
+   <extension
+         point="org.eclipse.emfforms.treemasterdetail.swt.toolbarActions">
+      <action
+            toolbarAction="org.eclipse.emfforms.internal.editor.viewmodel.toolbaractions.PreviewViewmodelAction">
+      </action>
+   </extension>
+  
+</plugin>

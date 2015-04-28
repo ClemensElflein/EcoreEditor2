@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -39,7 +38,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.action.LoadResourceAction.LoadResourceDialog;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -62,55 +60,26 @@ import org.osgi.framework.FrameworkUtil;
  * The Class LoadEcoreAction.
  * It displays the "Load Ecore" action in the editor's toolbar, if appropriate.
  */
-public class LoadEcoreAction extends Object implements IToolbarAction {
+public class LoadEcoreAction extends Action {
 
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction#getAction(java.lang.Object)
-	 */
-	@Override
-	public Action getAction(final Object currentObject) {
+	private final Object currentObject;
 
-		final Action loadEcoreAction = new Action("Load Ecore") {
-			/**
-			 * {@inheritDoc}
-			 *
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@Override
-			public void run() {
-				new ExtendedLoadResourceDialog(Display.getDefault().getActiveShell(),
-					AdapterFactoryEditingDomain.getEditingDomainFor(currentObject)).open();
-			}
-		};
-
-		loadEcoreAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
+	public LoadEcoreAction(Object currentObject) {
+		super("Load Ecore");
+		setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
 			.getResource("icons/chart_organisation_add.png")));
-
-		return loadEcoreAction;
+		this.currentObject = currentObject;
 	}
 
 	/**
-	 *
 	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emfforms.spi.treemasterdetail.swt.IToolbarAction#canExecute(java.lang.Object)
+	 *
+	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	@Override
-	public boolean canExecute(Object object) {
-		// We cannot execute the action on objects other than ResourceSet
-		if (!(object instanceof ResourceSet)
-			|| ((ResourceSet) object).getResources().size() == 0) {
-			return false;
-		}
-		// We cannot execute the action, when the first Resource's root is not a EPackage
-		final Resource firstResource = ((ResourceSet) object).getResources().get(0);
-		if (firstResource.getContents().size() == 0 || firstResource.getContents().get(0) instanceof GenModel) {
-			return false;
-		}
-		return true;
+	public void run() {
+		new ExtendedLoadResourceDialog(Display.getDefault().getActiveShell(),
+			AdapterFactoryEditingDomain.getEditingDomainFor(currentObject)).open();
 	}
 
 	/**
