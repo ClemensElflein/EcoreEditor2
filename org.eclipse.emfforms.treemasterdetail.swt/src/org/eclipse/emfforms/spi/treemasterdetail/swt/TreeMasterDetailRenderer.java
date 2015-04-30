@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial implementation
+ ******************************************************************************/
 package org.eclipse.emfforms.spi.treemasterdetail.swt;
 
 import java.util.ArrayList;
@@ -17,18 +28,21 @@ import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridCell;
 import org.eclipse.emf.ecp.view.spi.swt.layout.SWTGridDescription;
 import org.eclipse.emf.ecp.view.treemasterdetail.model.VTreeMasterDetail;
 import org.eclipse.emfforms.internal.treemasterdetail.swt.Activator;
-import org.eclipse.emfforms.internal.treemasterdetail.swt.MasterDetailAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class TreeMasterDetailRenderer extends AbstractSWTRenderer<VTreeMasterDetail>{
+/**
+ * This class wraps the TreeMasterDetailSWTRenderer in an EMF Forms renderer.
+ */
+@SuppressWarnings("restriction")
+public class TreeMasterDetailRenderer extends AbstractSWTRenderer<VTreeMasterDetail> {
 
 	private SWTGridDescription rendererGridDescription;
 
 	@Override
 	public SWTGridDescription getGridDescription(
-			SWTGridDescription gridDescription) {
+		SWTGridDescription gridDescription) {
 		if (rendererGridDescription == null) {
 			rendererGridDescription = GridDescriptionFactory.INSTANCE.createSimpleGrid(1, 1, this);
 		}
@@ -37,10 +51,11 @@ public class TreeMasterDetailRenderer extends AbstractSWTRenderer<VTreeMasterDet
 
 	@Override
 	protected Control renderControl(SWTGridCell cell, Composite parent)
-			throws NoRendererFoundException, NoPropertyDescriptorFoundExeption {
-		return new TreeMasterDetailSWTRenderer(parent, SWT.NONE, getViewModelContext().getDomainModel().eResource(), readMasterDetailActions());
+		throws NoRendererFoundException, NoPropertyDescriptorFoundExeption {
+		return new TreeMasterDetailSWTRenderer(parent, SWT.NONE, getViewModelContext().getDomainModel().eResource(),
+			readMasterDetailActions());
 	}
-	
+
 	/**
 	 * Returns a list of all {@link MasterDetailAction MasterDetailActions} which shall be displayed in the context menu
 	 * of the master treeviewer.

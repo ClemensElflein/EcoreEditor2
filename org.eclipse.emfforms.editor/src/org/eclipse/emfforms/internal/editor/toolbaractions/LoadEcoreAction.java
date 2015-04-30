@@ -64,6 +64,11 @@ public class LoadEcoreAction extends Action {
 
 	private final Object currentObject;
 
+	/**
+	 * Creates a new LoadEcoreAction.
+	 *
+	 * @param currentObject the currently loaded object in the Editor (should be ResourceSet)
+	 */
 	public LoadEcoreAction(Object currentObject) {
 		super("Load Ecore");
 		setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
@@ -106,7 +111,7 @@ public class LoadEcoreAction extends Action {
 					{
 						final ResourceSet resourceSet = new ResourceSetImpl();
 						resourceSet.getURIConverter().getURIMap()
-							.putAll(EcorePlugin.computePlatformURIMap(false));
+						.putAll(EcorePlugin.computePlatformURIMap(false));
 
 						// To support Xcore resources, we need a resource with a URI that helps determine the
 						// containing project
@@ -240,16 +245,16 @@ public class LoadEcoreAction extends Action {
 			for (final TreeIterator<?> j =
 				new EcoreUtil.ContentTreeIterator<Object>(resource.getContents())
 				{
-					private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-					@Override
-					protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
-					{
-						return
+				@Override
+				protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
+				{
+					return
 						eObject instanceof EPackage ?
 							((EPackage) eObject).getESubpackages().iterator() :
-							Collections.<EObject> emptyList().iterator();
-					}
+								Collections.<EObject> emptyList().iterator();
+				}
 				}; j.hasNext();)
 			{
 				final Object content = j.next();
@@ -312,14 +317,14 @@ public class LoadEcoreAction extends Action {
 		{
 			super(parent,
 				new LabelProvider()
+			{
+				@Override
+				public Image getImage(Object element)
 				{
-					@Override
-					public Image getImage(Object element)
-					{
-						return ExtendedImageRegistry.getInstance().getImage(
-							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-					}
-				});
+					return ExtendedImageRegistry.getInstance().getImage(
+						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+				}
+			});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -360,14 +365,14 @@ public class LoadEcoreAction extends Action {
 		{
 			super(parent,
 				new LabelProvider()
+			{
+				@Override
+				public Image getImage(Object element)
 				{
-					@Override
-					public Image getImage(Object element)
-					{
-						return ExtendedImageRegistry.getInstance().getImage(
-							EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
-					}
-				});
+					return ExtendedImageRegistry.getInstance().getImage(
+						EcoreEditPlugin.INSTANCE.getImage("full/obj16/EPackage"));
+				}
+			});
 
 			setMultipleSelection(true);
 			setMessage("Select Registered Package URI");
@@ -410,15 +415,15 @@ public class LoadEcoreAction extends Action {
 			buttonGroup.setLayout(layout);
 			final Button developmentTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			developmentTimeVersionButton.addSelectionListener
-				(new SelectionAdapter()
+			(new SelectionAdapter()
+			{
+				@Override
+				public void widgetSelected(SelectionEvent event)
 				{
-					@Override
-					public void widgetSelected(SelectionEvent event)
-					{
-						isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
-						updateElements();
-					}
-				});
+					isDevelopmentTimeVersion = developmentTimeVersionButton.getSelection();
+					updateElements();
+				}
+			});
 			developmentTimeVersionButton.setText("Development Time Version");
 			final Button runtimeTimeVersionButton = new Button(buttonGroup, SWT.RADIO);
 			runtimeTimeVersionButton.setText("Runtime Version");

@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.1.0,4.0.0)",
  org.eclipse.ui.workbench;bundle-version="[3.106.0,4.0.0)",
  org.eclipse.emf.edit.ui;bundle-version="[2.10.0,3.0.0)",
  org.eclipse.emf.edit;bundle-version="[2.10.0,3.0.0)",
- org.eclipse.emfforms.treemasterdetail.swt
+ org.eclipse.emfforms.treemasterdetail.swt;bundle-version="[1.0.0,1.1.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emfforms.internal.editor.ecore;version="1.5.0";x-internal:=true,

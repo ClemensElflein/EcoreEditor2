@@ -40,7 +40,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
 import org.eclipse.emfforms.internal.editor.toolbaractions.LoadEcoreAction;
-import org.eclipse.emfforms.internal.editor.ui.EditorView;
+import org.eclipse.emfforms.internal.editor.ui.EditorForm;
 import org.eclipse.emfforms.spi.editor.helpers.ResourceSetHelpers;
 import org.eclipse.emfforms.spi.treemasterdetail.swt.CreateElementCallback;
 import org.eclipse.jface.action.Action;
@@ -74,7 +74,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 	private final BasicCommandStack commandStack = new BasicCommandStack();
 
 	/** The root view. It is the main Editor panel. */
-	private EditorView rootView;
+	private EditorForm rootView;
 
 	/**
 	 * True, if there were changes in the filesystem while the editor was in the background and the changes could not be
@@ -242,7 +242,7 @@ public class GenericEditor extends EditorPart implements IEditingDomainProvider 
 		parent.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		parent.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		rootView = new EditorView(parent, getEditorTitle(), resourceSet, getToolbarActions());
+		rootView = new EditorForm(parent, getEditorTitle(), resourceSet, getToolbarActions());
 
 		rootView.setCreateElementCallback(getCreateElementCallback());
 

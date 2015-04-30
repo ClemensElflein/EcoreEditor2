@@ -1,7 +1,19 @@
-package org.eclipse.emfforms.internal.treemasterdetail.swt;
+/*******************************************************************************
+ * Copyright (c) 2011-2013 EclipseSource Muenchen GmbH and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Clemens Elflein - initial implementation
+ ******************************************************************************/
+package org.eclipse.emfforms.internal.editor.ui;
 
 import java.util.List;
 
+import org.eclipse.emfforms.internal.treemasterdetail.swt.Activator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -18,19 +30,30 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 
-public class TreeMasterToolBar extends Composite {
+/**
+ * The Toolbar at the top of the editor.
+ */
+public class EditorToolBar extends Composite {
 
-	private ToolBarManager toolBarManager;
-	
-	public TreeMasterToolBar(Composite parent, int style, String titleText, List<Action> toolbarActions) {
+	private final ToolBarManager toolBarManager;
+
+	/**
+	 * Creates a new Toolbar.
+	 * 
+	 * @param parent The parent
+	 * @param style The Style (SWT.NONE)
+	 * @param titleText The text in the toolbar
+	 * @param toolbarActions a List of actions for the toolbar
+	 */
+	public EditorToolBar(Composite parent, int style, String titleText, List<Action> toolbarActions) {
 		super(parent, style);
 
-		this.setBackground(new Color(parent.getDisplay(), 207, 222, 238));
+		setBackground(new Color(parent.getDisplay(), 207, 222, 238));
 
 		final FormLayout layout = new FormLayout();
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
-		this.setLayout(layout);
+		setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(this);
 
 		// Create the Icon on the Left
@@ -38,7 +61,7 @@ public class TreeMasterToolBar extends Composite {
 		final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(Activator.getDefault().getBundle()
 			.getResource("icons/view.png"));
 		titleImage.setImage(new Image(parent.getDisplay(), imageDescriptor.getImageData()));
-		
+
 		final FormData titleImageData = new FormData();
 		final int imageOffset = -titleImage.computeSize(SWT.DEFAULT, SWT.DEFAULT).y / 2;
 		titleImageData.top = new FormAttachment(50, imageOffset);
@@ -56,8 +79,7 @@ public class TreeMasterToolBar extends Composite {
 		final FormData titleData = new FormData();
 		title.setLayoutData(titleData);
 		titleData.left = new FormAttachment(titleImage, 5, SWT.DEFAULT);
-		
-		
+
 		// Create the toolbar and add it to the header
 		final ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		final FormData formData = new FormData();
@@ -67,15 +89,14 @@ public class TreeMasterToolBar extends Composite {
 		toolBarManager = new ToolBarManager(toolBar);
 
 		// Add the provided actions
-		if(toolbarActions != null) {
-			for(Action a : toolbarActions) {
+		if (toolbarActions != null) {
+			for (final Action a : toolbarActions) {
 				toolBarManager.add(a);
 			}
 		}
-		
+
 		toolBarManager.update(true);
 		this.layout();
 	}
-	
 
 }

@@ -63,9 +63,9 @@ public class OpenPreviewHandler extends MasterDetailAction implements IToolbarAc
 				IWorkbenchPage.VIEW_VISIBLE);
 		} catch (final PartInitException e) {
 			Activator
-				.getDefault()
-				.getLog()
-				.log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), e.getMessage(), e));
+			.getDefault()
+			.getLog()
+			.log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), e.getMessage(), e));
 		}
 
 	}
@@ -82,14 +82,14 @@ public class OpenPreviewHandler extends MasterDetailAction implements IToolbarAc
 
 	@Override
 	public Action getAction(final Object currentObject) {
-		Action previewAction = new Action("Open Preview") {
+		final Action previewAction = new Action("Open Preview") {
 			@Override
 			public void run() {
-				execute(((ResourceSet)currentObject).getResources().get(0).getAllContents().next());
+				execute(((ResourceSet) currentObject).getResources().get(0).getAllContents().next());
 			}
 		};
 		previewAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(this.getClass())
-				.getResource("icons/preview.png")));
+			.getResource("icons/preview.png")));
 		return previewAction;
 	}
 

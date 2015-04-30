@@ -17,8 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.plaf.ViewportUI;
-
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.viewer.ColumnViewerInformationControlToolTipSupport;
@@ -28,9 +26,7 @@ import org.eclipse.emf.ecp.common.spi.ChildrenDescriptorCollector;
 import org.eclipse.emf.ecp.ui.view.ECPRendererException;
 import org.eclipse.emf.ecp.ui.view.swt.ECPSWTViewRenderer;
 import org.eclipse.emf.ecp.view.model.common.edit.provider.CustomReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.ecp.view.spi.context.ViewModelService;
 import org.eclipse.emf.ecp.view.spi.model.VView;
-import org.eclipse.emf.ecp.view.spi.model.util.ViewModelUtil;
 import org.eclipse.emf.ecp.view.spi.provider.ViewProviderHelper;
 import org.eclipse.emf.ecp.view.treemasterdetail.model.VTreeMasterDetail;
 import org.eclipse.emf.edit.command.CommandParameter;
@@ -47,7 +43,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
 import org.eclipse.emfforms.internal.treemasterdetail.helpers.EcoreHelpers;
 import org.eclipse.emfforms.internal.treemasterdetail.swt.Activator;
-import org.eclipse.emfforms.internal.treemasterdetail.swt.MasterDetailAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -66,7 +61,6 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
@@ -98,7 +92,78 @@ import org.osgi.framework.FrameworkUtil;
  * MasterDetailRenderer provides an ISelectionProvider to get the currently selected items in the tree
  *
  */
+@SuppressWarnings("restriction")
 public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDomainProvider {
+
+	/**
+	 * This class handles the right click actions for the TreeViewer.
+	 */
+	private final class TreeMasterDetailMenuListener implements IMenuListener {
+		private final ChildrenDescriptorCollector childrenDescriptorCollector;
+		private final MenuManager menuMgr;
+		private final TreeViewer treeViewer;
+		private final EditingDomain editingDomain;
+
+		/**
+		 * @param childrenDescriptorCollector
+		 * @param menuMgr
+		 * @param treeViewer
+		 * @param editingDomain
+		 */
+		private TreeMasterDetailMenuListener(ChildrenDescriptorCollector childrenDescriptorCollector,
+			MenuManager menuMgr, TreeViewer treeViewer, EditingDomain editingDomain) {
+			this.childrenDescriptorCollector = childrenDescriptorCollector;
+			this.menuMgr = menuMgr;
+			this.treeViewer = treeViewer;
+			this.editingDomain = editingDomain;
+		}
+
+		@Override
+		public void menuAboutToShow(IMenuManager manager) {
+			if (treeViewer.getSelection().isEmpty()) {
+				return;
+			}
+			if (treeViewer.getSelection() instanceof IStructuredSelection) {
+				final IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+
+				if (selection.size() == 1 && selection.getFirstElement() instanceof EObject) {
+					final EObject eObject = (EObject) selection.getFirstElement();
+					final EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
+					if (domain == null) {
+						return;
+					}
+					final Collection<?> descriptors = childrenDescriptorCollector.getDescriptors(eObject);
+					fillContextMenu(manager, descriptors, editingDomain, eObject);
+				}
+				manager.add(new Separator());
+				addDeleteActionToContextMenu(editingDomain, menuMgr, selection);
+
+				if (selection.getFirstElement() instanceof EObject && rightClickActions != null) {
+					final EObject eSelectedObject = (EObject) selection.getFirstElement();
+
+					for (final MasterDetailAction menuAction : rightClickActions) {
+						if (menuAction.shouldShow(eSelectedObject)) {
+							final Action newAction = new Action() {
+								@Override
+								public void run() {
+									super.run();
+									menuAction.execute(eSelectedObject);
+								}
+							};
+
+							newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
+								menuAction.getClass())
+								.getResource(menuAction.getImagePath())));
+							newAction.setText(menuAction.getLabel());
+
+							manager.add(newAction);
+						}
+					}
+
+				}
+			}
+		}
+	}
 
 	/** The input. */
 	private final Object input;
@@ -117,12 +182,12 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 
 	/** The detail panel. */
 	private Composite detailPanel;
-	
-	/** The CreateElementCallback to allow modifications to the newly created element */
-	private CreateElementCallback createElementCallback = null;
 
-	/** The Actions to show in the right click menu */
-	private List<MasterDetailAction> rightClickActions = null;
+	/** The CreateElementCallback to allow modifications to the newly created element. */
+	private CreateElementCallback createElementCallback;
+
+	/** The Actions to show in the right click menu. */
+	private final List<MasterDetailAction> rightClickActions;
 
 	/**
 	 * The context. It is used in the same way as in TreeMasterDetail.
@@ -144,7 +209,7 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 	public TreeMasterDetailSWTRenderer(Composite parent, int style, Object input) {
 		this(parent, style, input, null);
 	}
-	
+
 	/**
 	 * Instantiates a new master detail renderer.
 	 *
@@ -153,19 +218,18 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 	 * @param input the input
 	 * @param rightClickActions the actions to show in the right click menu
 	 */
-	public TreeMasterDetailSWTRenderer(Composite parent, int style, Object input, List<MasterDetailAction> rightClickActions) {
+	public TreeMasterDetailSWTRenderer(Composite parent, int style, Object input,
+		List<MasterDetailAction> rightClickActions) {
 		super(parent, style);
 		this.input = input;
 		this.rightClickActions = rightClickActions;
-		if(input instanceof Resource) {
+		if (input instanceof Resource) {
 			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(((Resource) input).getContents().get(0));
 		} else {
 			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(input);
 		}
 		renderControl();
 	}
-	
-	
 
 	/**
 	 * Render the control.
@@ -191,7 +255,6 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 
 		return this;
 	}
-	
 
 	/**
 	 * Creates the sash for separation of the tree and the detail pane.
@@ -225,8 +288,6 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 
 		verticalSash = sash;
 	}
-	
-	
 
 	/**
 	 * Creates the tree.
@@ -256,7 +317,7 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 		treeFormData.right = new FormAttachment(verticalSash, -2);
 		treeFormData.top = new FormAttachment(0, 5);
 		treeViewer.getControl().setLayoutData(treeFormData);
-		
+
 		return treeViewer.getControl();
 	}
 
@@ -268,18 +329,20 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 		final Object selectedObject = treeViewer.getSelection() != null ? ((StructuredSelection) treeViewer
 			.getSelection()).getFirstElement() : null;
 		if (selectedObject instanceof EObject) {
-			// Check, if the selected object would be rendered using a TreeMasterDetail. If so, render the provided detail view.
+			// Check, if the selected object would be rendered using a TreeMasterDetail. If so, render the provided
+				// detail view.
 			final VView view = ViewProviderHelper.getView((EObject) selectedObject, context);
 			if (view.getChildren().size() > 0 && view.getChildren().get(0) instanceof VTreeMasterDetail) {
 				// Yes, we need to render this node differently
-				VTreeMasterDetail vTreeMasterDetail = (VTreeMasterDetail) view.getChildren().get(0);
+				final VTreeMasterDetail vTreeMasterDetail = (VTreeMasterDetail) view.getChildren().get(0);
 				try {
-					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject)selectedObject, vTreeMasterDetail.getDetailView());
+					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject,
+							vTreeMasterDetail.getDetailView());
 					detailPanel.layout(true, true);
 				} catch (final ECPRendererException e) {
 				}
-				
-			} else {
+
+				} else {
 				// No, everything is fine
 				try {
 					ECPSWTViewRenderer.INSTANCE.render(detailPanel, (EObject) selectedObject, context);
@@ -423,53 +486,8 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 		final ChildrenDescriptorCollector childrenDescriptorCollector = new ChildrenDescriptorCollector();
 		final MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if (treeViewer.getSelection().isEmpty()) {
-					return;
-				}
-				if (treeViewer.getSelection() instanceof IStructuredSelection) {
-					final IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
-
-					if (selection.size() == 1 && selection.getFirstElement() instanceof EObject) {
-						final EObject eObject = (EObject) selection.getFirstElement();
-						final EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(eObject);
-						if (domain == null) {
-							return;
-						}
-						final Collection<?> descriptors = childrenDescriptorCollector.getDescriptors(eObject);
-						fillContextMenu(manager, descriptors, editingDomain, eObject);
-					}
-					manager.add(new Separator());
-					addDeleteActionToContextMenu(editingDomain, menuMgr, selection);
-					
-					if(selection.getFirstElement() instanceof EObject) {
-						final EObject eSelectedObject = (EObject) selection.getFirstElement();
-						if(rightClickActions != null) {
-							for (final MasterDetailAction menuAction : rightClickActions) {
-								if (menuAction.shouldShow(eSelectedObject)) {
-									final Action newAction = new Action() {
-										@Override
-										public void run() {
-											super.run();
-											menuAction.execute(eSelectedObject);
-										}
-									};
-		
-									newAction.setImageDescriptor(ImageDescriptor.createFromURL(FrameworkUtil.getBundle(
-										menuAction.getClass())
-										.getResource(menuAction.getImagePath())));
-									newAction.setText(menuAction.getLabel());
-		
-									manager.add(newAction);
-								}
-							}
-						}
-					}
-				}
-			}
-		});
+		menuMgr.addMenuListener(new TreeMasterDetailMenuListener(childrenDescriptorCollector, menuMgr, treeViewer,
+			editingDomain));
 		final Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
 	}
@@ -602,7 +620,8 @@ public class TreeMasterDetailSWTRenderer extends Composite implements IEditingDo
 
 	/**
 	 * Set the CreateElementCallback. To clear the callback, pass null
-	 * @param The new Callback. null to remove callback.
+	 *
+	 * @param createElementCallback The new Callback. null to remove callback.
 	 */
 	public void setCreateElementCallback(CreateElementCallback createElementCallback) {
 		this.createElementCallback = createElementCallback;

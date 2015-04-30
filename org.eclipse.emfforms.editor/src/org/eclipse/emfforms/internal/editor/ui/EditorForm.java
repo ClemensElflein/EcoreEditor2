@@ -14,7 +14,6 @@ package org.eclipse.emfforms.internal.editor.ui;
 import java.util.List;
 
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emfforms.internal.treemasterdetail.swt.TreeMasterToolBar;
 import org.eclipse.emfforms.spi.treemasterdetail.swt.CreateElementCallback;
 import org.eclipse.emfforms.spi.treemasterdetail.swt.TreeMasterDetailSWTRenderer;
 import org.eclipse.jface.action.Action;
@@ -26,12 +25,12 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * @author cleme_000
- *
+ * This Composite renders the Editor's main View.
+ * It consists of the Toolbar at the top and the TreeMasterDetail at the bottom of the page.
  */
-public class EditorView extends Composite {
+public class EditorForm extends Composite {
 
-	private final TreeMasterToolBar toolbar;
+	private final EditorToolBar toolbar;
 	private final TreeMasterDetailSWTRenderer treeMasterDetail;
 
 	/**
@@ -41,8 +40,9 @@ public class EditorView extends Composite {
 	 * @param parent The Parent
 	 * @param editorTitle The Editor's name
 	 * @param editorInput The Input to display
+	 * @param toolbarActions a List of jface actions to show in the toolbar.
 	 */
-	public EditorView(Composite parent, String editorTitle, Object editorInput, List<Action> toolbarActions) {
+	public EditorForm(Composite parent, String editorTitle, Object editorInput, List<Action> toolbarActions) {
 		super(parent, SWT.NONE);
 
 		setLayout(new FormLayout());
@@ -51,7 +51,7 @@ public class EditorView extends Composite {
 		toolbarLayoutData.left = new FormAttachment(0);
 		toolbarLayoutData.right = new FormAttachment(100);
 		toolbarLayoutData.top = new FormAttachment(0);
-		toolbar = new TreeMasterToolBar(this, SWT.NONE, editorTitle, toolbarActions);
+		toolbar = new EditorToolBar(this, SWT.NONE, editorTitle, toolbarActions);
 		toolbar.setLayoutData(toolbarLayoutData);
 
 		final FormData treeMasterDetailLayoutData = new FormData();
